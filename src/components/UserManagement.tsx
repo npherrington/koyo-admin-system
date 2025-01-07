@@ -5,9 +5,6 @@ import {
   Search,
   Filter,
   MoreVertical,
-  CheckCircle,
-  XCircle,
-  AlertCircle,
   Download,
   Plus,
   MessageSquare,
@@ -17,8 +14,6 @@ import {
   Headphones,
   Shield,
   Settings,
-  Bell,
-  ChevronDown,
   Activity,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

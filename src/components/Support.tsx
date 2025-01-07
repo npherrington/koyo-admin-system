@@ -1,7 +1,7 @@
 import React from "react";
 
 function Support() {
-  return <div>Support</div>;
+  return <div>NO SCREEN DESIGNED YET</div>;
 }
 
 export default Support;

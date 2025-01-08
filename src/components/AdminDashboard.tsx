@@ -14,6 +14,8 @@ import {
   ChevronDown,
   Activity,
   AlertCircle,
+  BadgeCheck,
+  Cpu,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -74,6 +76,18 @@ const AdminDashboard = () => {
       path: "/Compliance",
     },
     { icon: Settings, label: "Settings", id: "settings", path: "/Settings" },
+    {
+      icon: BadgeCheck,
+      label: "Quality Assurance",
+      id: "qa",
+      path: "/QualityAssurance",
+    },
+    {
+      icon: Cpu,
+      label: "AI Workflows",
+      id: "ai",
+      path: "/AiWorkflows",
+    },
   ];
 
   return (

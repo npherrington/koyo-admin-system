@@ -12,6 +12,8 @@ import {
   BarChart2,
   Headphones,
   Activity,
+  BadgeCheck,
+  Cpu,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -70,6 +72,18 @@ const UserSettingsDashboard = () => {
       path: "/Compliance",
     },
     { icon: Settings, label: "Settings", id: "settings", path: "/Settings" },
+    {
+      icon: BadgeCheck,
+      label: "Quality Assurance",
+      id: "qa",
+      path: "/QualityAssurance",
+    },
+    {
+      icon: Cpu,
+      label: "AI Workflows",
+      id: "ai",
+      path: "/AiWorkflows",
+    },
   ];
 
   const [selectedTab, setSelectedTab] = useState("doctor-settings");

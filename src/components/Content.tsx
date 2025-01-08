@@ -213,7 +213,7 @@ const ContentDashboard = () => {
 
       {/* Content Overview */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <Card>
+        <Card className="bg-green-100">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium">Total Entries</CardTitle>
           </CardHeader>
@@ -223,17 +223,17 @@ const ContentDashboard = () => {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-indigo-100">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium">Total Views</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">52.4K</div>
-            <p className="text-xs text-green-500">+18% vs last month</p>
+            <p className="text-xs text-blue-600">+18% vs last month</p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-slate-100">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium">Languages</CardTitle>
           </CardHeader>
@@ -243,7 +243,7 @@ const ContentDashboard = () => {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-orange-100">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium">
               Content Updates
@@ -258,10 +258,10 @@ const ContentDashboard = () => {
 
       {/* Main Content */}
       <Card>
-        <CardHeader className="border-b">
+        <CardHeader className="border-b bg-slate-50">
           <div className="flex items-center justify-between">
             <Tabs defaultValue="glossary" className="w-full">
-              <TabsList>
+              <TabsList className="bg-indigo-50 text-black-300">
                 <TabsTrigger
                   value="glossary"
                   onClick={() => setSelectedTab("glossary")}
@@ -281,7 +281,7 @@ const ContentDashboard = () => {
 
         <CardContent className="p-0">
           {/* Filters and Search */}
-          <div className="p-4 border-b flex items-center justify-between">
+          <div className="p-4 border-b flex items-center justify-between bg-slate-50">
             <div className="flex items-center space-x-4">
               <div className="relative">
                 <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
@@ -294,7 +294,7 @@ const ContentDashboard = () => {
                 />
               </div>
               <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center px-3 py-2 border rounded-lg text-gray-600 hover:bg-gray-50">
+                <DropdownMenuTrigger className="flex items-center px-3 py-2 border rounded-lg text-gray-600 hover:bg-gray-100 bg-gray-50">
                   <Filter className="w-4 h-4 mr-2" />
                   Filter
                 </DropdownMenuTrigger>
@@ -376,7 +376,7 @@ const ContentDashboard = () => {
           </div>
 
           {/* Pagination */}
-          <div className="px-6 py-4 flex items-center justify-between border-t">
+          <div className="px-6 py-4 flex items-center justify-between border-t bg-slate-50">
             <div className="text-sm text-gray-500">
               Showing 1-10 of {selectedTab === "glossary" ? "856" : "389"}{" "}
               results

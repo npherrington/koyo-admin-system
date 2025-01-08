@@ -184,7 +184,7 @@ const SubscriptionsDashboard = () => {
 
       {/* Metrics Overview */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <Card>
+        <Card className="bg-green-100">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium flex items-center justify-between">
               Monthly Revenue
@@ -193,14 +193,14 @@ const SubscriptionsDashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">₦2.4M</div>
-            <div className="flex items-center text-xs text-green-500">
+            <div className="flex items-center text-xs text-blue-600">
               <ChevronUp className="w-3 h-3" />
               22% vs last month
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-orange-100">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium">
               Active Subscribers
@@ -208,14 +208,14 @@ const SubscriptionsDashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">3,521</div>
-            <div className="flex items-center text-xs text-green-500">
+            <div className="flex items-center text-xs text-blue-600">
               <ChevronUp className="w-3 h-3" />
               15% growth
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-indigo-100">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium">Premium Ratio</CardTitle>
           </CardHeader>
@@ -225,7 +225,7 @@ const SubscriptionsDashboard = () => {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-slate-100">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium">Churn Rate</CardTitle>
           </CardHeader>
@@ -240,7 +240,7 @@ const SubscriptionsDashboard = () => {
       </div>
 
       {/* Plan Distribution */}
-      <Card className="mb-6">
+      <Card className="mb-6 bg-blue-50">
         <CardHeader>
           <CardTitle className="text-sm">
             Subscription Plan Distribution
@@ -249,7 +249,7 @@ const SubscriptionsDashboard = () => {
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+              <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg border">
                 <div>
                   <p className="font-medium">Basic Plan (Monthly)</p>
                   <p className="text-sm text-gray-500">₦2,000/month</p>
@@ -259,7 +259,7 @@ const SubscriptionsDashboard = () => {
                   <p className="text-sm text-gray-500">68%</p>
                 </div>
               </div>
-              <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+              <div className="flex items-center justify-between p-4 bg-orange-50 rounded-lg border">
                 <div>
                   <p className="font-medium">Basic Plan (Annual)</p>
                   <p className="text-sm text-gray-500">₦18,000/year</p>
@@ -271,7 +271,7 @@ const SubscriptionsDashboard = () => {
               </div>
             </div>
             <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+              <div className="flex items-center justify-between p-4 bg-green-50 rounded-lg border">
                 <div>
                   <p className="font-medium">Premium Plan (Monthly)</p>
                   <p className="text-sm text-gray-500">₦10,000/month</p>
@@ -281,7 +281,7 @@ const SubscriptionsDashboard = () => {
                   <p className="text-sm text-gray-500">15%</p>
                 </div>
               </div>
-              <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+              <div className="flex items-center justify-between p-4 bg-orange-50 rounded-lg border">
                 <div>
                   <p className="font-medium">Premium Plan (Annual)</p>
                   <p className="text-sm text-gray-500">₦90,000/year</p>
@@ -298,10 +298,10 @@ const SubscriptionsDashboard = () => {
 
       {/* Main Content */}
       <Card>
-        <CardHeader className="border-b">
+        <CardHeader className="border-b bg-slate-50">
           <div className="flex items-center justify-between">
             <Tabs defaultValue="active" className="w-full">
-              <TabsList>
+              <TabsList className="bg-indigo-50 text-black-300">
                 <TabsTrigger
                   value="active"
                   onClick={() => setSelectedTab("active")}
@@ -324,7 +324,7 @@ const SubscriptionsDashboard = () => {
 
         <CardContent className="p-0">
           {/* Filters and Search */}
-          <div className="p-4 border-b flex items-center justify-between">
+          <div className="p-4 border-b flex items-center justify-between bg-slate-50">
             <div className="flex items-center space-x-4">
               <div className="relative">
                 <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
@@ -335,7 +335,7 @@ const SubscriptionsDashboard = () => {
                 />
               </div>
               <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center px-3 py-2 border rounded-lg text-gray-600 hover:bg-gray-50">
+                <DropdownMenuTrigger className="flex items-center px-3 py-2 border rounded-lg text-gray-600 hover:bg-gray-100 bg-gray-50">
                   <Filter className="w-4 h-4 mr-2" />
                   Filter
                 </DropdownMenuTrigger>
@@ -411,7 +411,7 @@ const SubscriptionsDashboard = () => {
           </div>
 
           {/* Pagination */}
-          <div className="px-6 py-4 flex items-center justify-between border-t">
+          <div className="px-6 py-4 flex items-center justify-between border-t bg-slate-50">
             <div className="text-sm text-gray-500">
               Showing 1-10 of 3,521 results
             </div>

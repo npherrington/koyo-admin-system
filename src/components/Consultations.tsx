@@ -190,7 +190,7 @@ const ConsultationsDashboard = () => {
 
       {/* Metrics Overview */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <Card>
+        <Card className="bg-orange-100">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium">Active Now</CardTitle>
           </CardHeader>
@@ -200,17 +200,17 @@ const ConsultationsDashboard = () => {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-green-100">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium">Today's Total</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">128</div>
-            <p className="text-xs text-green-500">+12% vs yesterday</p>
+            <p className="text-xs text-blue-600">+12% vs yesterday</p>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-indigo-100">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium">
               Avg Response Time
@@ -222,7 +222,7 @@ const ConsultationsDashboard = () => {
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-purple-100">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium">
               Patient Satisfaction
@@ -230,17 +230,17 @@ const ConsultationsDashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">4.8</div>
-            <p className="text-xs text-green-500">96% positive feedback</p>
+            <p className="text-xs text-blue-600">96% positive feedback</p>
           </CardContent>
         </Card>
       </div>
 
       {/* Main Content */}
       <Card>
-        <CardHeader className="border-b">
+        <CardHeader className="border-b bg-slate-50">
           <div className="flex items-center justify-between">
             <Tabs defaultValue="active" className="w-full">
-              <TabsList>
+              <TabsList className="bg-indigo-50 text-black-300">
                 <TabsTrigger
                   value="active"
                   onClick={() => setSelectedTab("active")}
@@ -263,7 +263,7 @@ const ConsultationsDashboard = () => {
 
         <CardContent className="p-0">
           {/* Filters and Search */}
-          <div className="p-4 border-b flex items-center justify-between">
+          <div className="p-4 border-b flex items-center justify-between bg-slate-50">
             <div className="flex items-center space-x-4">
               <div className="relative">
                 <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
@@ -274,7 +274,7 @@ const ConsultationsDashboard = () => {
                 />
               </div>
               <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center px-3 py-2 border rounded-lg text-gray-600 hover:bg-gray-50">
+                <DropdownMenuTrigger className="flex items-center px-3 py-2 border rounded-lg text-gray-600 hover:bg-gray-100 bg-gray-50">
                   <Filter className="w-4 h-4 mr-2" />
                   Filter
                 </DropdownMenuTrigger>
@@ -391,7 +391,7 @@ const ConsultationsDashboard = () => {
           )}
 
           {/* Pagination */}
-          <div className="px-6 py-4 flex items-center justify-between border-t">
+          <div className="px-6 py-4 flex items-center justify-between border-t bg-slate-50">
             <div className="text-sm text-gray-500">
               Showing 1-10 of 128 results
             </div>

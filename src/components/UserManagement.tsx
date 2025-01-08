@@ -187,10 +187,10 @@ const UserManagement = () => {
 
       {/* Main Content */}
       <Card>
-        <CardHeader className="border-b">
+        <CardHeader className="border-b bg-slate-50">
           <div className="flex items-center justify-between">
             <Tabs defaultValue="patients" className="w-full">
-              <TabsList>
+              <TabsList className="bg-indigo-50 text-black-300">
                 <TabsTrigger
                   value="patients"
                   onClick={() => setSelectedTab("patients")}
@@ -207,7 +207,7 @@ const UserManagement = () => {
             </Tabs>
           </div>
         </CardHeader>
-        <CardContent className="p-0">
+        <CardContent className="p-0 bg-slate-50">
           {/* Filters and Search */}
           <div className="p-4 border-b flex items-center justify-between">
             <div className="flex items-center space-x-4">
@@ -220,7 +220,7 @@ const UserManagement = () => {
                 />
               </div>
               <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center px-3 py-2 border rounded-lg text-gray-600 hover:bg-gray-50">
+                <DropdownMenuTrigger className="flex items-center px-3 py-2 border rounded-lg text-gray-600 hover:bg-gray-100 bg-gray-50">
                   <Filter className="w-4 h-4 mr-2" />
                   Filter
                 </DropdownMenuTrigger>
@@ -230,7 +230,7 @@ const UserManagement = () => {
                   <DropdownMenuItem>Premium Subscribers</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-              <button className="flex items-center px-3 py-2 border rounded-lg text-gray-600 hover:bg-gray-50">
+              <button className="flex items-center px-3 py-2 border rounded-lg text-orange-600 hover:bg-orange-100 bg-orange-50">
                 <Download className="w-4 h-4 mr-2" />
                 Export
               </button>

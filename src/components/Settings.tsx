@@ -146,10 +146,10 @@ const UserSettingsDashboard = () => {
 
       {/* Main Content */}
       <Card>
-        <CardHeader className="border-b">
+        <CardHeader className="border-b bg-slate-50">
           <div className="flex items-center justify-between">
             <Tabs defaultValue="doctor-settings" className="w-full">
-              <TabsList>
+              <TabsList className="bg-indigo-50 text-black-300">
                 <TabsTrigger
                   value="doctor-settings"
                   onClick={() => setSelectedTab("doctor-settings")}

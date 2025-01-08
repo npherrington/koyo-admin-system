@@ -179,7 +179,7 @@ const AnalyticsDashboard = () => {
         </div>
         <div className="flex items-center space-x-3">
           <DropdownMenu>
-            <DropdownMenuTrigger className="flex items-center px-3 py-2 border rounded-lg text-gray-600 hover:bg-gray-50">
+            <DropdownMenuTrigger className="flex items-center px-3 py-2 border rounded-lg text-gray-600 hover:bg-gray-100 bg-gray-50">
               <Calendar className="w-4 h-4 mr-2" />
               {timeRange === "7d"
                 ? "Last 7 days"
@@ -213,20 +213,20 @@ const AnalyticsDashboard = () => {
 
       {/* Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <Card>
+        <Card className="bg-orange-100">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium">Active Users</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">3,521</div>
-            <div className="flex items-center text-xs text-green-500">
+            <div className="flex items-center text-xs text-blue-600">
               <ChevronUp className="w-3 h-3" />
               15% vs last period
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-green-100">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium">
               Avg Response Time
@@ -234,14 +234,14 @@ const AnalyticsDashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">2.1m</div>
-            <div className="flex items-center text-xs text-red-500">
+            <div className="flex items-center text-xs text-blue-600">
               <ChevronUp className="w-3 h-3" />
               0.3m vs target
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-indigo-100">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium">
               Patient Satisfaction
@@ -249,14 +249,14 @@ const AnalyticsDashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">4.8/5</div>
-            <div className="flex items-center text-xs text-green-500">
+            <div className="flex items-center text-xs text-blue-600">
               <ChevronUp className="w-3 h-3" />
               0.2 vs last period
             </div>
           </CardContent>
         </Card>
 
-        <Card>
+        <Card className="bg-slate-100">
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium">System Uptime</CardTitle>
           </CardHeader>

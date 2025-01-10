@@ -82,9 +82,9 @@ const UserManagement = () => {
     { icon: Settings, label: "Settings", id: "settings", path: "/Settings" },
     {
       icon: BadgeCheck,
-      label: "Quality Assurance",
-      id: "qa",
-      path: "/QualityAssurance",
+      label: "Clincal Testing",
+      id: "testing",
+      path: "/ClincalTesting",
     },
     {
       icon: Cpu,

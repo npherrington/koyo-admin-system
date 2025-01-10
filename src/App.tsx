@@ -11,7 +11,7 @@ import Subscriptions from "./components/Subscriptions";
 import Support from "./components/Support";
 import Analytics from "./components/Analytics";
 import Compliance from "./components/Compliance";
-import QualityAssurance from "./components/QualityAssurance";
+import ClincalTesting from "./components/ClincalTesting";
 import AiWorkflows from "./components/AiWorkflows";
 
 function App() {
@@ -30,7 +30,7 @@ function App() {
         <Route path="/Support" element={<Support />} />
         <Route path="/Analytics" element={<Analytics />} />
         <Route path="/Compliance" element={<Compliance />} />
-        <Route path="/QualityAssurance" element={<QualityAssurance />} />
+        <Route path="/ClincalTesting" element={<ClincalTesting />} />
         <Route path="/AiWorkflows" element={<AiWorkflows />} />
       </Routes>
     </Router>

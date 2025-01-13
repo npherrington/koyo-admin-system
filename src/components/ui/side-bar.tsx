@@ -11,6 +11,7 @@ import {
   Settings,
   BadgeCheck,
   Cpu,
+  Menu,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "./button";
@@ -20,7 +21,7 @@ const menuItems = [
     icon: Activity,
     label: "Dashboard",
     id: "dashboard",
-    path: "/",
+    path: "/dashboard",
   },
   {
     icon: Users,
@@ -88,12 +89,12 @@ const Sidebar = ({ activeSection }: { activeSection: string }) => {
               onClick={() => setIsSidebarOpen(false)} // Close sidebar when overlay is clicked
             ></div>
           )}
-          <div className="flex justify-end items-center px-4 py-2">
+          <div className="flex items-start justify-start h-12 px-0">
             <Button
-              className="text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg border border-bg-gray-100 bg-gray-50"
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              className={"-ml-2 px-2 rounded-lg hover:bg-gray-100 bg-white"}
             >
-              Menu
+              <Menu className="w-6 h-6 text-gray-600" />
             </Button>
           </div>
         </div>
@@ -126,6 +127,14 @@ const Sidebar = ({ activeSection }: { activeSection: string }) => {
             isSidebarOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >
+          <div className="flex items-center justify-end h-12 px-4">
+            <Button
+              onClick={() => setIsSidebarOpen(!isSidebarOpen)}
+              className={"px-2 rounded-lg hover:bg-gray-100 bg-white"}
+            >
+              <Menu className="w-6 h-6 text-gray-600" />
+            </Button>
+          </div>
           <ul className="fixed top-10 left-2 space-y-2">
             {menuItems.map((item) => (
               <li key={item.id}>

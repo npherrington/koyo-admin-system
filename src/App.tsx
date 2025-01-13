@@ -13,15 +13,16 @@ import Analytics from "./components/Analytics";
 import Compliance from "./components/Compliance";
 import ClincalTesting from "./components/ClincalTesting";
 import AiWorkflows from "./components/AiWorkflows";
+import SignIn from "./components/SignIn";
 
 function App() {
   return (
     <Router>
       <Routes>
         {/* Default Route */}
-        <Route path="/" element={<AdminDashboard />} />
-
+        <Route path="/" element={<SignIn />} />
         {/* Other Routes */}
+        <Route path="/Dashboard" element={<AdminDashboard />} />
         <Route path="/UserManagement" element={<UserManagement />} />
         <Route path="/Consultations" element={<Consultations />} />
         <Route path="/Content" element={<Content />} />

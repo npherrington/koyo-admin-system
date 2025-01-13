@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import Sidebar from "./ui/side-bar";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -35,8 +36,9 @@ const LoginPage = () => {
           <p className="text-gray-500">Healthcare Management System</p>
         </div>
 
+        <Sidebar activeSection="Sign In" />
         {/* Login Card */}
-        <Card>
+        <Card className="bg-slate-50">
           <CardHeader>
             <CardTitle>Welcome back</CardTitle>
             <CardDescription>

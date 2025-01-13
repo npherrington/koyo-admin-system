@@ -16,6 +16,8 @@ import {
   AlertCircle,
   BadgeCheck,
   Cpu,
+  Sun,
+  Moon,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -28,14 +30,20 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Sidebar from "./ui/side-bar";
 import { isAuthenticated } from "@/utils/auth";
 import { Button } from "./ui/button";
+import { Switch } from "@/components/ui/switch";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const [authenticated, setAuthenticated] = useState<boolean | null>(null);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
+  const toggleTheme = () => {
+    setIsDarkMode(!isDarkMode);
+  };
   const handleProfileButton = () => {
     navigate("/Profile");
   };
+
   useEffect(() => {
     // Check if the user is authenticated when the component mounts
     const checkAuthentication = () => {
@@ -55,12 +63,17 @@ const AdminDashboard = () => {
   }
   return (
     <div
-      className="flex h-screen bg-gray
-    -50"
+      className={`flex h-screen ${
+        isDarkMode ? "bg-slate-800 text-white" : "bg-white text-black"
+      }`}
     >
       {/* Sidebar */}
-      <div className="w-64 bg-white shadow-lg">
-        <div className="p-4 border-b">
+      <div
+        className={`w-64 shadow-lg ${
+          isDarkMode ? "bg-slate-800 text-white" : "bg-white text-black"
+        }`}
+      >
+        <div className="p-4">
           <h1 className="text-xl font-bold text-orange-600">Koyo Admin</h1>
           <p className="text-xs text-gray-500">Healthcare Management System</p>
         </div>
@@ -70,7 +83,11 @@ const AdminDashboard = () => {
       {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <header className="bg-white shadow-sm border-b">
+        <header
+          className={`${
+            isDarkMode ? "bg-slate-800 text-white" : "bg-white text-black"
+          }`}
+        >
           <div className="flex items-center justify-between px-6 py-4">
             <div className="flex items-center space-x-4">
               <div className="relative">
@@ -78,11 +95,21 @@ const AdminDashboard = () => {
                 <input
                   type="text"
                   placeholder="Search users, consultations..."
-                  className="pl-10 pr-4 py-2 w-96 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className={`${
+                    isDarkMode
+                      ? "bg-slate-800 text-white"
+                      : "bg-white text-black"
+                  } pl-10 pr-4 py-2 w-96 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"`}
                 />
               </div>
               <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center px-2 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg border border-bg-gray-100 bg-gray-50">
+                <DropdownMenuTrigger
+                  className={`${
+                    isDarkMode
+                      ? "bg-slate-800 text-white"
+                      : "bg-slate-50 text-black"
+                  } flex items-center px-2 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg border border-bg-gray-100`}
+                >
                   Filter By <ChevronDown className="ml-2 h-4 w-4" />
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
@@ -92,22 +119,26 @@ const AdminDashboard = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
+            <div className="flex items-center gap-4">
+              <span>{isDarkMode ? <Moon /> : <Sun />}</span>
+              <Switch checked={isDarkMode} onCheckedChange={toggleTheme} />
+            </div>
 
             <div className="flex items-center space-x-4">
-              <button className="p-2 rounded-lg hover:bg-gray-100 relative">
-                {/* <Bell className="w-5 h-5 text-gray-600" /> */}
-                <DropdownMenu>
-                  <DropdownMenuTrigger className="flex items-center px-1 py-0 text-sm font-medium text-gray-700 hover:bg-gray-100">
+              {/* <Bell className="w-5 h-5 text-gray-600" /> */}
+              <DropdownMenu>
+                <DropdownMenuTrigger className="flex items-center px-1 py-0 text-sm font-medium text-gray-700 hover:bg-gray-100">
+                  <button className="p-2 rounded-lg hover:bg-gray-100 relative">
                     <Bell className="w-5 h-5 text-gray-600" />{" "}
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent>
-                    <DropdownMenuItem>Notification one</DropdownMenuItem>
-                    <DropdownMenuItem>Notification two</DropdownMenuItem>
-                    <DropdownMenuItem>Notification three</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span>
-              </button>
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <DropdownMenuItem>Notification one</DropdownMenuItem>
+                  <DropdownMenuItem>Notification two</DropdownMenuItem>
+                  <DropdownMenuItem>Notification three</DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+              {/* <span className="absolute top-0 right-0 w-2 h-2 bg-red-500 rounded-full"></span> */}
               <div className="flex items-center space-x-3">
                 <Button
                   className="px-2 bg-white hover:bg-orange-100"
@@ -197,7 +228,11 @@ const AdminDashboard = () => {
           </div>
 
           {/* Active Consultations */}
-          <Card className="mb-6">
+          <Card
+            className={`mb-6 ${
+              isDarkMode ? "bg-slate-800 text-white" : "bg-white text-black"
+            }`}
+          >
             <CardHeader>
               <CardTitle>Active Consultations</CardTitle>
             </CardHeader>
@@ -206,7 +241,9 @@ const AdminDashboard = () => {
                 <div className="flex items-center p-3 bg-orange-50 rounded-lg border border-gray-200">
                   <div className="w-2 h-2 bg-orange-500 rounded-full mr-3"></div>
                   <div className="flex-1">
-                    <p className="text-sm font-medium">Urgent Case #1234</p>
+                    <p className="text-sm text-black font-medium">
+                      Urgent Case #1234
+                    </p>
                     <p className="text-xs text-gray-500">
                       Waiting for doctor - 3m
                     </p>
@@ -219,7 +256,7 @@ const AdminDashboard = () => {
                 <div className="flex items-center p-3 bg-gray-50 rounded-lg border border-gray-200">
                   <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
                   <div className="flex-1">
-                    <p className="text-sm font-medium">
+                    <p className="text-sm text-black font-medium">
                       Case #1235 - Dr. Sarah
                     </p>
                     <p className="text-xs text-gray-500">In progress - 12m</p>
@@ -234,7 +271,11 @@ const AdminDashboard = () => {
 
           {/* Recent Activity */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card>
+            <Card
+              className={`mb-6 ${
+                isDarkMode ? "bg-slate-800 text-white" : "bg-white text-black"
+              }`}
+            >
               <CardHeader>
                 <CardTitle>Support Tickets</CardTitle>
               </CardHeader>
@@ -260,7 +301,11 @@ const AdminDashboard = () => {
               </CardContent>
             </Card>
 
-            <Card>
+            <Card
+              className={`mb-6 ${
+                isDarkMode ? "bg-slate-800 text-white" : "bg-white text-black"
+              }`}
+            >
               <CardHeader>
                 <CardTitle>System Health</CardTitle>
               </CardHeader>

@@ -11,6 +11,7 @@ import {
   Settings,
   BadgeCheck,
   Cpu,
+  PersonStandingIcon,
   Menu,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -21,7 +22,7 @@ const menuItems = [
     icon: Activity,
     label: "Dashboard",
     id: "dashboard",
-    path: "/dashboard",
+    path: "/Dashboard",
   },
   {
     icon: Users,
@@ -67,6 +68,12 @@ const menuItems = [
     label: "AI Workflows",
     id: "ai",
     path: "/AiWorkflows",
+  },
+  {
+    icon: PersonStandingIcon,
+    label: "Profile",
+    id: "profile",
+    path: "/Profile",
   },
 ];
 const Sidebar = ({ activeSection }: { activeSection: string }) => {

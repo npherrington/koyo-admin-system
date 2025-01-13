@@ -10,11 +10,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { signIn } from "../utils/auth";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const navigate = useNavigate();
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -25,25 +27,25 @@ const LoginPage = () => {
     }
     // Reset error state
     setError("");
-  };
 
-  const navigate = useNavigate();
-  const handleSubmit = () => {
     console.log("Email:", email);
     console.log("Password:", password);
     if (email == "supervisor@koyohealthtech.com" && password == "supervisor") {
-      navigate("/dashboard");
+      signIn("fake-jwt-token");
+      navigate("/Dashboard");
     } else {
       setError("Incorrect email and/or password fields");
     }
   };
+
+  //   const handleSubmit = () => {};
 
   const handleForgotPassword = () => {
     setError("Please contact support for a new password");
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-orange-50">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="w-full max-w-md space-y-4 p-6">
         {/* Logo and Title */}
         <div className="text-center space-y-2 mb-8">
@@ -106,7 +108,7 @@ const LoginPage = () => {
               <button
                 type="submit"
                 className="w-full bg-orange-600 text-white py-2 px-4 rounded-lg hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition-colors"
-                onClick={handleSubmit}
+                // onClick={handleSubmit}
               >
                 Sign In
               </button>

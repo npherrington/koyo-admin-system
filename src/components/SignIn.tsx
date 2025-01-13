@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { AlertCircle, Lock, Mail } from "lucide-react";
 import {
   Card,
@@ -9,7 +10,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import Sidebar from "./ui/side-bar";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -27,6 +27,19 @@ const LoginPage = () => {
     setError("");
   };
 
+  const navigate = useNavigate();
+  const handleSubmit = () => {
+    console.log("Email:", email);
+    console.log("Password:", password);
+    if (email == "supervisor@koyohealthtech.com" && password == "supervisor") {
+      navigate("/dashboard");
+    } else {
+      setError("Incorrect email and/or password fields");
+    }
+
+    // Navigate to the route
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="w-full max-w-md space-y-4 p-6">
@@ -36,7 +49,6 @@ const LoginPage = () => {
           <p className="text-gray-500">Healthcare Management System</p>
         </div>
 
-        <Sidebar activeSection="Sign In" />
         {/* Login Card */}
         <Card className="bg-slate-50">
           <CardHeader>
@@ -92,6 +104,7 @@ const LoginPage = () => {
               <button
                 type="submit"
                 className="w-full bg-orange-600 text-white py-2 px-4 rounded-lg hover:bg-orange-700 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-2 transition-colors"
+                onClick={handleSubmit}
               >
                 Sign In
               </button>

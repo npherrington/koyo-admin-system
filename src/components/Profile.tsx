@@ -20,7 +20,7 @@ function Compliance() {
     <div className="min-h-screen flex items-center justify-center bg-white">
       <div className="w-full max-w-md ">
         <div className="absolute top-0 left-2">
-          <Sidebar activeSection="profile" />
+          <Sidebar activeSection="Profile" />
         </div>
         {/* Logo and Title */}
         <div className="text-center space-y-2 mb-8">
@@ -44,7 +44,7 @@ function Compliance() {
               <span className="font-normal">joeblogs@companyemail.com</span>
             </p>
             <p className="text-xl font-bold">
-              Acess Level: <span className="font-normal">Supervisor</span>
+              Acess Level: <span className="font-normal">Super Admin</span>
             </p>
             <div className="px-2 flex justify-center items-center mt-4">
               <Button

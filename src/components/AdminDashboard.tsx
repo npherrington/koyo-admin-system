@@ -114,7 +114,7 @@ const AdminDashboard = () => {
                   onClick={handleProfileButton}
                 >
                   <img
-                    src="/src/assets/koyo-navigate_icon.png"
+                    src="https://www.w3schools.com/w3images/avatar2.png"
                     alt="Admin"
                     className="w-8 h-8 rounded-full"
                   />

@@ -27,72 +27,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "./ui/button";
+import Sidebar from "./ui/side-bar";
 
 const UserManagement = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-
-  const navigate = useNavigate();
-  const [activeSection, setActiveSection] = useState("users");
-
-  const handleNavigation = (id: string, path?: string) => {
-    setActiveSection(id);
-    if (path) {
-      navigate(path);
-    }
-  };
-  const menuItems = [
-    {
-      icon: Activity,
-      label: "Dashboard",
-      id: "dashboard",
-      path: "/",
-    },
-    {
-      icon: Users,
-      label: "User Management",
-      id: "users",
-      path: "/UserManagement",
-    },
-    {
-      icon: MessageSquare,
-      label: "Consultations",
-      id: "consultations",
-      path: "/Consultations",
-    },
-    {
-      icon: CreditCard,
-      label: "Subscriptions",
-      id: "subscriptions",
-      path: "/Subscriptions",
-    },
-    { icon: FileText, label: "Content", id: "content", path: "/Content" },
-    {
-      icon: BarChart2,
-      label: "Analytics",
-      id: "analytics",
-      path: "/Analytics",
-    },
-    { icon: Headphones, label: "Support", id: "support", path: "/Support" },
-    {
-      icon: Shield,
-      label: "Compliance",
-      id: "compliance",
-      path: "/Compliance",
-    },
-    { icon: Settings, label: "Settings", id: "settings", path: "/Settings" },
-    {
-      icon: BadgeCheck,
-      label: "Clincal Testing",
-      id: "testing",
-      path: "/ClincalTesting",
-    },
-    {
-      icon: Cpu,
-      label: "AI Workflows",
-      id: "ai",
-      path: "/AiWorkflows",
-    },
-  ];
   const [selectedTab, setSelectedTab] = useState("patients");
   const [selectedUsers, setSelectedUsers] = useState([]);
 
@@ -145,46 +82,7 @@ const UserManagement = () => {
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
-      <div className="relative">
-        {/* Sidebar Overlay */}
-        {isSidebarOpen && (
-          <div
-            className="fixed inset-0 bg-black bg-opacity-0 z-40"
-            onClick={() => setIsSidebarOpen(false)} // Close sidebar when overlay is clicked
-          ></div>
-        )}
-        <div className="flex justify-end items-center px-4 py-2">
-          <Button
-            className="text-sm font-medium text-gray-700 hover:bg-gray-100 rounded-lg border border-bg-gray-100 bg-gray-50"
-            onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-          >
-            Menu
-          </Button>
-        </div>
-        <nav
-          className={`fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-50 transform transition-transform duration-300 ${
-            isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
-        >
-          <ul className="fixed top-10 left-2 space-y-2">
-            {menuItems.map((item) => (
-              <li key={item.id}>
-                <button
-                  onClick={() => handleNavigation(item.id, item.path)}
-                  className={`flex items-center w-full p-2 rounded-lg ${
-                    activeSection === item.id
-                      ? "bg-orange-100 text-orange-600"
-                      : "hover:bg-gray-100"
-                  }`}
-                >
-                  <item.icon className="w-5 h-5 mr-3" />
-                  {item.label}
-                </button>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </div>
+      <Sidebar activeSection="User Management" />
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <div>

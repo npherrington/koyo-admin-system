@@ -36,21 +36,23 @@ const LoginPage = () => {
     } else {
       setError("Incorrect email and/or password fields");
     }
+  };
 
-    // Navigate to the route
+  const handleForgotPassword = () => {
+    setError("Please contact support for a new password");
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center bg-orange-50">
       <div className="w-full max-w-md space-y-4 p-6">
         {/* Logo and Title */}
         <div className="text-center space-y-2 mb-8">
           <h1 className="text-3xl font-bold text-orange-600">Koyo Admin</h1>
-          <p className="text-gray-500">Healthcare Management System</p>
+          <p className="text-gray-800">Healthcare Management System</p>
         </div>
 
         {/* Login Card */}
-        <Card className="bg-slate-50">
+        <Card className="bg-orange-100 border-orange-300">
           <CardHeader>
             <CardTitle>Welcome back</CardTitle>
             <CardDescription>
@@ -111,12 +113,15 @@ const LoginPage = () => {
             </form>
           </CardContent>
           <CardFooter className="flex justify-between">
-            <button className="text-sm text-gray-600 hover:text-orange-600">
+            <button
+              className="text-sm text-gray-600 hover:text-orange-600"
+              onClick={handleForgotPassword}
+            >
               Forgot password?
             </button>
-            <button className="text-sm text-gray-600 hover:text-orange-600">
+            {/* <button className="text-sm text-gray-600 hover:text-orange-600">
               Contact support
-            </button>
+            </button> */}
           </CardFooter>
         </Card>
 

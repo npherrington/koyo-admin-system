@@ -193,7 +193,7 @@ const ReviewConsultation = () => {
   };
   return (
     <Card className="w-full max-w-2xl mx-auto">
-      <CardHeader className="border-b">
+      <CardHeader className="border-b bg-blue-50">
         <div className="flex items-center space-x-4">
           <Button
             variant="ghost"
@@ -204,15 +204,12 @@ const ReviewConsultation = () => {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div className="flex items-center justify-between">
-            <CardTitle>Consultation Chat</CardTitle>
-            <span className="text-sm text-gray-500">
-              Doctor Assigned: Dr Joe Blogs
-            </span>
+            <CardTitle>Consultation Review</CardTitle>
           </div>
         </div>
       </CardHeader>
       {/* Consultation Summary Section */}
-      <div className="border-b p-4">
+      <div className="border-b p-4 bg-slate-50">
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
           <div>
             <p className="text-sm text-gray-500 flex items-center">
@@ -262,7 +259,7 @@ const ReviewConsultation = () => {
           <p className="text-sm">{consultationSummary.summary}</p>
         </div>
       </div>
-      <CardContent className="p-4">
+      <CardContent className="p-4 bg-white">
         <div className="space-y-4">
           {messages.map((message) => (
             <div

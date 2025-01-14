@@ -59,9 +59,9 @@ const menuItems = [
   { icon: Settings, label: "Settings", id: "settings", path: "/Settings" },
   {
     icon: BadgeCheck,
-    label: "Clincal Testing",
+    label: "Clinical Testing",
     id: "testing",
-    path: "/ClincalTesting",
+    path: "/ClinicalTesting",
   },
   {
     icon: Cpu,

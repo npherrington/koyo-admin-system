@@ -264,7 +264,7 @@ const ReviewConsultation = () => {
                       <Avatar className="w-8 h-8">
                         <AvatarImage src="" />
                         <AvatarFallback>
-                          <Cpu className="w-5 h-5 text-gray-700" />{" "}
+                          <Cpu className="w-5 h-5 text-gray-600" />{" "}
                         </AvatarFallback>
                       </Avatar>
                     </div>
@@ -272,8 +272,8 @@ const ReviewConsultation = () => {
                   <div
                     className={`rounded-lg p-3 ${
                       message.sender === "doctor"
-                        ? "bg-white border border-gray-200"
-                        : "bg-orange-600 text-white"
+                        ? "bg-blue-50 border border-blue-100"
+                        : "bg-orange-400 text-white"
                     }`}
                   >
                     <p className="text-sm">{message.content}</p>

@@ -1,10 +1,20 @@
 import React, { useState } from "react";
-import { User, Star, Cpu, Clock, Calendar, FileText } from "lucide-react";
+import {
+  User,
+  Star,
+  Cpu,
+  Clock,
+  Calendar,
+  FileText,
+  ArrowLeft,
+} from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "./ui/button";
+import { useNavigate } from "react-router-dom";
 
 const ReviewConsultation = () => {
-  // Mock chat data with message ratings
+  const navigate = useNavigate();
   const consultationSummary = {
     id: "C-1236",
     patientName: "Michael Davis",
@@ -177,14 +187,28 @@ const ReviewConsultation = () => {
       ))}
     </div>
   );
+
+  const onBack = () => {
+    navigate("../ClinicalTesting");
+  };
   return (
     <Card className="w-full max-w-2xl mx-auto">
       <CardHeader className="border-b">
-        <div className="flex items-center justify-between">
-          <CardTitle>Consultation Chat</CardTitle>
-          <span className="text-sm text-gray-500">
-            Doctor Assigned: Dr Joe Blogs
-          </span>
+        <div className="flex items-center space-x-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={onBack}
+            className="hover:bg-gray-100"
+          >
+            <ArrowLeft className="h-5 w-5" />
+          </Button>
+          <div className="flex items-center justify-between">
+            <CardTitle>Consultation Chat</CardTitle>
+            <span className="text-sm text-gray-500">
+              Doctor Assigned: Dr Joe Blogs
+            </span>
+          </div>
         </div>
       </CardHeader>
       {/* Consultation Summary Section */}

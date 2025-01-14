@@ -17,6 +17,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useNavigate } from "react-router-dom";
+import Sidebar from "./ui/side-bar";
 
 interface Consultation {
   id: string;
@@ -131,6 +132,7 @@ const ClinicalTesting = () => {
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
+      <Sidebar activeSection="Clinical Testing" />
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Clinical Testing</h1>

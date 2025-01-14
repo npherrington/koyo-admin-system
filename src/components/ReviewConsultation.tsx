@@ -9,6 +9,7 @@ import {
   ArrowLeft,
   Heart,
   CircleCheck,
+  Sidebar,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";

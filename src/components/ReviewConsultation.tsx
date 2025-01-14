@@ -21,7 +21,7 @@ const ReviewConsultation = () => {
     doctorName: "Dr. Sarah Lee",
     date: "2024-01-18",
     duration: "28m",
-    status: "completed",
+    status: "awaiting-review",
     type: "Dermatology Consultation",
     rating: 4,
     summary:
@@ -249,9 +249,9 @@ const ReviewConsultation = () => {
           <div>
             <p className="text-sm text-gray-500 flex items-center">
               <Star className="w-4 h-4 mr-2" />
-              Rating
+              Patient Rating
             </p>
-            <ConsultationRating rating={consultationSummary.rating} />
+            <ConsultationRating rating={consultationSummary.patientRating} />
           </div>
         </div>
         <div className="bg-gray-50 p-3 rounded-lg">

@@ -1,24 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   Search,
   Filter,
-  MessageSquare,
-  MoreVertical,
-  Download,
-  Users,
-  CreditCard,
-  FileText,
-  BarChart2,
-  Headphones,
-  Shield,
-  Settings,
-  Activity,
-  BadgeCheck,
-  Cpu,
   Star,
+  Heart,
+  CheckCircle,
+  Square,
+  CheckSquare,
 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   DropdownMenu,
@@ -26,10 +16,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Button } from "./ui/button";
-import Sidebar from "./ui/side-bar";
-import { List } from "postcss/lib/list";
 
 interface Consultation {
   id: string;
@@ -39,41 +25,74 @@ interface Consultation {
   duration: string;
   status: string;
   type: string;
-  rating: number;
+  patientRating: number;
+  empathyScore: number | null;
+  qstarScore: number | null;
   summary: string;
+  assigned?: boolean;
 }
 
 const ClinicalTesting = () => {
+  const [selectedTab, setSelectedTab] = useState("awaiting-review");
   const [consultations, setConsultations] = useState<Consultation[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 5;
 
   useEffect(() => {
-    // Fetch the JSON file
     fetch("../public/mockConsultations.json")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
         }
-        return response.json(); // Returns a promise
+        return response.json();
       })
       .then((data: Consultation[]) => {
-        setConsultations(data);
+        // Initialize assigned property
+        const consultationsWithAssigned = data.map((consultation) => ({
+          ...consultation,
+          assigned: false,
+        }));
+        setConsultations(consultationsWithAssigned);
       })
       .catch((error) => {
         console.error("Error loading the JSON file:", error);
       });
   }, []);
 
-  const navigate = useNavigate();
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
+  // Toggle assigned status
+  const toggleAssigned = (id: string, event: React.MouseEvent) => {
+    event.stopPropagation(); // Prevent consultation click handler from firing
+    setConsultations((prevConsultations) =>
+      prevConsultations.map((consultation) =>
+        consultation.id === id
+          ? { ...consultation, assigned: !consultation.assigned }
+          : consultation
+      )
+    );
+  };
 
-  // Calculate the index range of consultations to display
+  // Filter consultations based on selected tab
+  const filteredConsultations = consultations.filter((consultation) => {
+    if (selectedTab === "awaiting-review") {
+      return (
+        consultation.status === "awaiting review" && !consultation.assigned
+      );
+    } else if (selectedTab === "reviewed") {
+      return consultation.status === "reviewed" && !consultation.assigned;
+    } else if (selectedTab === "assigned") {
+      return consultation.assigned;
+    }
+    return true;
+  });
+
+  // Calculate pagination
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
-  const currentConsultations = consultations.slice(startIndex, endIndex);
-
-  // Calculate total number of pages
-  const totalPages = Math.ceil(consultations.length / itemsPerPage);
+  const currentConsultations = filteredConsultations.slice(
+    startIndex,
+    endIndex
+  );
+  const totalPages = Math.ceil(filteredConsultations.length / itemsPerPage);
 
   const nextPage = () => {
     if (currentPage < totalPages) {
@@ -87,38 +106,41 @@ const ClinicalTesting = () => {
     }
   };
 
-  const handleConsultationClick = () => {
-    navigate("../ReviewConsultation");
+  // Reset to first page when changing tabs
+  const handleTabChange = (value: string) => {
+    setSelectedTab(value);
+    setCurrentPage(1);
   };
+
+  const handleConsultationClick = () => {
+    console.log("Consultation clicked");
+  };
+
   const getStatusBadge = (status) => {
     const styles = {
+      "awaiting review": "bg-yellow-100 text-yellow-800",
+      reviewed: "bg-green-100 text-green-800",
       "in-progress": "bg-blue-100 text-blue-800",
-      waiting: "bg-yellow-100 text-yellow-800",
-      completed: "bg-green-100 text-green-800",
       cancelled: "bg-red-100 text-red-800",
     };
-    return styles[status] || "bg-gray-100 text-gray-800";
+    return styles[status.toLowerCase()] || "bg-gray-100 text-gray-800";
   };
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
-      <Sidebar activeSection="Clinical Testing" />
-      {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Clinical Testing</h1>
-          <p className="text-gray-500">Assess consultations?</p>
+          <p className="text-gray-500">Review completed consultation</p>
         </div>
       </div>
 
-      {/* Main Content */}
       <Card>
         <CardHeader className="border-b bg-slate-50">
           <span className="text-black font-bold text-xl">Consultations</span>
         </CardHeader>
 
         <CardContent className="p-0">
-          {/* Filters and Search */}
           <div className="p-4 border-b flex items-center justify-between bg-slate-50">
             <div className="flex items-center space-x-4">
               <div className="relative">
@@ -129,29 +151,30 @@ const ClinicalTesting = () => {
                   className="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                 />
               </div>
-              <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center px-3 py-2 border rounded-lg text-gray-600 hover:bg-gray-100 bg-gray-50">
-                  <Filter className="w-4 h-4 mr-2" />
-                  Filter
-                </DropdownMenuTrigger>
-                <DropdownMenuContent>
-                  <DropdownMenuItem>
-                    5 <span className="text-yellow-500 mr-1">★</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    4 <span className="text-yellow-500 mr-1">★</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    3 <span className="text-yellow-500 mr-1">★</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    2 <span className="text-yellow-500 mr-1">★</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    1 <span className="text-yellow-500 mr-1">★</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+              <div className="flex items-center justify-between">
+                <Tabs value={selectedTab} className="w-full">
+                  <TabsList className="bg-indigo-50 text-black-300">
+                    <TabsTrigger
+                      value="awaiting-review"
+                      onClick={() => handleTabChange("awaiting-review")}
+                    >
+                      Awaiting Review
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="reviewed"
+                      onClick={() => handleTabChange("reviewed")}
+                    >
+                      Reviewed
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="assigned"
+                      onClick={() => handleTabChange("assigned")}
+                    >
+                      Assigned
+                    </TabsTrigger>
+                  </TabsList>
+                </Tabs>
+              </div>
             </div>
           </div>
 
@@ -159,41 +182,65 @@ const ClinicalTesting = () => {
             {currentConsultations.map((consultation) => (
               <div
                 key={consultation.id}
-                className={`p-4 hover:bg-gray-50 ${
+                className={`p-4 hover:bg-gray-50 cursor-pointer ${
                   consultation.id === "C-1236"
-                    ? "bg-orange-50 hover:bg-orange-100"
+                    ? "bg-green-50 hover:bg-green-100"
                     : ""
                 }`}
                 onClick={handleConsultationClick}
               >
                 <div className="flex items-center justify-between">
-                  <div>
+                  <div className="flex items-center space-x-3">
+                    <button
+                      onClick={(e) => toggleAssigned(consultation.id, e)}
+                      className="hover:bg-gray-100 p-1 rounded"
+                    >
+                      {consultation.assigned ? (
+                        <CheckSquare className="w-5 h-5 text-blue-500" />
+                      ) : (
+                        <Square className="w-5 h-5 text-gray-400" />
+                      )}
+                    </button>
+                    <div>
+                      <div className="flex items-center">
+                        <h3 className="font-medium">
+                          {consultation.patientName}
+                        </h3>
+                        <span
+                          className={`ml-2 px-2 py-0.5 rounded-full text-xs ${getStatusBadge(
+                            consultation.status
+                          )}`}
+                        >
+                          {consultation.status}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-500">
+                        {consultation.type} • {consultation.date}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        {consultation.doctorName}
+                      </p>
+                      <p className="text-sm text-gray-500">
+                        <i>{consultation.summary}</i>
+                      </p>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-6">
                     <div className="flex items-center">
-                      <h3 className="font-medium">
-                        {consultation.patientName}
-                      </h3>
-                      <span
-                        className={`ml-2 px-2 py-0.5 rounded-full text-xs ${getStatusBadge(
-                          consultation.status
-                        )}`}
-                      >
-                        {consultation.status}
+                      <Star className="w-4 h-4 text-yellow-500 mr-1" />
+                      <span className="text-sm">
+                        {consultation.patientRating}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-500">
-                      {consultation.type} • {consultation.date}
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      {consultation.doctorName}
-                    </p>
-                    <p className="text-sm text-gray-500">
-                      <i>{consultation.summary}</i>
-                    </p>
-                  </div>
-                  <div className="flex items-center space-x-4">
                     <div className="flex items-center">
-                      <span className="text-yellow-500 mr-1">★</span>
-                      <span className="text-sm">{consultation.rating}</span>
+                      <Heart className="w-4 h-4 text-yellow-500 mr-1" />
+                      <span className="text-sm">
+                        {consultation.empathyScore}
+                      </span>
+                    </div>
+                    <div className="flex items-center">
+                      <CheckCircle className="w-4 h-4 text-yellow-500 mr-1" />
+                      <span className="text-sm">{consultation.qstarScore}</span>
                     </div>
                   </div>
                 </div>
@@ -201,14 +248,15 @@ const ClinicalTesting = () => {
             ))}
           </div>
 
-          {/* Pagination */}
           <div className="px-6 py-4 flex items-center justify-between border-t bg-slate-50">
             <div className="text-sm text-gray-500">
-              Showing 1-{itemsPerPage} of {consultations.length} results
+              Showing {startIndex + 1}-
+              {Math.min(endIndex, filteredConsultations.length)} of{" "}
+              {filteredConsultations.length} results
             </div>
             <div className="flex items-center space-x-2">
               <button
-                className="px-3 py-1 border rounded hover:bg-gray-50"
+                className="px-3 py-1 border rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                 onClick={prevPage}
                 disabled={currentPage === 1}
               >
@@ -218,7 +266,7 @@ const ClinicalTesting = () => {
                 Page {currentPage} of {totalPages}
               </span>
               <button
-                className="px-3 py-1 border rounded hover:bg-gray-50"
+                className="px-3 py-1 border rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
                 onClick={nextPage}
                 disabled={currentPage === totalPages}
               >

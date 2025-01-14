@@ -48,7 +48,7 @@ const ClinicalTesting = () => {
 
   useEffect(() => {
     // Fetch the JSON file
-    fetch("./public/mockConsultations.json")
+    fetch("../public/mockConsultations.json")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -63,6 +63,7 @@ const ClinicalTesting = () => {
       });
   }, []);
 
+  const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
@@ -86,6 +87,9 @@ const ClinicalTesting = () => {
     }
   };
 
+  const handleConsultationClick = () => {
+    navigate("../ReviewConsultation");
+  };
   const getStatusBadge = (status) => {
     const styles = {
       "in-progress": "bg-blue-100 text-blue-800",
@@ -153,7 +157,15 @@ const ClinicalTesting = () => {
 
           <div className="divide-y">
             {currentConsultations.map((consultation) => (
-              <div key={consultation.id} className="p-4 hover:bg-gray-50">
+              <div
+                key={consultation.id}
+                className={`p-4 hover:bg-gray-50 ${
+                  consultation.id === "C-1236"
+                    ? "bg-orange-50 hover:bg-orange-100"
+                    : ""
+                }`}
+                onClick={handleConsultationClick}
+              >
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="flex items-center">

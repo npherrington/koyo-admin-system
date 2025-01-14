@@ -17,6 +17,7 @@ import AiWorkflows from "./components/AiWorkflows";
 import SignIn from "./components/SignIn";
 import PrivateRoute from "./components/PrivateRouting";
 import Profile from "./components/Profile";
+import ReviewConsultation from "./components/ReviewConsultation";
 
 function App() {
   return (
@@ -71,6 +72,10 @@ function App() {
         <Route
           path="/Profile"
           element={<PrivateRoute element={<Profile />} />}
+        />
+        <Route
+          path="/ReviewConsultation"
+          element={<PrivateRoute element={<ReviewConsultation />} />}
         />
         {/* Default route */}
         <Route path="/" element={<Navigate to="/signin" />} />

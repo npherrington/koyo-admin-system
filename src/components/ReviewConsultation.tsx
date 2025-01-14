@@ -7,6 +7,8 @@ import {
   Calendar,
   FileText,
   ArrowLeft,
+  Heart,
+  CircleCheck,
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -21,9 +23,11 @@ const ReviewConsultation = () => {
     doctorName: "Dr. Sarah Lee",
     date: "2024-01-18",
     duration: "28m",
-    status: "awaiting-review",
+    status: "awaiting review",
     type: "Dermatology Consultation",
-    rating: 4,
+    patientRating: 4,
+    empathyScore: null,
+    qstarScore: null,
     summary:
       "Michael visited Dr. Sarah Lee to address ongoing skin irritation. Dr. Lee prescribed a new topical treatment and advised on proper skincare routines. Michael found the consultation helpful, though he felt the treatment options could have been explained in more detail. He rated the consultation a 4 out of 5.",
   };
@@ -163,10 +167,35 @@ const ReviewConsultation = () => {
             onMouseLeave={() => setHover(0)}
             className="focus:outline-none"
           >
-            <Star
+            <CircleCheck
               className={`w-4 h-4 ${
                 star <= (hover || currentRating)
-                  ? "fill-yellow-400 text-yellow-400"
+                  ? "fill-green-400 text-black-400"
+                  : "text-gray-300"
+              }`}
+            />
+          </button>
+        ))}
+      </div>
+    );
+  };
+  const HeartRating = ({ messageId, currentRating }) => {
+    const [hover, setHover] = useState(0);
+
+    return (
+      <div className="flex items-center space-x-1 mb-1">
+        {[1, 2, 3, 4, 5].map((heart) => (
+          <button
+            key={heart}
+            onClick={() => handleRating(messageId, heart)}
+            onMouseEnter={() => setHover(heart)}
+            onMouseLeave={() => setHover(0)}
+            className="focus:outline-none"
+          >
+            <Heart
+              className={`w-4 h-4 ${
+                heart <= (hover || currentRating)
+                  ? "fill-red-400 text-white-400"
                   : "text-gray-300"
               }`}
             />
@@ -275,6 +304,12 @@ const ReviewConsultation = () => {
               >
                 {message.sender === "doctor" && (
                   <StarRating
+                    messageId={message.id}
+                    currentRating={message.rating}
+                  />
+                )}
+                {message.sender === "doctor" && (
+                  <HeartRating
                     messageId={message.id}
                     currentRating={message.rating}
                   />

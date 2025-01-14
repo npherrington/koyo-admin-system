@@ -16,6 +16,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useNavigate } from "react-router-dom";
 
 interface Consultation {
   id: string;
@@ -33,6 +34,7 @@ interface Consultation {
 }
 
 const ClinicalTesting = () => {
+  const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState("awaiting-review");
   const [consultations, setConsultations] = useState<Consultation[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
@@ -114,6 +116,7 @@ const ClinicalTesting = () => {
 
   const handleConsultationClick = () => {
     console.log("Consultation clicked");
+    navigate("../ReviewConsultation");
   };
 
   const getStatusBadge = (status) => {

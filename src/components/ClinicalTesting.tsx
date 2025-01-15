@@ -7,6 +7,7 @@ import {
   CheckCircle,
   Square,
   CheckSquare,
+  Download,
 } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -181,6 +182,10 @@ const ClinicalTesting = () => {
                 </Tabs>
               </div>
             </div>
+            <button className="flex items-center px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700">
+              <Download className="w-4 h-4 mr-2" />
+              Export Report
+            </button>
           </div>
 
           <div className="divide-y">

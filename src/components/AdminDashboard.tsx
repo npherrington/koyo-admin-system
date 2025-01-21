@@ -32,6 +32,12 @@ import { isAuthenticated } from "@/utils/auth";
 import { Button } from "./ui/button";
 import { Switch } from "@/components/ui/switch";
 import { useTheme } from "@/contexts/ThemeContext";
+import {
+  ColourCard,
+  ColourCardHeader,
+  ColourCardTitle,
+  ColourCardContent,
+} from "@/components/ui/colour-card";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -172,57 +178,65 @@ const AdminDashboard = () => {
 
           {/* Key Metrics */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
-            <Card className="bg-orange-100">
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">
+            <ColourCard variant="orange">
+              <ColourCardHeader className="flex flex-row items-center justify-between pb-2">
+                <ColourCardTitle
+                  variant="orange"
+                  className="text-sm font-medium"
+                >
                   Active Patients
-                </CardTitle>
+                </ColourCardTitle>
                 <Users className="w-4 h-4 text-gray-500" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">3,521</div>
+              </ColourCardHeader>
+              <ColourCardContent variant="orange">
+                <div className="text-2xl font-bold ">3,521</div>
                 <p className="text-xs text-green-500">+15% from last month</p>
-              </CardContent>
-            </Card>
+              </ColourCardContent>
+            </ColourCard>
 
-            <Card className="bg-blue-100">
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">
+            <ColourCard variant="blue">
+              <ColourCardHeader className="flex flex-row items-center justify-between pb-2">
+                <ColourCardTitle variant="blue" className="text-sm font-medium">
                   Active Doctors
-                </CardTitle>
+                </ColourCardTitle>
                 <Users className="w-4 h-4 text-gray-500" />
-              </CardHeader>
-              <CardContent>
+              </ColourCardHeader>
+              <ColourCardContent variant="blue">
                 <div className="text-2xl font-bold">42</div>
                 <p className="text-xs text-gray-500">8 currently online</p>
-              </CardContent>
-            </Card>
+              </ColourCardContent>
+            </ColourCard>
 
-            <Card className="bg-green-100">
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">
+            {/* Today's Consultations Card */}
+            <ColourCard variant="green">
+              <ColourCardHeader className="flex flex-row items-center justify-between pb-2">
+                <ColourCardTitle
+                  variant="green"
+                  className="text-sm font-medium"
+                >
                   Today's Consultations
-                </CardTitle>
+                </ColourCardTitle>
                 <MessageSquare className="w-4 h-4 text-gray-500" />
-              </CardHeader>
-              <CardContent>
+              </ColourCardHeader>
+              <ColourCardContent variant="green">
                 <div className="text-2xl font-bold">128</div>
                 <p className="text-xs text-gray-500">Avg. response time: 2m</p>
-              </CardContent>
-            </Card>
+              </ColourCardContent>
+            </ColourCard>
 
-            <Card className="bg-slate-100">
-              <CardHeader className="flex flex-row items-center justify-between pb-2">
-                <CardTitle className="text-sm font-medium">
+            {/* Revenue Card */}
+            <ColourCard variant="gray">
+              <ColourCardHeader className="flex flex-row items-center justify-between pb-2">
+                <ColourCardTitle variant="gray" className="text-sm font-medium">
                   Revenue (MTD)
-                </CardTitle>
+                </ColourCardTitle>
                 <CreditCard className="w-4 h-4 text-gray-500" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">₦2.4M</div>
+              </ColourCardHeader>
+              <ColourCardContent variant="gray">
+                <div className="text-2xl font-bold text-gray-900">₦2.4M</div>
                 <p className="text-xs text-green-500">+22% from last month</p>
-              </CardContent>
-            </Card>
+              </ColourCardContent>
+            </ColourCard>
           </div>
 
           {/* Active Consultations */}
@@ -269,15 +283,13 @@ const AdminDashboard = () => {
 
           {/* Recent Activity */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <Card
-              className={`mb-6 ${
-                isDarkMode ? "bg-slate-800 text-white" : "bg-white text-black"
-              }`}
-            >
-              <CardHeader>
-                <CardTitle>Support Tickets</CardTitle>
-              </CardHeader>
-              <CardContent>
+            <ColourCard variant="purple" className="mb-6">
+              <ColourCardHeader>
+                <ColourCardTitle variant="purple">
+                  Support Tickets
+                </ColourCardTitle>
+              </ColourCardHeader>
+              <ColourCardContent variant="purple">
                 <div className="space-y-4">
                   <div className="flex items-center">
                     <div className="w-2 h-2 bg-red-500 rounded-full mr-2"></div>
@@ -296,36 +308,29 @@ const AdminDashboard = () => {
                     </span>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-
-            <Card
-              className={`mb-6 ${
-                isDarkMode ? "bg-slate-800 text-white" : "bg-white text-black"
-              }`}
-            >
-              <CardHeader>
-                <CardTitle>System Health</CardTitle>
-              </CardHeader>
-              <CardContent>
+              </ColourCardContent>
+            </ColourCard>
+            <ColourCard variant="yellow" className="mb-6">
+              <ColourCardHeader>
+                <ColourCardTitle variant="yellow">
+                  System Health
+                </ColourCardTitle>
+              </ColourCardHeader>
+              <ColourCardContent variant="yellow">
                 <div className="space-y-4">
                   <div className="flex items-center">
                     <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
                     <span className="text-sm">API Response Time: 45ms</span>
-                    <span className="ml-auto text-xs text-gray-500">
-                      Normal
-                    </span>
+                    <span className="ml-auto text-xs opacity-70">Normal</span>
                   </div>
                   <div className="flex items-center">
                     <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
                     <span className="text-sm">Database Load: 32%</span>
-                    <span className="ml-auto text-xs text-gray-500">
-                      Optimal
-                    </span>
+                    <span className="ml-auto text-xs opacity-70">Optimal</span>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
+              </ColourCardContent>
+            </ColourCard>
           </div>
         </main>
       </div>

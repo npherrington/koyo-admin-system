@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useTheme } from "@/contexts/ThemeContext";
 import {
   Users,
   Activity,
@@ -16,6 +17,7 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "./button";
+import { cn } from "@/lib/utils";
 
 const menuItems = [
   {
@@ -76,51 +78,64 @@ const menuItems = [
   },
   { icon: Settings, label: "Settings", id: "settings", path: "/Settings" },
 ];
+
 const Sidebar = ({ activeSection }: { activeSection: string }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const navigate = useNavigate();
+  const { isDarkMode } = useTheme();
 
   const handleNavigation = (path: string) => {
-    navigate(path); // Navigate to the route
+    navigate(path);
   };
 
   return (
     <div>
-      {/* Navigation */}
       {activeSection !== "Dashboard" && (
         <div className="relative">
-          {/* Sidebar Overlay */}
           {isSidebarOpen && (
             <div
               className="fixed inset-0 bg-black bg-opacity-0 z-40"
-              onClick={() => setIsSidebarOpen(false)} // Close sidebar when overlay is clicked
+              onClick={() => setIsSidebarOpen(false)}
             ></div>
           )}
           <div className="flex items-start justify-start h-12 px-0">
             <Button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className={"-ml-2 px-2 rounded-lg hover:bg-gray-100 bg-white"}
+              className={cn(
+                "-ml-2 px-2 rounded-lg",
+                isDarkMode
+                  ? "hover:bg-slate-700 bg-slate-800 text-slate-200"
+                  : "hover:bg-gray-100 bg-white text-gray-600"
+              )}
             >
-              <Menu className="w-6 h-6 text-gray-600" />
+              <Menu className="w-6 h-6" />
             </Button>
           </div>
         </div>
       )}
 
-      {activeSection == "Dashboard" && (
+      {activeSection === "Dashboard" && (
         <nav className="p-4">
           <ul className="space-y-2">
             {menuItems.map((item) => (
               <li key={item.id}>
                 <button
                   onClick={() => handleNavigation(item.path)}
-                  className={`flex items-center w-full p-2 rounded-lg ${
+                  className={cn(
+                    "flex items-center w-full p-2 rounded-lg",
                     activeSection === item.label
                       ? "bg-orange-100 text-orange-600"
-                      : "hover:bg-gray-100"
-                  }`}
+                      : isDarkMode
+                      ? "text-slate-200 hover:bg-slate-700"
+                      : "text-slate-900 hover:bg-gray-100"
+                  )}
                 >
-                  <item.icon className="w-5 h-5 mr-3" />
+                  <item.icon
+                    className={cn(
+                      "w-5 h-5 mr-3",
+                      isDarkMode ? "text-slate-400" : "text-slate-600"
+                    )}
+                  />
                   {item.label}
                 </button>
               </li>
@@ -128,18 +143,26 @@ const Sidebar = ({ activeSection }: { activeSection: string }) => {
           </ul>
         </nav>
       )}
+
       {activeSection !== "Dashboard" && (
         <nav
-          className={`fixed top-0 left-0 h-full w-64 bg-white shadow-lg z-50 transform transition-transform duration-300 ${
+          className={cn(
+            "fixed top-0 left-0 h-full w-64 shadow-lg z-50 transform transition-transform duration-300",
+            isDarkMode ? "bg-slate-800" : "bg-white",
             isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-          }`}
+          )}
         >
           <div className="flex items-center justify-end h-12 px-4">
             <Button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className={"px-2 rounded-lg hover:bg-gray-100 bg-white"}
+              className={cn(
+                "px-2 rounded-lg",
+                isDarkMode
+                  ? "hover:bg-slate-700 bg-slate-800 text-slate-200"
+                  : "hover:bg-gray-100 bg-white text-gray-600"
+              )}
             >
-              <Menu className="w-6 h-6 text-gray-600" />
+              <Menu className="w-6 h-6" />
             </Button>
           </div>
           <ul className="fixed top-10 left-2 space-y-2">
@@ -147,13 +170,21 @@ const Sidebar = ({ activeSection }: { activeSection: string }) => {
               <li key={item.id}>
                 <button
                   onClick={() => handleNavigation(item.path)}
-                  className={`flex items-center w-full p-2 rounded-lg ${
+                  className={cn(
+                    "flex items-center w-full p-2 rounded-lg",
                     activeSection === item.label
                       ? "bg-orange-100 text-orange-600"
-                      : "hover:bg-gray-100"
-                  }`}
+                      : isDarkMode
+                      ? "text-slate-200 hover:bg-slate-700"
+                      : "text-slate-900 hover:bg-gray-100"
+                  )}
                 >
-                  <item.icon className="w-5 h-5 mr-3" />
+                  <item.icon
+                    className={cn(
+                      "w-5 h-5 mr-3",
+                      isDarkMode ? "text-slate-400" : "text-slate-600"
+                    )}
+                  />
                   {item.label}
                 </button>
               </li>

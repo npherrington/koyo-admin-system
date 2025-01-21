@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "./ui/side-bar";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface Consultation {
   id: string;
@@ -36,6 +37,7 @@ interface Consultation {
 }
 
 const ClinicalTesting = () => {
+  const { isDarkMode, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const [selectedTab, setSelectedTab] = useState("awaiting-review");
   const [consultations, setConsultations] = useState<Consultation[]>([]);
@@ -154,12 +156,12 @@ const ClinicalTesting = () => {
       </div>
 
       <Card>
-        <CardHeader className="border-b bg-slate-50">
-          <span className="text-black font-bold text-xl">Consultations</span>
+        <CardHeader className="border-b">
+          <span className="font-bold text-xl">Consultations</span>
         </CardHeader>
 
         <CardContent className="p-0">
-          <div className="p-4 border-b flex items-center justify-between bg-slate-50">
+          <div className="p-4 border-b flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <div className="relative">
                 <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
@@ -171,7 +173,7 @@ const ClinicalTesting = () => {
               </div>
               <div className="flex items-center justify-between">
                 <Tabs value={selectedTab} className="w-full">
-                  <TabsList className="bg-indigo-50 text-black-300">
+                  <TabsList>
                     <TabsTrigger
                       value="awaiting-review"
                       onClick={() => handleTabChange("awaiting-review")}
@@ -204,10 +206,8 @@ const ClinicalTesting = () => {
             {currentConsultations.map((consultation) => (
               <div
                 key={consultation.id}
-                className={`p-4 hover:bg-gray-50 cursor-pointer ${
-                  consultation.id === "C-1236"
-                    ? "bg-green-50 hover:bg-green-100"
-                    : ""
+                className={`p-4 cursor-pointer ${
+                  isDarkMode ? "hover:bg-slate-900" : "hover:bg-slate-50"
                 }`}
                 onClick={handleConsultationClick}
               >
@@ -270,8 +270,8 @@ const ClinicalTesting = () => {
             ))}
           </div>
 
-          <div className="px-6 py-4 flex items-center justify-between border-t bg-slate-50">
-            <div className="text-sm text-gray-500">
+          <div className="px-6 py-4 flex items-center justify-between border-t">
+            <div className="text-sm">
               Showing {startIndex + 1}-
               {Math.min(endIndex, filteredConsultations.length)} of{" "}
               {filteredConsultations.length} results

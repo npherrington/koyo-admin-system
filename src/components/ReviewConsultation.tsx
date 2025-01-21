@@ -10,6 +10,7 @@ import {
   Heart,
   CircleCheck,
   Sidebar,
+  AlertTriangle,
 } from "lucide-react";
 import {
   Card,
@@ -27,6 +28,9 @@ const ReviewConsultation = () => {
   const navigate = useNavigate();
   const [showOverlay, setShowOverlay] = useState(false);
   const [reviewerNotes, setReviewerNotes] = useState("");
+  const [alertedMessages, setAlertedMessages] = useState(new Set());
+  const hasAlerts = alertedMessages.size > 0;
+  const [alertNotes, setAlertNotes] = useState("");
   const consultationSummary = {
     id: "C-1236",
     patientName: "Michael Davis",
@@ -36,6 +40,8 @@ const ReviewConsultation = () => {
     status: "awaiting review",
     type: "Dermatology Consultation",
     patientRating: 4,
+    patientFeedback:
+      "The consultation was helpful but the doctor could have responded faster.",
     empathyScore: null,
     qstarScore: null,
     summary:
@@ -50,6 +56,7 @@ const ReviewConsultation = () => {
       timestamp: "2024-01-18T09:00:00Z",
       empathyScore: null,
       qstarScore: null,
+      messageAlerted: false,
     },
     {
       id: 2,
@@ -59,6 +66,7 @@ const ReviewConsultation = () => {
       timestamp: "2024-01-18T09:05:00Z",
       empathyScore: null,
       qstarScore: null,
+      messageAlerted: false,
     },
     {
       id: 3,
@@ -68,6 +76,7 @@ const ReviewConsultation = () => {
       timestamp: "2024-01-18T09:10:00Z",
       empathyScore: null,
       qstarScore: null,
+      messageAlerted: false,
     },
     {
       id: 4,
@@ -77,6 +86,7 @@ const ReviewConsultation = () => {
       timestamp: "2024-01-18T09:15:00Z",
       empathyScore: null,
       qstarScore: null,
+      messageAlerted: false,
     },
     {
       id: 5,
@@ -86,6 +96,7 @@ const ReviewConsultation = () => {
       timestamp: "2024-01-18T09:20:00Z",
       empathyScore: null,
       qstarScore: null,
+      messageAlerted: false,
     },
     {
       id: 6,
@@ -95,6 +106,7 @@ const ReviewConsultation = () => {
       timestamp: "2024-01-18T09:25:00Z",
       empathyScore: null,
       qstarScore: null,
+      messageAlerted: false,
     },
     {
       id: 7,
@@ -104,6 +116,7 @@ const ReviewConsultation = () => {
       timestamp: "2024-01-18T09:30:00Z",
       empathyScore: null,
       qstarScore: null,
+      messageAlerted: false,
     },
     {
       id: 8,
@@ -113,6 +126,7 @@ const ReviewConsultation = () => {
       timestamp: "2024-01-18T09:35:00Z",
       empathyScore: null,
       qstarScore: null,
+      messageAlerted: false,
     },
     {
       id: 9,
@@ -122,6 +136,7 @@ const ReviewConsultation = () => {
       timestamp: "2024-01-18T09:40:00Z",
       empathyScore: null,
       qstarScore: null,
+      messageAlerted: false,
     },
     {
       id: 10,
@@ -131,6 +146,7 @@ const ReviewConsultation = () => {
       timestamp: "2024-01-18T09:45:00Z",
       empathyScore: null,
       qstarScore: null,
+      messageAlerted: false,
     },
     {
       id: 11,
@@ -140,6 +156,7 @@ const ReviewConsultation = () => {
       timestamp: "2024-01-18T09:50:00Z",
       empathyScore: null,
       qstarScore: null,
+      messageAlerted: false,
     },
     {
       id: 12,
@@ -149,6 +166,7 @@ const ReviewConsultation = () => {
       timestamp: "2024-01-18T09:55:00Z",
       empathyScore: null,
       qstarScore: null,
+      messageAlerted: false,
     },
     {
       id: 13,
@@ -158,6 +176,7 @@ const ReviewConsultation = () => {
       timestamp: "2024-01-18T10:00:00Z",
       empathyScore: null,
       qstarScore: null,
+      messageAlerted: false,
     },
     {
       id: 14,
@@ -167,6 +186,7 @@ const ReviewConsultation = () => {
       timestamp: "2024-01-18T10:05:00Z",
       empathyScore: null,
       qstarScore: null,
+      messageAlerted: false,
     },
     {
       id: 15,
@@ -176,6 +196,7 @@ const ReviewConsultation = () => {
       timestamp: "2024-01-18T10:10:00Z",
       empathyScore: null,
       qstarScore: null,
+      messageAlerted: false,
     },
     {
       id: 16,
@@ -185,6 +206,7 @@ const ReviewConsultation = () => {
       timestamp: "2024-01-18T10:15:00Z",
       empathyScore: null,
       qstarScore: null,
+      messageAlerted: false,
     },
   ]);
 
@@ -218,7 +240,7 @@ const ReviewConsultation = () => {
             className="focus:outline-none"
           >
             <CircleCheck
-              className={`w-4 h-4 ${
+              className={`w-5 h-5 ${
                 check <= (hover || currentRating || 0)
                   ? "fill-green-400 text-black-400"
                   : "text-gray-300"
@@ -243,7 +265,7 @@ const ReviewConsultation = () => {
             className="focus:outline-none"
           >
             <Heart
-              className={`w-4 h-4 ${
+              className={`w-5 h-5 ${
                 heart <= (hover || currentRating || 0)
                   ? "fill-red-400 text-white-400"
                   : "text-gray-300"
@@ -254,6 +276,35 @@ const ReviewConsultation = () => {
       </div>
     );
   };
+  const AlertTrigger = ({ messageId, isAlerted, onToggle }) => {
+    return (
+      <button
+        onClick={() => onToggle(messageId)}
+        className="focus:outline-none hover:bg-gray-100 p-1 rounded"
+      >
+        <AlertTriangle
+          className={`w-6 h-6 ${
+            isAlerted ? "fill-red-400 text-black-400" : "text-gray-400"
+          }`}
+        />
+      </button>
+    );
+  };
+  const handleToggleAlert = (messageId) => {
+    setAlertedMessages((prev) => {
+      const newAlerts = new Set(prev);
+      if (newAlerts.has(messageId)) {
+        newAlerts.delete(messageId); // Remove if already alerted
+      } else {
+        newAlerts.add(messageId); // Add if not alerted
+      }
+      return newAlerts;
+    });
+  };
+  const getAlertedMessages = useMemo(() => {
+    return messages.filter((message) => alertedMessages.has(message.id));
+  }, [messages, alertedMessages]);
+
   const ConsultationRating = ({ rating }) => (
     <div className="flex items-center">
       {[1, 2, 3, 4, 5].map((star) => (
@@ -374,6 +425,10 @@ const ReviewConsultation = () => {
               </div>
             </div>
             <div className="bg-gray-50 p-3 rounded-lg">
+              <p className="text-sm text-gray-500 mb-1">Patient Feedback</p>
+              <p className="text-sm">{consultationSummary.patientFeedback}</p>
+            </div>
+            <div className="bg-gray-50 p-3 rounded-lg">
               <p className="text-sm text-gray-500 mb-1">Summary</p>
               <p className="text-sm">{consultationSummary.summary}</p>
             </div>
@@ -395,16 +450,23 @@ const ReviewConsultation = () => {
                     }`}
                   >
                     {message.sender === "doctor" && (
-                      <CircleRating
-                        messageId={message.id}
-                        currentRating={message.qstarScore}
-                      />
-                    )}
-                    {message.sender === "doctor" && (
-                      <HeartRating
-                        messageId={message.id}
-                        currentRating={message.empathyScore}
-                      />
+                      <div className="flex justify-between items-center">
+                        <div className="flex flex-col">
+                          <CircleRating
+                            messageId={message.id}
+                            currentRating={message.qstarScore}
+                          />
+                          <HeartRating
+                            messageId={message.id}
+                            currentRating={message.empathyScore}
+                          />
+                        </div>
+                        <AlertTrigger
+                          messageId={message.id}
+                          isAlerted={alertedMessages.has(message.id)}
+                          onToggle={handleToggleAlert}
+                        />
+                      </div>
                     )}
                     <div className="flex items-start space-x-2">
                       {message.sender === "doctor" && (
@@ -495,6 +557,28 @@ const ReviewConsultation = () => {
                   </span>
                 </div>
               </div>
+              {/* New section for alerted messages */}
+              {hasAlerts && (
+                <div className="space-y-2">
+                  <p className="text-sm text-gray-500 flex items-center">
+                    <AlertTriangle className="w-4 h-4 text-yellow-400 mr-2" />
+                    Flagged Messages ({getAlertedMessages.length})
+                  </p>
+                  <div className="max-h-48 overflow-y-auto border rounded-md">
+                    {getAlertedMessages.map((message) => (
+                      <div
+                        key={message.id}
+                        className="p-3 border-b last:border-b-0 bg-gray-50"
+                      >
+                        <div className="text-xs text-gray-500 mb-1">
+                          {new Date(message.timestamp).toLocaleTimeString()}
+                        </div>
+                        <div className="text-sm">{message.content}</div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <div className="space-y-2">
                 <p className="text-sm text-gray-500">Reviewer Notes</p>
@@ -505,6 +589,22 @@ const ReviewConsultation = () => {
                   className="w-full h-32"
                 />
               </div>
+              {/* Alert notes */}
+              {hasAlerts && (
+                <div className="space-y-2">
+                  <p className="text-sm text-gray-500 flex items-center">
+                    <AlertTriangle className="w-4 h-4 text-yellow-400 mr-2" />
+                    Alert Notes (Required)
+                  </p>
+                  <Textarea
+                    value={alertNotes}
+                    onChange={(e) => setAlertNotes(e.target.value)}
+                    placeholder="Please provide details about the flagged messages..."
+                    className="w-full h-32"
+                    required
+                  />
+                </div>
+              )}
             </CardContent>
             <CardFooter className="flex justify-end space-x-2">
               <Button variant="outline" onClick={() => setShowOverlay(false)}>

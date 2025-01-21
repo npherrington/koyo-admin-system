@@ -37,26 +37,11 @@ const menuItems = [
     path: "/Consultations",
   },
   {
-    icon: CreditCard,
-    label: "Subscriptions",
-    id: "subscriptions",
-    path: "/Subscriptions",
-  },
-  { icon: FileText, label: "Content", id: "content", path: "/Content" },
-  {
     icon: BarChart2,
     label: "Analytics",
     id: "analytics",
     path: "/Analytics",
   },
-  { icon: Headphones, label: "Support", id: "support", path: "/Support" },
-  {
-    icon: Shield,
-    label: "Compliance",
-    id: "compliance",
-    path: "/Compliance",
-  },
-  { icon: Settings, label: "Settings", id: "settings", path: "/Settings" },
   {
     icon: BadgeCheck,
     label: "Clinical Testing",
@@ -69,12 +54,27 @@ const menuItems = [
     id: "ai",
     path: "/AiWorkflows",
   },
+  { icon: FileText, label: "Content", id: "content", path: "/Content" },
+  {
+    icon: CreditCard,
+    label: "Subscriptions",
+    id: "subscriptions",
+    path: "/Subscriptions",
+  },
+  {
+    icon: Shield,
+    label: "Compliance",
+    id: "compliance",
+    path: "/Compliance",
+  },
+  { icon: Headphones, label: "Support", id: "support", path: "/Support" },
   {
     icon: PersonStandingIcon,
     label: "Profile",
     id: "profile",
     path: "/Profile",
   },
+  { icon: Settings, label: "Settings", id: "settings", path: "/Settings" },
 ];
 const Sidebar = ({ activeSection }: { activeSection: string }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);

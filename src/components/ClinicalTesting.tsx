@@ -43,24 +43,36 @@ const ClinicalTesting = () => {
   const itemsPerPage = 5;
 
   useEffect(() => {
-    fetch("../public/mockConsultations.json")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data: Consultation[]) => {
-        // Initialize assigned property
-        const consultationsWithAssigned = data.map((consultation) => ({
-          ...consultation,
-          assigned: false,
-        }));
-        setConsultations(consultationsWithAssigned);
-      })
-      .catch((error) => {
-        console.error("Error loading the JSON file:", error);
-      });
+    const storedConsultations = localStorage.getItem("mockConsultations");
+
+    if (storedConsultations) {
+      // If data exists in localStorage, use it
+      setConsultations(JSON.parse(storedConsultations));
+    } else {
+      // If no data in localStorage, fetch from JSON file
+      fetch("../public/mockConsultations.json")
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error("Network response was not ok");
+          }
+          return response.json();
+        })
+        .then((data: Consultation[]) => {
+          // Initialize assigned property and store in localStorage
+          const consultationsWithAssigned = data.map((consultation) => ({
+            ...consultation,
+            assigned: false,
+          }));
+          localStorage.setItem(
+            "mockConsultations",
+            JSON.stringify(consultationsWithAssigned)
+          );
+          setConsultations(consultationsWithAssigned);
+        })
+        .catch((error) => {
+          console.error("Error loading the JSON file:", error);
+        });
+    }
   }, []);
 
   // Toggle assigned status

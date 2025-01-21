@@ -536,95 +536,113 @@ const ReviewConsultation = () => {
         </Card>
       </div>
       {showOverlay && (
-        <div className="fixed inset-0 flex items-center justify-center">
+        <div className="fixed inset-0 flex items-center justify-center overflow-y-auto p-4">
           <div className="absolute inset-0 bg-black bg-opacity-50" />
-          <Card className="w-full max-w-md relative bg-white">
-            <CardHeader>
-              <CardTitle>Consultation Review Summary</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <p className="text-sm text-gray-500">Patient Rating</p>
-                <ConsultationRating
-                  rating={consultationSummary.patientRating}
-                />
-              </div>
-
-              <div className="space-y-2">
-                <p className="text-sm text-gray-500">Average Empathy Score</p>
-                <div className="flex items-center">
-                  <Heart className="w-5 h-5 text-red-400 mr-2" />
-                  <span className="text-lg font-semibold">
-                    {calculateAverages.averageEmpathy}
-                  </span>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <p className="text-sm text-gray-500">Average QSTAR Score</p>
-                <div className="flex items-center">
-                  <CircleCheck className="w-5 h-5 text-green-400 mr-2" />
-                  <span className="text-lg font-semibold">
-                    {calculateAverages.averageQstar}
-                  </span>
-                </div>
-              </div>
-              {/* New section for alerted messages */}
-              {hasAlerts && (
+          <div className="max-h-[80vh] overflow-y-auto">
+            {" "}
+            {/* Added wrapper div for scrolling */}
+            <Card className="w-full max-w-md relative bg-white my-8">
+              <CardHeader className="sticky top-0 bg-white border-b z-10">
+                <CardTitle>Consultation Review Summary</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <p className="text-sm text-gray-500 flex items-center">
-                    <AlertTriangle className="w-4 h-4 text-yellow-400 mr-2" />
-                    Flagged Messages ({getAlertedMessages.length})
-                  </p>
-                  <div className="max-h-48 overflow-y-auto border rounded-md">
-                    {getAlertedMessages.map((message) => (
-                      <div
-                        key={message.id}
-                        className="p-3 border-b last:border-b-0 bg-gray-50"
-                      >
-                        <div className="text-xs text-gray-500 mb-1">
-                          {new Date(message.timestamp).toLocaleTimeString()}
-                        </div>
-                        <div className="text-sm">{message.content}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              <div className="space-y-2">
-                <p className="text-sm text-gray-500">Reviewer Notes</p>
-                <Textarea
-                  value={reviewerNotes}
-                  onChange={(e) => setReviewerNotes(e.target.value)}
-                  placeholder="Add your thoughts about this consultation..."
-                  className="w-full h-32"
-                />
-              </div>
-              {/* Alert notes */}
-              {hasAlerts && (
-                <div className="space-y-2">
-                  <p className="text-sm text-gray-500 flex items-center">
-                    <AlertTriangle className="w-4 h-4 text-yellow-400 mr-2" />
-                    Alert Notes (Required)
-                  </p>
-                  <Textarea
-                    value={alertNotes}
-                    onChange={(e) => setAlertNotes(e.target.value)}
-                    placeholder="Please provide details about the flagged messages..."
-                    className="w-full h-32"
-                    required
+                  <p className="text-sm text-gray-500">Patient Rating</p>
+                  <ConsultationRating
+                    rating={consultationSummary.patientRating}
                   />
                 </div>
-              )}
-            </CardContent>
-            <CardFooter className="flex justify-end space-x-2">
-              <Button variant="outline" onClick={() => setShowOverlay(false)}>
-                Cancel
-              </Button>
-              <Button onClick={handleConfirmSubmit}>Confirm</Button>
-            </CardFooter>
-          </Card>
+                <div className="bg-gray-50 p-3 rounded-lg">
+                  <p className="text-sm text-gray-500 mb-1">Patient Feedback</p>
+                  <p className="text-sm">
+                    {consultationSummary.patientFeedback}
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <p className="text-sm text-gray-500">Average Empathy Score</p>
+                  <div className="flex items-center">
+                    <Heart className="w-5 h-5 text-red-400 mr-2" />
+                    <span className="text-lg font-semibold">
+                      {calculateAverages.averageEmpathy}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <p className="text-sm text-gray-500">Average QSTAR Score</p>
+                  <div className="flex items-center">
+                    <CircleCheck className="w-5 h-5 text-green-400 mr-2" />
+                    <span className="text-lg font-semibold">
+                      {calculateAverages.averageQstar}
+                    </span>
+                  </div>
+                </div>
+                {/* New section for alerted messages */}
+                {hasAlerts && (
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-500 flex items-center">
+                      <AlertTriangle className="w-4 h-4 text-yellow-400 mr-2" />
+                      Flagged Messages ({getAlertedMessages.length})
+                    </p>
+                    <div className="max-h-48 overflow-y-auto border rounded-md">
+                      {getAlertedMessages.map((message) => (
+                        <div
+                          key={message.id}
+                          className="p-3 border-b last:border-b-0 bg-gray-50"
+                        >
+                          <div className="text-xs text-gray-500 mb-1">
+                            {new Date(message.timestamp).toLocaleTimeString()}
+                          </div>
+                          <div className="text-sm">{message.content}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <div className="space-y-2">
+                  <p className="text-sm text-gray-500">Reviewer Notes</p>
+                  <Textarea
+                    value={reviewerNotes}
+                    onChange={(e) => setReviewerNotes(e.target.value)}
+                    placeholder="Add your thoughts about this consultation..."
+                    className="w-full h-32"
+                  />
+                </div>
+                {/* Alert notes */}
+                {hasAlerts && (
+                  <div className="space-y-2">
+                    <p className="text-sm text-gray-500 flex items-center">
+                      <AlertTriangle className="w-4 h-4 text-yellow-400 mr-2" />
+                      Alert Notes (Required)
+                    </p>
+                    <Textarea
+                      value={alertNotes}
+                      onChange={(e) => setAlertNotes(e.target.value)}
+                      placeholder="Please provide details about the flagged messages..."
+                      className="w-full h-32"
+                      required
+                    />
+                  </div>
+                )}
+              </CardContent>
+              <CardFooter className="flex justify-end space-x-2">
+                <Button variant="outline" onClick={() => setShowOverlay(false)}>
+                  Cancel
+                </Button>
+                <Button
+                  onClick={handleConfirmSubmit}
+                  disabled={
+                    hasAlerts && (!alertNotes || alertNotes.trim().length === 0)
+                  }
+                  className="bg-blue-600 hover:bg-blue-700"
+                >
+                  Confirm
+                </Button>
+              </CardFooter>
+            </Card>
+          </div>
         </div>
       )}
     </div>

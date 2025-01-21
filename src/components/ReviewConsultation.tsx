@@ -11,6 +11,8 @@ import {
   CircleCheck,
   Sidebar,
   AlertTriangle,
+  Hourglass,
+  Gauge,
 } from "lucide-react";
 import {
   Card,
@@ -37,6 +39,7 @@ const ReviewConsultation = () => {
     doctorName: "Dr. Sarah Lee",
     date: "2024-01-18",
     duration: "28m",
+    responseTime: "5m",
     status: "awaiting review",
     type: "Dermatology Consultation",
     patientRating: 4,
@@ -413,6 +416,15 @@ const ReviewConsultation = () => {
                   Duration
                 </p>
                 <p className="font-medium">{consultationSummary.duration}</p>
+              </div>
+              <div>
+                <p className="text-sm text-gray-500 flex items-center">
+                  <Gauge className="w-4 h-4 mr-2" />
+                  Response Time
+                </p>
+                <p className="font-medium">
+                  {consultationSummary.responseTime}
+                </p>
               </div>
               <div>
                 <p className="text-sm text-gray-500 flex items-center">

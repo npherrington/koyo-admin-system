@@ -31,15 +31,13 @@ import Sidebar from "./ui/side-bar";
 import { isAuthenticated } from "@/utils/auth";
 import { Button } from "./ui/button";
 import { Switch } from "@/components/ui/switch";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
   const [authenticated, setAuthenticated] = useState<boolean | null>(null);
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const { isDarkMode, toggleTheme } = useTheme();
 
-  const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode);
-  };
   const handleProfileButton = () => {
     navigate("/Profile");
   };

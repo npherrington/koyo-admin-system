@@ -478,42 +478,42 @@ const ReviewConsultation = () => {
           <div className="border-b p-4 ">
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
               <div>
-                <p className="text-sm text-gray-500 flex items-center">
+                <p className="text-sm flex items-center">
                   <User className="w-4 h-4 mr-2" />
                   Patient
                 </p>
                 <p className="font-medium">{consultationSummary.patientName}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-500 flex items-center">
+                <p className="text-sm flex items-center">
                   <User className="w-4 h-4 mr-2" />
                   Doctor
                 </p>
                 <p className="font-medium">{consultationSummary.doctorName}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-500 flex items-center">
+                <p className="text-sm flex items-center">
                   <FileText className="w-4 h-4 mr-2" />
                   Type
                 </p>
                 <p className="font-medium">{consultationSummary.type}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-500 flex items-center">
+                <p className="text-sm flex items-center">
                   <Calendar className="w-4 h-4 mr-2" />
                   Date
                 </p>
                 <p className="font-medium">{consultationSummary.date}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-500 flex items-center">
+                <p className="text-sm flex items-center">
                   <Clock className="w-4 h-4 mr-2" />
                   Duration
                 </p>
                 <p className="font-medium">{consultationSummary.duration}</p>
               </div>
               <div>
-                <p className="text-sm text-gray-500 flex items-center">
+                <p className="text-sm flex items-center">
                   <Gauge className="w-4 h-4 mr-2" />
                   Response Time
                 </p>
@@ -522,7 +522,7 @@ const ReviewConsultation = () => {
                 </p>
               </div>
               <div>
-                <p className="text-sm text-gray-500 flex items-center">
+                <p className="text-sm flex items-center">
                   <Star className="w-4 h-4 mr-2" />
                   Patient Rating
                 </p>
@@ -532,11 +532,11 @@ const ReviewConsultation = () => {
               </div>
             </div>
             <div className="p-3 rounded-lg">
-              <p className="text-sm text-gray-500 mb-1">Patient Feedback</p>
+              <p className="text-sm mb-1">Patient Feedback</p>
               <p className="text-sm">{consultationSummary.patientFeedback}</p>
             </div>
             <div className="p-3 rounded-lg">
-              <p className="text-sm text-gray-500 mb-1">Summary</p>
+              <p className="text-sm mb-1">Summary</p>
               <p className="text-sm">{consultationSummary.summary}</p>
             </div>
           </div>

@@ -162,8 +162,8 @@ const ClinicalTesting = () => {
       <Sidebar activeSection="Clinical Testing" />
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Clinical Testing</h1>
-          <p className="text-gray-500">Review completed consultation</p>
+          <h1 className="text-2xl font-bold">Clinical Testing</h1>
+          <p>Review completed consultation</p>
         </div>
       </div>
 

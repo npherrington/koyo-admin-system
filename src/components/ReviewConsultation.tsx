@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 import {
   User,
   Star,
@@ -469,8 +470,11 @@ const ReviewConsultation = () => {
               >
                 <ArrowLeft className="h-5 w-5" />
               </Button>
-              <div className="flex items-center justify-between">
-                <CardTitle>Consultation Review</CardTitle>
+              <div className="flex w-full items-center">
+                <CardTitle className="flex-1">Consultation Review</CardTitle>
+                <div className="ml-auto">
+                  <ThemeToggle />
+                </div>
               </div>
             </div>
           </CardHeader>

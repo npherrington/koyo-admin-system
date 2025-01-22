@@ -18,6 +18,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { Button } from "./button";
 import { cn } from "@/lib/utils";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 const menuItems = [
   {
@@ -122,12 +123,14 @@ const Sidebar = ({ activeSection }: { activeSection: string }) => {
                 <button
                   onClick={() => handleNavigation(item.path)}
                   className={cn(
-                    "flex items-center w-full p-2 rounded-lg",
+                    "flex items-center w-full p-2 rounded-lg transition-colors",
                     activeSection === item.label
-                      ? "bg-orange-100 text-orange-600"
+                      ? isDarkMode
+                        ? "bg-orange-400 text-orange-100" // Dark mode active state
+                        : "bg-orange-100 text-orange-600" // Light mode active state
                       : isDarkMode
-                      ? "text-slate-200 hover:bg-slate-700"
-                      : "text-slate-900 hover:bg-gray-100"
+                      ? "text-slate-200 hover:bg-orange-400" // Dark mode inactive state with orange hover
+                      : "text-slate-900 hover:bg-gray-100" // Light mode inactive state with gray hover
                   )}
                 >
                   <item.icon
@@ -153,6 +156,7 @@ const Sidebar = ({ activeSection }: { activeSection: string }) => {
           )}
         >
           <div className="flex items-center justify-end h-12 px-4">
+            <ThemeToggle className="px-4 py-4 items-center justify-start" />
             <Button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
               className={cn(
@@ -171,12 +175,14 @@ const Sidebar = ({ activeSection }: { activeSection: string }) => {
                 <button
                   onClick={() => handleNavigation(item.path)}
                   className={cn(
-                    "flex items-center w-full p-2 rounded-lg",
+                    "flex items-center w-full p-2 rounded-lg transition-colors",
                     activeSection === item.label
-                      ? "bg-orange-100 text-orange-600"
+                      ? isDarkMode
+                        ? "bg-orange-400 text-orange-100" // Dark mode active state
+                        : "bg-orange-100 text-orange-600" // Light mode active state
                       : isDarkMode
-                      ? "text-slate-200 hover:bg-slate-700"
-                      : "text-slate-900 hover:bg-gray-100"
+                      ? "text-slate-200 hover:bg-orange-400" // Dark mode inactive state with orange hover
+                      : "text-slate-900 hover:bg-gray-100" // Light mode inactive state with gray hover
                   )}
                 >
                   <item.icon

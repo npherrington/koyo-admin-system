@@ -19,70 +19,73 @@ import PrivateRoute from "./components/PrivateRouting";
 import Profile from "./components/Profile";
 import ReviewConsultation from "./components/ReviewConsultation";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import { ThemeLayout } from "./components/layouts/theme-layout";
 
 function App() {
   return (
     <ThemeProvider>
-      <Router>
-        <Routes>
-          <Route path="/signin" element={<SignIn />} />
-          {/* Private Routes */}
-          <Route
-            path="/Dashboard"
-            element={<PrivateRoute element={<AdminDashboard />} />}
-          />
-          <Route
-            path="/UserManagement"
-            element={<PrivateRoute element={<UserManagement />} />}
-          />
-          <Route
-            path="/Consultations"
-            element={<PrivateRoute element={<Consultations />} />}
-          />
-          <Route
-            path="/Content"
-            element={<PrivateRoute element={<Content />} />}
-          />
-          <Route
-            path="/Settings"
-            element={<PrivateRoute element={<Settings />} />}
-          />
-          <Route
-            path="/Subscriptions"
-            element={<PrivateRoute element={<Subscriptions />} />}
-          />
-          <Route
-            path="/Support"
-            element={<PrivateRoute element={<Support />} />}
-          />
-          <Route
-            path="/Analytics"
-            element={<PrivateRoute element={<Analytics />} />}
-          />
-          <Route
-            path="/Compliance"
-            element={<PrivateRoute element={<Compliance />} />}
-          />
-          <Route
-            path="/ClinicalTesting"
-            element={<PrivateRoute element={<ClinicalTesting />} />}
-          />
-          <Route
-            path="/AiWorkflows"
-            element={<PrivateRoute element={<AiWorkflows />} />}
-          />
-          <Route
-            path="/Profile"
-            element={<PrivateRoute element={<Profile />} />}
-          />
-          <Route
-            path="/ReviewConsultation"
-            element={<PrivateRoute element={<ReviewConsultation />} />}
-          />
-          {/* Default route */}
-          <Route path="/" element={<Navigate to="/signin" />} />
-        </Routes>
-      </Router>
+      <ThemeLayout>
+        <Router>
+          <Routes>
+            <Route path="/signin" element={<SignIn />} />
+            {/* Private Routes */}
+            <Route
+              path="/Dashboard"
+              element={<PrivateRoute element={<AdminDashboard />} />}
+            />
+            <Route
+              path="/UserManagement"
+              element={<PrivateRoute element={<UserManagement />} />}
+            />
+            <Route
+              path="/Consultations"
+              element={<PrivateRoute element={<Consultations />} />}
+            />
+            <Route
+              path="/Content"
+              element={<PrivateRoute element={<Content />} />}
+            />
+            <Route
+              path="/Settings"
+              element={<PrivateRoute element={<Settings />} />}
+            />
+            <Route
+              path="/Subscriptions"
+              element={<PrivateRoute element={<Subscriptions />} />}
+            />
+            <Route
+              path="/Support"
+              element={<PrivateRoute element={<Support />} />}
+            />
+            <Route
+              path="/Analytics"
+              element={<PrivateRoute element={<Analytics />} />}
+            />
+            <Route
+              path="/Compliance"
+              element={<PrivateRoute element={<Compliance />} />}
+            />
+            <Route
+              path="/ClinicalTesting"
+              element={<PrivateRoute element={<ClinicalTesting />} />}
+            />
+            <Route
+              path="/AiWorkflows"
+              element={<PrivateRoute element={<AiWorkflows />} />}
+            />
+            <Route
+              path="/Profile"
+              element={<PrivateRoute element={<Profile />} />}
+            />
+            <Route
+              path="/ReviewConsultation"
+              element={<PrivateRoute element={<ReviewConsultation />} />}
+            />
+            {/* Default route */}
+            <Route path="/" element={<Navigate to="/signin" />} />
+          </Routes>
+        </Router>
+      </ThemeLayout>
     </ThemeProvider>
   );
 }

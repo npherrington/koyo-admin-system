@@ -26,13 +26,22 @@ Card.displayName = "Card";
 const CardHeader = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("flex flex-col space-y-1.5 p-6", className)}
-    {...props}
-  />
-));
+>(({ className, ...props }, ref) => {
+  const { isDarkMode } = useTheme();
+  return (
+    <div
+      ref={ref}
+      className={cn(
+        "flex flex-col space-y-1.5 p-6",
+        isDarkMode
+          ? "bg-slate-800 border-slate-700 text-white"
+          : "bg-slate-50 border-slate-200 text-slate-950",
+        className
+      )}
+      {...props}
+    />
+  );
+});
 CardHeader.displayName = "CardHeader";
 
 const CardTitle = React.forwardRef<
@@ -83,7 +92,7 @@ const CardContent = React.forwardRef<
       ref={ref}
       className={cn(
         "p-6 pt-0",
-        isDarkMode ? "text-blue-300" : "text-slate-950",
+        isDarkMode ? "bg-slate-700 text-blue-300/80" : "text-slate-950",
         className
       )}
       {...props}
@@ -102,7 +111,7 @@ const CardFooter = React.forwardRef<
       ref={ref}
       className={cn(
         "flex items-center p-6 pt-0",
-        isDarkMode ? "text-blue-300" : "text-slate-950",
+        isDarkMode ? "text-blue-300" : "bg-slate-50 text-slate-950",
         className
       )}
       {...props}

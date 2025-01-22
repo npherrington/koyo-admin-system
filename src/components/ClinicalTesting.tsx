@@ -9,7 +9,12 @@ import {
   CheckSquare,
   Download,
 } from "lucide-react";
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+} from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   DropdownMenu,
@@ -17,9 +22,16 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  ColourCard,
+  ColourCardHeader,
+  ColourCardTitle,
+  ColourCardContent,
+} from "@/components/ui/colour-card";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "./ui/side-bar";
 import { useTheme } from "@/contexts/ThemeContext";
+import { SearchInput } from "@/components/ui/search-input";
 
 interface Consultation {
   id: string;
@@ -164,11 +176,17 @@ const ClinicalTesting = () => {
           <div className="p-4 border-b flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <div className="relative">
-                <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
-                <input
-                  type="text"
+                <SearchInput
                   placeholder="Search consultations..."
-                  className="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  width="w-full"
+                  iconClassName="text-orange-500"
+                  containerClassName="max-w-md"
+                  iconColor="text-blue-500"
+                  hoverRingColor="hover:ring-orange-300"
+                  focusRingColor="focus:ring-orange-500"
+                  onChange={(e) => {
+                    /* handle search */
+                  }}
                 />
               </div>
               <div className="flex items-center justify-between">
@@ -207,7 +225,9 @@ const ClinicalTesting = () => {
               <div
                 key={consultation.id}
                 className={`p-4 cursor-pointer ${
-                  isDarkMode ? "hover:bg-slate-900" : "hover:bg-slate-50"
+                  isDarkMode
+                    ? "hover:bg-orange-500/80 hover:text-white"
+                    : "hover:bg-orange-500/50"
                 }`}
                 onClick={handleConsultationClick}
               >
@@ -236,13 +256,11 @@ const ClinicalTesting = () => {
                           {consultation.status}
                         </span>
                       </div>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm">
                         {consultation.type} • {consultation.date}
                       </p>
-                      <p className="text-sm text-gray-500">
-                        {consultation.doctorName}
-                      </p>
-                      <p className="text-sm text-gray-500">
+                      <p className="text-sm">{consultation.doctorName}</p>
+                      <p className="text-sm">
                         <i>{consultation.summary}</i>
                       </p>
                     </div>
@@ -269,8 +287,9 @@ const ClinicalTesting = () => {
               </div>
             ))}
           </div>
-
-          <div className="px-6 py-4 flex items-center justify-between border-t">
+        </CardContent>
+        <CardFooter className="p-0 w-full">
+          <div className="w-full px-6 py-4 flex items-center justify-between border-t">
             <div className="text-sm">
               Showing {startIndex + 1}-
               {Math.min(endIndex, filteredConsultations.length)} of{" "}
@@ -296,7 +315,7 @@ const ClinicalTesting = () => {
               </button>
             </div>
           </div>
-        </CardContent>
+        </CardFooter>
       </Card>
     </div>
   );

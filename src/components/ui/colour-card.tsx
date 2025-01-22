@@ -16,7 +16,7 @@ const variantStyles = {
       content: "text-blue-800",
     },
     dark: {
-      card: "bg-blue-600 border-blue-400",
+      card: "bg-blue-600/60 border-blue-400",
       title: "text-white-100",
       description: "text-blue-100",
       content: "text-white-100",
@@ -30,7 +30,7 @@ const variantStyles = {
       content: "text-green-800",
     },
     dark: {
-      card: "bg-green-600 border-green-200",
+      card: "bg-green-600/70 border-green-200",
       title: "text-white-100",
       description: "text-green-300",
       content: "text-white-100",
@@ -44,7 +44,7 @@ const variantStyles = {
       content: "text-red-800",
     },
     dark: {
-      card: "bg-red-600 border-red-200",
+      card: "bg-red-600/80 border-red-200",
       title: "text-white-100",
       description: "text-red-300",
       content: "text-white-100",
@@ -58,7 +58,7 @@ const variantStyles = {
       content: "text-yellow-800",
     },
     dark: {
-      card: "bg-yellow-200 border-yellow-100",
+      card: "bg-yellow-200/80 border-yellow-100",
       title: "text-gray-600",
       description: "text-yellow-300",
       content: "text-gray-600",
@@ -72,7 +72,7 @@ const variantStyles = {
       content: "text-purple-800",
     },
     dark: {
-      card: "bg-purple-200 border-purple-100",
+      card: "bg-purple-200/80 border-purple-100",
       title: "text-gray-600",
       description: "text-purple-300",
       content: "text-gray-600",
@@ -86,7 +86,7 @@ const variantStyles = {
       content: "text-orange-800",
     },
     dark: {
-      card: "bg-orange-400 border-orange-200",
+      card: "bg-orange-400/80 border-orange-200",
       title: "text-white-100",
       description: "text-orange-300",
       content: "text-white-100",

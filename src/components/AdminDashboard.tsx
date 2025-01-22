@@ -38,6 +38,8 @@ import {
   ColourCardTitle,
   ColourCardContent,
 } from "@/components/ui/colour-card";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { SearchInput } from "@/components/ui/search-input";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -95,15 +97,17 @@ const AdminDashboard = () => {
           <div className="flex items-center justify-between px-6 py-4">
             <div className="flex items-center space-x-4">
               <div className="relative">
-                <Search className="absolute left-3 top-2.5 h-4 w- text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Search users, consultations..."
-                  className={`${
-                    isDarkMode
-                      ? "bg-slate-800 text-white"
-                      : "bg-white text-black"
-                  } pl-10 pr-4 py-2 w-96 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"`}
+                <SearchInput
+                  placeholder="Search consultations..."
+                  width="w-full"
+                  iconClassName="text-orange-500"
+                  containerClassName="max-w-md"
+                  iconColor="text-blue-500"
+                  hoverRingColor="hover:ring-orange-300"
+                  focusRingColor="focus:ring-orange-500"
+                  onChange={(e) => {
+                    /* handle search */
+                  }}
                 />
               </div>
               <DropdownMenu>
@@ -123,10 +127,11 @@ const AdminDashboard = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
-            <div className="flex items-center gap-4">
-              <span>{isDarkMode ? <Moon /> : <Sun />}</span>
-              <Switch checked={isDarkMode} onCheckedChange={toggleTheme} />
-            </div>
+            {/* <div className="flex items-center gap-4"> */}
+            {/* <span>{isDarkMode ? <Moon /> : <Sun />}</span>
+              <Switch checked={isDarkMode} onCheckedChange={toggleTheme} /> */}
+            <ThemeToggle className="justify-end" />
+            {/* </div> */}
 
             <div className="flex items-center space-x-4">
               {/* <Bell className="w-5 h-5 text-gray-600" /> */}
@@ -167,7 +172,7 @@ const AdminDashboard = () => {
         {/* Main Dashboard Content */}
         <main className="flex-1 overflow-auto p-6">
           {/* Critical Alerts */}
-          <Alert className="mb-6 bg-red-100">
+          <Alert className="mb-6" variant="destructive">
             <AlertCircle className="h-4 w-4" />
             <AlertTitle>System Updates</AlertTitle>
             <AlertDescription>
@@ -189,7 +194,7 @@ const AdminDashboard = () => {
                 <Users className="w-4 h-4 text-gray-500" />
               </ColourCardHeader>
               <ColourCardContent variant="orange">
-                <div className="text-2xl font-bold ">3,521</div>
+                <div className="text-2xl font-bold">3,521</div>
                 <p className="text-xs text-green-500">+15% from last month</p>
               </ColourCardContent>
             </ColourCard>
@@ -239,47 +244,44 @@ const AdminDashboard = () => {
             </ColourCard>
           </div>
 
-          {/* Active Consultations */}
-          <Card
-            className={`mb-6 ${
-              isDarkMode ? "bg-slate-800 text-white" : "bg-white text-black"
-            }`}
-          >
-            <CardHeader>
-              <CardTitle>Active Consultations</CardTitle>
-            </CardHeader>
-            <CardContent>
+          <ColourCard variant="gray" className="mb-6">
+            <ColourCardHeader>
+              <ColourCardTitle variant="gray">
+                Active Consultations
+              </ColourCardTitle>
+            </ColourCardHeader>
+            <ColourCardContent variant="gray">
               <div className="space-y-4">
-                <div className="flex items-center p-3 bg-orange-50 rounded-lg border border-gray-200">
+                <div className="flex items-center p-3 bg-orange-50 rounded-lg border border-orange-200">
                   <div className="w-2 h-2 bg-orange-500 rounded-full mr-3"></div>
                   <div className="flex-1">
-                    <p className="text-sm text-black font-medium">
+                    <p className="text-sm font-medium text-orange-900">
                       Urgent Case #1234
                     </p>
-                    <p className="text-xs text-gray-500">
+                    <p className="text-xs text-orange-600">
                       Waiting for doctor - 3m
                     </p>
                   </div>
-                  <button className="px-3 py-1 text-sm bg-orange-100 text-orange-600 rounded-lg border border-orange-200">
+                  <button className="px-3 py-1 text-sm bg-orange-100 text-orange-600 rounded-lg border border-orange-200 hover:bg-orange-200 transition-colors">
                     Notify Doctor
                   </button>
                 </div>
 
-                <div className="flex items-center p-3 bg-gray-50 rounded-lg border border-gray-200">
+                <div className="flex items-center p-3 bg-green-50 rounded-lg border border-green-200">
                   <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
                   <div className="flex-1">
-                    <p className="text-sm text-black font-medium">
+                    <p className="text-sm font-medium text-green-900">
                       Case #1235 - Dr. Sarah
                     </p>
-                    <p className="text-xs text-gray-500">In progress - 12m</p>
+                    <p className="text-xs text-green-600">In progress - 12m</p>
                   </div>
-                  <button className="px-3 py-1 text-sm bg-gray-100 text-gray-600 rounded-lg border border-gray-200">
+                  <button className="px-3 py-1 text-sm bg-green-100 text-green-600 rounded-lg border border-green-200 hover:bg-green-200 transition-colors">
                     View Details
                   </button>
                 </div>
               </div>
-            </CardContent>
-          </Card>
+            </ColourCardContent>
+          </ColourCard>
 
           {/* Recent Activity */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

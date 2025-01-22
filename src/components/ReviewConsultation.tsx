@@ -1,4 +1,5 @@
 import React, { useState, useMemo } from "react";
+import { cn } from "@/lib/utils";
 import {
   User,
   Star,
@@ -13,6 +14,7 @@ import {
   AlertTriangle,
   Hourglass,
   Gauge,
+  Bot,
 } from "lucide-react";
 import {
   Card,
@@ -25,14 +27,19 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "./ui/button";
 import { useNavigate } from "react-router-dom";
 import { Textarea } from "./ui/textarea";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const ReviewConsultation = () => {
+  const { isDarkMode } = useTheme();
   const navigate = useNavigate();
   const [showOverlay, setShowOverlay] = useState(false);
   const [reviewerNotes, setReviewerNotes] = useState("");
   const [alertedMessages, setAlertedMessages] = useState(new Set());
   const hasAlerts = alertedMessages.size > 0;
-  const [alertNotes, setAlertNotes] = useState("");
+  const [alertNotes, setAlertNotes] = useState(new Map());
+  const [optimizedMessages, setOptimizedMessages] = useState(new Set());
+  const hasOptimizations = optimizedMessages.size > 0;
+  const [optimizationNotes, setOptimizationNotes] = useState(new Map());
   const consultationSummary = {
     id: "C-1236",
     patientName: "Michael Davis",
@@ -293,20 +300,108 @@ const ReviewConsultation = () => {
       </button>
     );
   };
+
+  const handleAlertNote = (messageId: number, note: string) => {
+    setAlertNotes((prev) => {
+      const newNotes = new Map(prev);
+      newNotes.set(messageId, note);
+      return newNotes;
+    });
+  };
+
   const handleToggleAlert = (messageId) => {
     setAlertedMessages((prev) => {
       const newAlerts = new Set(prev);
       if (newAlerts.has(messageId)) {
-        newAlerts.delete(messageId); // Remove if already alerted
+        newAlerts.delete(messageId);
+        // Remove the note when unflagging
+        setAlertNotes((prevNotes) => {
+          const newNotes = new Map(prevNotes);
+          newNotes.delete(messageId);
+          return newNotes;
+        });
       } else {
-        newAlerts.add(messageId); // Add if not alerted
+        newAlerts.add(messageId);
+        // Initialize empty note when flagging
+        setAlertNotes((prevNotes) => {
+          const newNotes = new Map(prevNotes);
+          newNotes.set(messageId, "");
+          return newNotes;
+        });
       }
       return newAlerts;
     });
   };
+
   const getAlertedMessages = useMemo(() => {
     return messages.filter((message) => alertedMessages.has(message.id));
   }, [messages, alertedMessages]);
+
+  const areAllAlertNotesComplete = useMemo(() => {
+    return Array.from(alertedMessages).every(
+      (messageId) =>
+        alertNotes.has(messageId) && alertNotes.get(messageId).trim().length > 0
+    );
+  }, [alertedMessages, alertNotes]);
+
+  const getOptimizedMessages = useMemo(() => {
+    return messages.filter((message) => optimizedMessages.has(message.id));
+  }, [messages, optimizedMessages]);
+
+  const handleToggleOptimize = (messageId) => {
+    setOptimizedMessages((prev) => {
+      const newOptimized = new Set(prev);
+      if (newOptimized.has(messageId)) {
+        newOptimized.delete(messageId);
+        // Remove the note when unflagging
+        setOptimizationNotes((prevNotes) => {
+          const newNotes = new Map(prevNotes);
+          newNotes.delete(messageId);
+          return newNotes;
+        });
+      } else {
+        newOptimized.add(messageId);
+        // Initialize empty note when flagging
+        setOptimizationNotes((prevNotes) => {
+          const newNotes = new Map(prevNotes);
+          newNotes.set(messageId, "");
+          return newNotes;
+        });
+      }
+      return newOptimized;
+    });
+  };
+
+  const handleOptimizationNote = (messageId: number, note: string) => {
+    setOptimizationNotes((prev) => {
+      const newNotes = new Map(prev);
+      newNotes.set(messageId, note);
+      return newNotes;
+    });
+  };
+  const areAllOptimizationNotesComplete = useMemo(() => {
+    return Array.from(optimizedMessages).every(
+      (messageId) =>
+        optimizationNotes.has(messageId) &&
+        optimizationNotes.get(messageId).trim().length > 0
+    );
+  }, [optimizedMessages, optimizationNotes]);
+
+  const OptimizeTrigger = ({ messageId, isOptimized, onToggle }) => {
+    return (
+      <button
+        onClick={() => onToggle(messageId)}
+        className="focus:outline-none hover:bg-gray-100 p-1 rounded"
+      >
+        <Cpu
+          className={cn(
+            "w-6 h-6",
+            isOptimized ? "fill-blue-400 text-black-400" : "text-gray-400"
+          )}
+        />
+      </button>
+    );
+  };
 
   const ConsultationRating = ({ rating }) => (
     <div className="flex items-center">
@@ -364,7 +459,7 @@ const ReviewConsultation = () => {
     <div className="relative">
       <div className={showOverlay ? "opacity-50" : ""}>
         <Card className="w-full max-w-2xl mx-auto">
-          <CardHeader className="border-b bg-blue-50">
+          <CardHeader className="border-b">
             <div className="flex items-center space-x-4">
               <Button
                 variant="ghost"
@@ -380,7 +475,7 @@ const ReviewConsultation = () => {
             </div>
           </CardHeader>
           {/* Consultation Summary Section */}
-          <div className="border-b p-4 bg-slate-50">
+          <div className="border-b p-4 ">
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
               <div>
                 <p className="text-sm text-gray-500 flex items-center">
@@ -436,16 +531,16 @@ const ReviewConsultation = () => {
                 />
               </div>
             </div>
-            <div className="bg-gray-50 p-3 rounded-lg">
+            <div className="p-3 rounded-lg">
               <p className="text-sm text-gray-500 mb-1">Patient Feedback</p>
               <p className="text-sm">{consultationSummary.patientFeedback}</p>
             </div>
-            <div className="bg-gray-50 p-3 rounded-lg">
+            <div className="p-3 rounded-lg">
               <p className="text-sm text-gray-500 mb-1">Summary</p>
               <p className="text-sm">{consultationSummary.summary}</p>
             </div>
           </div>
-          <CardContent className="p-4 bg-white">
+          <CardContent className="p-4">
             <div className="space-y-4">
               {messages.map((message) => (
                 <div
@@ -462,7 +557,7 @@ const ReviewConsultation = () => {
                     }`}
                   >
                     {message.sender === "doctor" && (
-                      <div className="flex justify-between items-center">
+                      <div className="flex justify-between items-center text-gray-800">
                         <div className="flex flex-col">
                           <CircleRating
                             messageId={message.id}
@@ -478,6 +573,11 @@ const ReviewConsultation = () => {
                           isAlerted={alertedMessages.has(message.id)}
                           onToggle={handleToggleAlert}
                         />
+                        <OptimizeTrigger
+                          messageId={message.id}
+                          isOptimized={optimizedMessages.has(message.id)}
+                          onToggle={handleToggleOptimize}
+                        />
                       </div>
                     )}
                     <div className="flex items-start space-x-2">
@@ -486,29 +586,37 @@ const ReviewConsultation = () => {
                           <Avatar className="w-8 h-8">
                             <AvatarImage src="" />
                             <AvatarFallback>
-                              <Cpu className="w-5 h-5 text-gray-600" />{" "}
+                              <Bot className="w-5 h-5 text-gray-600" />{" "}
                             </AvatarFallback>
                           </Avatar>
                         </div>
                       )}
                       <div
-                        className={`rounded-lg p-3 ${
+                        className={cn(
+                          "rounded-lg p-3",
                           message.sender === "doctor"
-                            ? "bg-blue-50 border border-blue-100"
-                            : "bg-orange-400 text-white"
-                        }`}
+                            ? isDarkMode
+                              ? "bg-blue-900 border border-blue-800 text-white" // Dark mode doctor
+                              : "bg-blue-50 border border-blue-100" // Light mode doctor
+                            : isDarkMode
+                            ? "bg-orange-500/80 text-white" // Dark mode patient
+                            : "bg-orange-400 text-white" // Light mode patient
+                        )}
                       >
                         <p className="text-sm">{message.content}</p>
                         <p
-                          className={`text-xs mt-1 ${
+                          className={cn(
+                            "text-xs mt-1",
                             message.sender === "doctor"
-                              ? "text-gray-500"
-                              : "text-orange-100"
-                          }`}
+                              ? isDarkMode
+                                ? "text-blue-200" // Dark mode doctor timestamp
+                                : "text-gray-500" // Light mode doctor timestamp
+                              : "text-orange-100" // Patient timestamp (both modes)
+                          )}
                         >
                           {message.timestamp}
                         </p>
-                      </div>
+                      </div>{" "}
                       {message.sender === "patient" && (
                         <div className="flex-shrink-0 w-8 h-8 bg-orange-100 rounded-full flex items-center justify-center">
                           <User className="w-5 h-5 text-orange-600" />
@@ -520,7 +628,7 @@ const ReviewConsultation = () => {
               ))}
             </div>
           </CardContent>
-          <CardFooter className="border-t p-4 bg-gray-50">
+          <CardFooter className="border-t p-4">
             <Button
               onClick={handleSubmit}
               disabled={!areAllMessagesRated}
@@ -541,19 +649,19 @@ const ReviewConsultation = () => {
           <div className="max-h-[80vh] overflow-y-auto">
             {" "}
             {/* Added wrapper div for scrolling */}
-            <Card className="w-full max-w-md relative bg-white my-8">
-              <CardHeader className="sticky top-0 bg-white border-b z-10">
+            <Card className="w-full max-w-md relative my-8">
+              <CardHeader className="sticky top-0 border-b z-10">
                 <CardTitle>Consultation Review Summary</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <p className="text-sm text-gray-500">Patient Rating</p>
+                  <p className="text-sm">Patient Rating</p>
                   <ConsultationRating
                     rating={consultationSummary.patientRating}
                   />
                 </div>
-                <div className="bg-gray-50 p-3 rounded-lg">
-                  <p className="text-sm text-gray-500 mb-1">Patient Feedback</p>
+                <div className="p-3 rounded-lg">
+                  <p className="text-sm mb-1">Patient Feedback</p>
                   <p className="text-sm">
                     {consultationSummary.patientFeedback}
                   </p>
@@ -580,50 +688,116 @@ const ReviewConsultation = () => {
                 </div>
                 {/* New section for alerted messages */}
                 {hasAlerts && (
-                  <div className="space-y-2">
+                  <div className="space-y-4">
                     <p className="text-sm text-gray-500 flex items-center">
-                      <AlertTriangle className="w-4 h-4 text-yellow-400 mr-2" />
+                      <AlertTriangle className="w-4 h-4 text-red-400 mr-2" />
                       Flagged Messages ({getAlertedMessages.length})
                     </p>
-                    <div className="max-h-48 overflow-y-auto border rounded-md">
-                      {getAlertedMessages.map((message) => (
-                        <div
-                          key={message.id}
-                          className="p-3 border-b last:border-b-0 bg-gray-50"
-                        >
+                    {getAlertedMessages.map((message) => (
+                      <div
+                        key={message.id}
+                        className={cn(
+                          "p-4 rounded-lg border",
+                          isDarkMode
+                            ? "bg-gray-800 border-gray-700"
+                            : "bg-gray-50 border-gray-200"
+                        )}
+                      >
+                        <div className="mb-2">
                           <div className="text-xs text-gray-500 mb-1">
                             {new Date(message.timestamp).toLocaleTimeString()}
                           </div>
-                          <div className="text-sm">{message.content}</div>
+                          <div
+                            className={cn(
+                              "p-3 rounded-lg mb-3",
+                              isDarkMode
+                                ? "bg-gray-700 text-gray-200"
+                                : "bg-white text-gray-700"
+                            )}
+                          >
+                            {message.content}
+                          </div>
+                          <div className="space-y-2">
+                            <p className="text-sm text-gray-500 flex items-center">
+                              <AlertTriangle className="w-4 h-4 text-red-400 mr-2" />
+                              Alert Notes
+                            </p>
+                            <Textarea
+                              value={alertNotes.get(message.id) || ""}
+                              onChange={(e) =>
+                                handleAlertNote(message.id, e.target.value)
+                              }
+                              placeholder="Please provide details about this alert..."
+                              className={cn(
+                                "w-full h-24",
+                                isDarkMode
+                                  ? "bg-gray-700 border-gray-600"
+                                  : "bg-white border-gray-200"
+                              )}
+                              required
+                            />
+                          </div>
                         </div>
-                      ))}
-                    </div>
+                      </div>
+                    ))}
                   </div>
                 )}
-
-                <div className="space-y-2">
-                  <p className="text-sm text-gray-500">Reviewer Notes</p>
-                  <Textarea
-                    value={reviewerNotes}
-                    onChange={(e) => setReviewerNotes(e.target.value)}
-                    placeholder="Add your thoughts about this consultation..."
-                    className="w-full h-32"
-                  />
-                </div>
-                {/* Alert notes */}
-                {hasAlerts && (
-                  <div className="space-y-2">
+                {hasOptimizations && (
+                  <div className="space-y-4">
                     <p className="text-sm text-gray-500 flex items-center">
-                      <AlertTriangle className="w-4 h-4 text-yellow-400 mr-2" />
-                      Alert Notes (Required)
+                      <Cpu className="w-4 h-4 text-blue-400 mr-2" />
+                      Messages to Optimize ({getOptimizedMessages.length})
                     </p>
-                    <Textarea
-                      value={alertNotes}
-                      onChange={(e) => setAlertNotes(e.target.value)}
-                      placeholder="Please provide details about the flagged messages..."
-                      className="w-full h-32"
-                      required
-                    />
+                    {getOptimizedMessages.map((message) => (
+                      <div
+                        key={message.id}
+                        className={cn(
+                          "p-4 rounded-lg border",
+                          isDarkMode
+                            ? "bg-gray-800 border-gray-700"
+                            : "bg-gray-50 border-gray-200"
+                        )}
+                      >
+                        <div className="mb-2">
+                          <div className="text-xs text-gray-500 mb-1">
+                            {new Date(message.timestamp).toLocaleTimeString()}
+                          </div>
+                          <div
+                            className={cn(
+                              "p-3 rounded-lg mb-3",
+                              isDarkMode
+                                ? "bg-gray-700 text-gray-200"
+                                : "bg-white text-gray-700"
+                            )}
+                          >
+                            {message.content}
+                          </div>
+                          <div className="space-y-2">
+                            <p className="text-sm text-gray-500 flex items-center">
+                              <Cpu className="w-4 h-4 text-blue-400 mr-2" />
+                              Optimization Suggestion
+                            </p>
+                            <Textarea
+                              value={optimizationNotes.get(message.id) || ""}
+                              onChange={(e) =>
+                                handleOptimizationNote(
+                                  message.id,
+                                  e.target.value
+                                )
+                              }
+                              placeholder="Please provide suggestions for optimizing this message..."
+                              className={cn(
+                                "w-full h-24",
+                                isDarkMode
+                                  ? "bg-gray-700 border-gray-600"
+                                  : "bg-white border-gray-200"
+                              )}
+                              required
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 )}
               </CardContent>
@@ -634,7 +808,8 @@ const ReviewConsultation = () => {
                 <Button
                   onClick={handleConfirmSubmit}
                   disabled={
-                    hasAlerts && (!alertNotes || alertNotes.trim().length === 0)
+                    (hasAlerts && !areAllAlertNotesComplete) ||
+                    (hasOptimizations && !areAllOptimizationNotesComplete)
                   }
                   className="bg-blue-600 hover:bg-blue-700"
                 >

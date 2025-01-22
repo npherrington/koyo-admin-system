@@ -458,7 +458,7 @@ const ReviewConsultation = () => {
   return (
     <div className="relative">
       <div className={showOverlay ? "opacity-50" : ""}>
-        <Card className="w-full max-w-2xl mx-auto">
+        <Card className="w-full max-w-4xl mx-auto">
           <CardHeader className="border-b">
             <div className="flex items-center space-x-4">
               <Button
@@ -568,16 +568,18 @@ const ReviewConsultation = () => {
                             currentRating={message.empathyScore}
                           />
                         </div>
-                        <AlertTrigger
-                          messageId={message.id}
-                          isAlerted={alertedMessages.has(message.id)}
-                          onToggle={handleToggleAlert}
-                        />
-                        <OptimizeTrigger
-                          messageId={message.id}
-                          isOptimized={optimizedMessages.has(message.id)}
-                          onToggle={handleToggleOptimize}
-                        />
+                        <div className="flex gap-1">
+                          <AlertTrigger
+                            messageId={message.id}
+                            isAlerted={alertedMessages.has(message.id)}
+                            onToggle={handleToggleAlert}
+                          />
+                          <OptimizeTrigger
+                            messageId={message.id}
+                            isOptimized={optimizedMessages.has(message.id)}
+                            onToggle={handleToggleOptimize}
+                          />
+                        </div>
                       </div>
                     )}
                     <div className="flex items-start space-x-2">

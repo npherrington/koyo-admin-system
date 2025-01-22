@@ -651,7 +651,7 @@ const ReviewConsultation = () => {
           <div className="max-h-[80vh] overflow-y-auto">
             {" "}
             {/* Added wrapper div for scrolling */}
-            <Card className="w-full max-w-md relative my-8">
+            <Card className="w-full max-w-2xl relative my-8">
               <CardHeader className="sticky top-0 border-b z-10">
                 <CardTitle>Consultation Review Summary</CardTitle>
               </CardHeader>
@@ -670,7 +670,7 @@ const ReviewConsultation = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <p className="text-sm text-gray-500">Average Empathy Score</p>
+                  <p className="text-sm">Average Empathy Score</p>
                   <div className="flex items-center">
                     <Heart className="w-5 h-5 text-red-400 mr-2" />
                     <span className="text-lg font-semibold">
@@ -680,7 +680,7 @@ const ReviewConsultation = () => {
                 </div>
 
                 <div className="space-y-2">
-                  <p className="text-sm text-gray-500">Average QSTAR Score</p>
+                  <p className="text-sm">Average QSTAR Score</p>
                   <div className="flex items-center">
                     <CircleCheck className="w-5 h-5 text-green-400 mr-2" />
                     <span className="text-lg font-semibold">
@@ -691,7 +691,7 @@ const ReviewConsultation = () => {
                 {/* New section for alerted messages */}
                 {hasAlerts && (
                   <div className="space-y-4">
-                    <p className="text-sm text-gray-500 flex items-center">
+                    <p className="text-sm flex items-center">
                       <AlertTriangle className="w-4 h-4 text-red-400 mr-2" />
                       Flagged Messages ({getAlertedMessages.length})
                     </p>
@@ -706,7 +706,7 @@ const ReviewConsultation = () => {
                         )}
                       >
                         <div className="mb-2">
-                          <div className="text-xs text-gray-500 mb-1">
+                          <div className="text-xs mb-1">
                             {new Date(message.timestamp).toLocaleTimeString()}
                           </div>
                           <div
@@ -746,7 +746,7 @@ const ReviewConsultation = () => {
                 )}
                 {hasOptimizations && (
                   <div className="space-y-4">
-                    <p className="text-sm text-gray-500 flex items-center">
+                    <p className="text-sm flex items-center">
                       <Cpu className="w-4 h-4 text-blue-400 mr-2" />
                       Messages to Optimize ({getOptimizedMessages.length})
                     </p>

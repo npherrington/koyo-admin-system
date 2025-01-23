@@ -34,6 +34,31 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "./ui/button";
 import Sidebar from "./ui/side-bar";
 
+interface GlossaryEntry {
+  id: string;
+  term: string;
+  category: string;
+  language: string;
+  lastUpdated: string;
+  status: string;
+  views: number;
+  brief: string;
+  author: string;
+}
+
+interface HealthResource {
+  id: string;
+  title: string;
+  type: string;
+  category: string;
+  language: string;
+  lastUpdated: string;
+  status: string;
+  views: number;
+  brief: string;
+  author: string;
+}
+
 const ContentDashboard = () => {
   const [selectedTab, setSelectedTab] = useState("glossary");
   const [searchTerm, setSearchTerm] = useState("");
@@ -91,8 +116,8 @@ const ContentDashboard = () => {
     },
   ];
 
-  const getStatusBadge = (status) => {
-    const styles = {
+  const getStatusBadge = (status: string) => {
+    const styles: Record<string, string> = {
       published: "bg-green-100 text-green-800",
       draft: "bg-yellow-100 text-yellow-800",
       review: "bg-blue-100 text-blue-800",
@@ -225,12 +250,15 @@ const ContentDashboard = () => {
             {(selectedTab === "glossary"
               ? glossaryEntries
               : healthResources
-            ).map((item) => (
+            ).map((item: GlossaryEntry | HealthResource) => (
               <div key={item.id} className="p-4 hover:bg-gray-50">
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
                     <div className="flex items-center">
-                      <h3 className="font-medium">{item.term || item.title}</h3>
+                      <h3 className="font-medium">
+                        {(item as GlossaryEntry).term ||
+                          (item as HealthResource).title}
+                      </h3>
                       <span
                         className={`ml-2 px-2 py-0.5 rounded-full text-xs ${getStatusBadge(
                           item.status

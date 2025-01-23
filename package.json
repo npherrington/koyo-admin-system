@@ -1,5 +1,6 @@
 {
-  "name": "dashboard_test",
+  "name": "koyo-admin-system",
+  "home": "https://npherrington.github.io/koyo-admin-system"
   "private": true,
   "version": "0.0.0",
   "type": "module",

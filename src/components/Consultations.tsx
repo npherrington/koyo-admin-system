@@ -69,8 +69,8 @@ const ConsultationsDashboard = () => {
     },
   ];
 
-  const getStatusBadge = (status) => {
-    const styles = {
+  const getStatusBadge = (status: string) => {
+    const styles: Record<string, string> = {
       "in-progress": "bg-blue-100 text-blue-800",
       waiting: "bg-yellow-100 text-yellow-800",
       completed: "bg-green-100 text-green-800",

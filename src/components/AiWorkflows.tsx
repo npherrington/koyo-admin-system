@@ -25,12 +25,18 @@ import {
 } from "@/components/ui/select";
 import Sidebar from "./ui/side-bar";
 
+interface Message {
+  role: string;
+  content: string;
+  timestamp: string;
+}
+
 const AiWorkflows = () => {
-  const [messages, setMessages] = useState([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [selectedModel, setSelectedModel] = useState("welcome");
-  const messagesEndRef = useRef(null);
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   // Model parameters
   const [temperature, setTemperature] = useState(0.7);
@@ -64,7 +70,7 @@ const AiWorkflows = () => {
     scrollToBottom();
   }, [messages]);
 
-  const handleModelChange = (modelId) => {
+  const handleModelChange = (modelId: string) => {
     setSelectedModel(modelId);
     setMessages([]); // Clear chat history when model changes
   };
@@ -83,12 +89,12 @@ const AiWorkflows = () => {
     setInputMessage("");
     setIsLoading(true);
 
-    // Simulate AI response (replace with actual API call)
     setTimeout(() => {
-      const aiMessage = {
+      const model = models.find((m) => m.id === selectedModel);
+      const aiMessage: Message = {
         role: "assistant",
         content: `[${
-          models.find((m) => m.id === selectedModel).name
+          model?.name || "Unknown"
         }] This is a simulated response with parameters: Temperature: ${temperature}, Top-P: ${topP}, Top-K: ${topK}, Max Tokens: ${maxTokens}`,
         timestamp: new Date().toLocaleTimeString(),
       };
@@ -97,7 +103,7 @@ const AiWorkflows = () => {
     }, 1000);
   };
 
-  const handleKeyPress = (e) => {
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
       handleSendMessage();
@@ -112,6 +118,14 @@ const AiWorkflows = () => {
     min,
     max,
     step,
+  }: {
+    icon: React.ElementType;
+    label: string;
+    value: number;
+    onChange: (value: number) => void;
+    min: number;
+    max: number;
+    step: number;
   }) => (
     <div className="flex flex-col gap-2">
       <div className="flex items-center gap-2">
@@ -130,7 +144,7 @@ const AiWorkflows = () => {
     </div>
   );
 
-  const MessageBubble = ({ message }) => (
+  const MessageBubble = ({ message }: { message: Message }) => (
     <div
       className={`flex gap-3 mb-4 ${
         message.role === "user" ? "justify-end" : "justify-start"

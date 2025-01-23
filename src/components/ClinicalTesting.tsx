@@ -147,8 +147,8 @@ const ClinicalTesting = () => {
     navigate("../ReviewConsultation");
   };
 
-  const getStatusBadge = (status) => {
-    const styles = {
+  const getStatusBadge = (status: string): string => {
+    const styles: Record<string, string> = {
       "awaiting review": "bg-yellow-100 text-yellow-800",
       reviewed: "bg-green-100 text-green-800",
       "in-progress": "bg-blue-100 text-blue-800",

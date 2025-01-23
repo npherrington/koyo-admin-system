@@ -69,8 +69,10 @@ const ConsultationsDashboard = () => {
     },
   ];
 
-  const getStatusBadge = (status) => {
-    const styles = {
+  type Status = "in-progress" | "waiting" | "completed" | "cancelled";
+
+  const getStatusBadge = (status: Status): string => {
+    const styles: Record<Status, string> = {
       "in-progress": "bg-blue-100 text-blue-800",
       waiting: "bg-yellow-100 text-yellow-800",
       completed: "bg-green-100 text-green-800",

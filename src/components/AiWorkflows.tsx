@@ -26,33 +26,17 @@ import {
 import Sidebar from "./ui/side-bar";
 
 interface Message {
-  role: "user" | "assistant";
+  role: string;
   content: string;
   timestamp: string;
-}
-
-interface Model {
-  id: string;
-  name: string;
-  description: string;
-}
-
-interface ModelParameterProps {
-  icon: React.ElementType;
-  label: string;
-  value: number;
-  onChange: (value: number) => void;
-  min: number;
-  max: number;
-  step: number;
 }
 
 const AiWorkflows = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedModel, setSelectedModel] = useState<string>("welcome");
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const [selectedModel, setSelectedModel] = useState("welcome");
+  const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
   // Model parameters
   const [temperature, setTemperature] = useState(0.7);
@@ -94,10 +78,8 @@ const AiWorkflows = () => {
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
 
-    const selectedModelData = models.find((m) => m.id === selectedModel);
-    if (!selectedModelData) return;
-
-    const userMessage: Message = {
+    // Add user message
+    const userMessage = {
       role: "user",
       content: inputMessage,
       timestamp: new Date().toLocaleTimeString(),
@@ -108,9 +90,12 @@ const AiWorkflows = () => {
     setIsLoading(true);
 
     setTimeout(() => {
+      const model = models.find((m) => m.id === selectedModel);
       const aiMessage: Message = {
         role: "assistant",
-        content: `[${selectedModelData.name}] This is a simulated response with parameters: Temperature: ${temperature}, Top-P: ${topP}, Top-K: ${topK}, Max Tokens: ${maxTokens}`,
+        content: `[${
+          model?.name || "Unknown"
+        }] This is a simulated response with parameters: Temperature: ${temperature}, Top-P: ${topP}, Top-K: ${topK}, Max Tokens: ${maxTokens}`,
         timestamp: new Date().toLocaleTimeString(),
       };
       setMessages((prev) => [...prev, aiMessage]);
@@ -125,7 +110,7 @@ const AiWorkflows = () => {
     }
   };
 
-  const ModelParameter: React.FC<ModelParameterProps> = ({
+  const ModelParameter = ({
     icon: Icon,
     label,
     value,
@@ -133,6 +118,14 @@ const AiWorkflows = () => {
     min,
     max,
     step,
+  }: {
+    icon: React.ElementType;
+    label: string;
+    value: number;
+    onChange: (value: number) => void;
+    min: number;
+    max: number;
+    step: number;
   }) => (
     <div className="flex flex-col gap-2">
       <div className="flex items-center gap-2">
@@ -151,7 +144,7 @@ const AiWorkflows = () => {
     </div>
   );
 
-  const MessageBubble: React.FC<{ message: Message }> = ({ message }) => (
+  const MessageBubble = ({ message }: { message: Message }) => (
     <div
       className={`flex gap-3 mb-4 ${
         message.role === "user" ? "justify-end" : "justify-start"

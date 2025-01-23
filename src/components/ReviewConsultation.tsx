@@ -30,6 +30,16 @@ import { useNavigate } from "react-router-dom";
 import { Textarea } from "./ui/textarea";
 import { useTheme } from "@/contexts/ThemeContext";
 
+interface Message {
+  id: number;
+  sender: string;
+  content: string;
+  timestamp: string;
+  empathyScore: number | null;
+  qstarScore: number | null;
+  messageAlerted: boolean;
+}
+
 const ReviewConsultation = () => {
   const { isDarkMode } = useTheme();
   const navigate = useNavigate();
@@ -58,7 +68,7 @@ const ReviewConsultation = () => {
     summary:
       "Michael visited Dr. Sarah Lee to address ongoing skin irritation. Dr. Lee prescribed a new topical treatment and advised on proper skincare routines. Michael found the consultation helpful, though he felt the treatment options could have been explained in more detail. He rated the consultation a 4 out of 5.",
   };
-  const [messages, setMessages] = useState([
+  const [messages, setMessages] = useState<Message[]>([
     {
       id: 1,
       sender: "patient",
@@ -221,7 +231,13 @@ const ReviewConsultation = () => {
     },
   ]);
 
-  const handleRatingQualityScore = (messageId, qstarScore) => {
+  interface AlertTriggerProps {
+    messageId: number;
+    isAlerted: boolean;
+    onToggle: (messageId: number) => void;
+  }
+
+  const handleRatingQualityScore = (messageId: number, qstarScore: number) => {
     setMessages(
       messages.map((message) =>
         message.id === messageId ? { ...message, qstarScore } : message
@@ -229,7 +245,10 @@ const ReviewConsultation = () => {
     );
   };
 
-  const handleRatingEmpathyScore = (messageId, empathyScore) => {
+  const handleRatingEmpathyScore = (
+    messageId: number,
+    empathyScore: number
+  ) => {
     setMessages(
       messages.map((message) =>
         message.id === messageId ? { ...message, empathyScore } : message
@@ -237,7 +256,23 @@ const ReviewConsultation = () => {
     );
   };
 
-  const CircleRating = ({ messageId, currentRating }) => {
+  interface CircleRatingProps {
+    messageId: number;
+    currentRating: number | null;
+  }
+
+  interface HeartRatingProps {
+    messageId: number;
+    currentRating: number | null;
+  }
+
+  interface OptimizeTriggerProps {
+    messageId: number;
+    isOptimized: boolean;
+    onToggle: (messageId: number) => void;
+  }
+
+  const CircleRating = ({ messageId, currentRating }: CircleRatingProps) => {
     const [hover, setHover] = useState(0);
 
     return (
@@ -262,7 +297,7 @@ const ReviewConsultation = () => {
       </div>
     );
   };
-  const HeartRating = ({ messageId, currentRating }) => {
+  const HeartRating = ({ messageId, currentRating }: HeartRatingProps) => {
     const [hover, setHover] = useState(0);
 
     return (
@@ -287,20 +322,23 @@ const ReviewConsultation = () => {
       </div>
     );
   };
-  const AlertTrigger = ({ messageId, isAlerted, onToggle }) => {
-    return (
-      <button
-        onClick={() => onToggle(messageId)}
-        className="focus:outline-none hover:bg-gray-100 p-1 rounded"
-      >
-        <AlertTriangle
-          className={`w-6 h-6 ${
-            isAlerted ? "fill-red-400 text-black-400" : "text-gray-400"
-          }`}
-        />
-      </button>
-    );
-  };
+
+  const AlertTrigger: React.FC<AlertTriggerProps> = ({
+    messageId,
+    isAlerted,
+    onToggle,
+  }) => (
+    <button
+      onClick={() => onToggle(messageId)}
+      className="focus:outline-none hover:bg-gray-100 p-1 rounded"
+    >
+      <AlertTriangle
+        className={`w-6 h-6 ${
+          isAlerted ? "fill-red-400 text-black-400" : "text-gray-400"
+        }`}
+      />
+    </button>
+  );
 
   const handleAlertNote = (messageId: number, note: string) => {
     setAlertNotes((prev) => {
@@ -310,7 +348,7 @@ const ReviewConsultation = () => {
     });
   };
 
-  const handleToggleAlert = (messageId) => {
+  const handleToggleAlert = (messageId: number) => {
     setAlertedMessages((prev) => {
       const newAlerts = new Set(prev);
       if (newAlerts.has(messageId)) {
@@ -349,7 +387,7 @@ const ReviewConsultation = () => {
     return messages.filter((message) => optimizedMessages.has(message.id));
   }, [messages, optimizedMessages]);
 
-  const handleToggleOptimize = (messageId) => {
+  const handleToggleOptimize = (messageId: number) => {
     setOptimizedMessages((prev) => {
       const newOptimized = new Set(prev);
       if (newOptimized.has(messageId)) {
@@ -388,7 +426,11 @@ const ReviewConsultation = () => {
     );
   }, [optimizedMessages, optimizationNotes]);
 
-  const OptimizeTrigger = ({ messageId, isOptimized, onToggle }) => {
+  const OptimizeTrigger = ({
+    messageId,
+    isOptimized,
+    onToggle,
+  }: OptimizeTriggerProps) => {
     return (
       <button
         onClick={() => onToggle(messageId)}
@@ -404,7 +446,12 @@ const ReviewConsultation = () => {
     );
   };
 
-  const ConsultationRating = ({ rating }) => (
+  interface ConsultationRatingProps {
+    rating: number;
+  }
+  const ConsultationRating: React.FC<ConsultationRatingProps> = ({
+    rating,
+  }) => (
     <div className="flex items-center">
       {[1, 2, 3, 4, 5].map((star) => (
         <Star

@@ -4,7 +4,7 @@ import { defineConfig } from "vite"
 
 export default defineConfig({
   plugins: [react()],
-  base: "/KoyoAdminSystem/",
+  base: "/koyo-admin-system/",
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

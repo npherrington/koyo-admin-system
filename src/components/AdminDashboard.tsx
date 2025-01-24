@@ -252,33 +252,35 @@ const AdminDashboard = () => {
             </ColourCardHeader>
             <ColourCardContent variant="gray">
               <div className="space-y-4">
-                <div className="flex items-center p-3 bg-orange-50 rounded-lg border border-orange-200">
-                  <div className="w-2 h-2 bg-orange-500 rounded-full mr-3"></div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-orange-900">
-                      Urgent Case #1234
-                    </p>
-                    <p className="text-xs text-orange-600">
-                      Waiting for doctor - 3m
-                    </p>
+                <ColourCard variant="orange">
+                  <div className="flex items-center p-3">
+                    <div className="w-2 h-2 bg-gray-800 rounded-full mr-3"></div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-orange-900">
+                        Urgent Case #1234
+                      </p>
+                      <p className="text-xs">Waiting for doctor - 3m</p>
+                    </div>
+                    <button className="px-3 py-1 text-sm bg-orange-100 text-orange-600 rounded-lg border border-orange-200 hover:bg-orange-200 transition-colors">
+                      Notify Doctor
+                    </button>
                   </div>
-                  <button className="px-3 py-1 text-sm bg-orange-100 text-orange-600 rounded-lg border border-orange-200 hover:bg-orange-200 transition-colors">
-                    Notify Doctor
-                  </button>
-                </div>
+                </ColourCard>
 
-                <div className="flex items-center p-3 bg-green-50 rounded-lg border border-green-200">
-                  <div className="w-2 h-2 bg-green-500 rounded-full mr-3"></div>
-                  <div className="flex-1">
-                    <p className="text-sm font-medium text-green-900">
-                      Case #1235 - Dr. Sarah
-                    </p>
-                    <p className="text-xs text-green-600">In progress - 12m</p>
+                <ColourCard variant="green">
+                  <div className="flex items-center p-3">
+                    <div className="w-2 h-2 bg-gray-800 rounded-full mr-3"></div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-green-900">
+                        Case #1235 - Dr. Sarah
+                      </p>
+                      <p className="text-xs">In progress - 12m</p>
+                    </div>
+                    <button className="px-3 py-1 text-sm bg-green-100 text-green-600 rounded-lg border border-green-200 hover:bg-green-200 transition-colors">
+                      View Details
+                    </button>
                   </div>
-                  <button className="px-3 py-1 text-sm bg-green-100 text-green-600 rounded-lg border border-green-200 hover:bg-green-200 transition-colors">
-                    View Details
-                  </button>
-                </div>
+                </ColourCard>
               </div>
             </ColourCardContent>
           </ColourCard>

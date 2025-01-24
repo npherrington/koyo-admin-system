@@ -26,6 +26,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
+  ColourCard,
+  ColourCardHeader,
+  ColourCardTitle,
+  ColourCardContent,
+} from "@/components/ui/colour-card";
+import {
   LineChart,
   Line,
   BarChart,
@@ -40,8 +46,10 @@ import {
 } from "recharts";
 import { Button } from "./ui/button";
 import Sidebar from "./ui/side-bar";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const AnalyticsDashboard = () => {
+  const { isDarkMode, toggleTheme } = useTheme();
   const [timeRange, setTimeRange] = useState("7d");
 
   // Mock data for charts
@@ -83,10 +91,8 @@ const AnalyticsDashboard = () => {
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Analytics</h1>
-          <p className="text-gray-500">
-            Platform performance and user engagement metrics
-          </p>
+          <h1 className="text-2xl font-bold ">Analytics</h1>
+          <p>Platform performance and user engagement metrics</p>
         </div>
         <div className="flex items-center space-x-3">
           <DropdownMenu>
@@ -122,62 +128,58 @@ const AnalyticsDashboard = () => {
         </div>
       </div>
 
-      {/* Key Metrics */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
-        <Card className="bg-orange-100">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Active Users</CardTitle>
-          </CardHeader>
-          <CardContent>
+        <ColourCard variant="orange">
+          <ColourCardHeader className="pb-2">
+            <ColourCardTitle variant="orange">Active Users</ColourCardTitle>
+          </ColourCardHeader>
+          <ColourCardContent variant="orange">
             <div className="text-2xl font-bold">3,521</div>
             <div className="flex items-center text-xs text-blue-600">
               <ChevronUp className="w-3 h-3" />
               15% vs last period
             </div>
-          </CardContent>
-        </Card>
+          </ColourCardContent>
+        </ColourCard>
 
-        <Card className="bg-green-100">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">
-              Avg Response Time
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+        <ColourCard variant="green">
+          <ColourCardHeader className="pb-2">
+            <ColourCardTitle variant="green">Avg Response Time</ColourCardTitle>
+          </ColourCardHeader>
+          <ColourCardContent variant="green">
             <div className="text-2xl font-bold">2.1m</div>
             <div className="flex items-center text-xs text-blue-600">
               <ChevronUp className="w-3 h-3" />
               0.3m vs target
             </div>
-          </CardContent>
-        </Card>
+          </ColourCardContent>
+        </ColourCard>
 
-        <Card className="bg-indigo-100">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">
+        <ColourCard variant="purple">
+          <ColourCardHeader className="pb-2">
+            <ColourCardTitle variant="purple">
               Patient Satisfaction
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
+            </ColourCardTitle>
+          </ColourCardHeader>
+          <ColourCardContent variant="purple">
             <div className="text-2xl font-bold">4.8/5</div>
             <div className="flex items-center text-xs text-blue-600">
               <ChevronUp className="w-3 h-3" />
               0.2 vs last period
             </div>
-          </CardContent>
-        </Card>
+          </ColourCardContent>
+        </ColourCard>
 
-        <Card className="bg-slate-100">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">System Uptime</CardTitle>
-          </CardHeader>
-          <CardContent>
+        <ColourCard variant="gray">
+          <ColourCardHeader className="pb-2">
+            <ColourCardTitle variant="gray">System Uptime</ColourCardTitle>
+          </ColourCardHeader>
+          <ColourCardContent variant="gray">
             <div className="text-2xl font-bold">99.9%</div>
             <div className="text-xs text-gray-500">Last 30 days</div>
-          </CardContent>
-        </Card>
+          </ColourCardContent>
+        </ColourCard>
       </div>
-
       {/* Charts */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
         {/* User Growth */}
@@ -186,12 +188,15 @@ const AnalyticsDashboard = () => {
             <CardTitle className="text-sm">User Growth</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-72">
+            <div className="h-72 py-1">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={userGrowthData}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="date" />
-                  <YAxis />
+                  <XAxis
+                    dataKey="date"
+                    tick={{ fill: isDarkMode ? "#E5E7EB" : "#374151" }}
+                  />
+                  <YAxis tick={{ fill: isDarkMode ? "#E5E7EB" : "#374151" }} />
                   <Tooltip />
                   <Area
                     type="monotone"
@@ -211,12 +216,15 @@ const AnalyticsDashboard = () => {
             <CardTitle className="text-sm">Daily Consultations</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-72">
+            <div className="h-72 py-1">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={consultationData}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="date" />
-                  <YAxis />
+                  <XAxis
+                    dataKey="date"
+                    tick={{ fill: isDarkMode ? "#E5E7EB" : "#374151" }}
+                  />
+                  <YAxis tick={{ fill: isDarkMode ? "#E5E7EB" : "#374151" }} />
                   <Tooltip />
                   <Bar dataKey="premium" stackId="a" fill="#F97316" />
                   <Bar dataKey="basic" stackId="a" fill="#FFEDD5" />
@@ -232,12 +240,15 @@ const AnalyticsDashboard = () => {
             <CardTitle className="text-sm">Response Time by Hour</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="h-72">
+            <div className="h-72 py-1">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={responseTimeData}>
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="hour" />
-                  <YAxis />
+                  <XAxis
+                    dataKey="hour"
+                    tick={{ fill: isDarkMode ? "#E5E7EB" : "#374151" }}
+                  />
+                  <YAxis tick={{ fill: isDarkMode ? "#E5E7EB" : "#374151" }} />
                   <Tooltip />
                   <Line
                     type="monotone"
@@ -257,77 +268,94 @@ const AnalyticsDashboard = () => {
             <CardTitle className="text-sm">Doctor Performance</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className="space-y-4 py-2">
               {doctorPerformanceData.map((doctor, index) => (
-                <div key={index} className="p-4 bg-gray-50 rounded-lg">
-                  <div className="flex items-center justify-between mb-2">
-                    <h3 className="font-medium">{doctor.name}</h3>
-                    <div className="flex items-center">
-                      <Star className="w-4 h-4 text-yellow-500 fill-yellow-500 mr-1" />
-                      <span>{doctor.rating}</span>
+                <ColourCard variant="gray" key={index}>
+                  <ColourCardContent variant="gray">
+                    <div className="flex items-center justify-between mb-2">
+                      <h3 className="font-medium">{doctor.name}</h3>
+                      <div className="flex items-center">
+                        <Star className="w-4 h-4 text-yellow-500 fill-yellow-500 mr-1" />
+                        <span>{doctor.rating}</span>
+                      </div>
                     </div>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4 text-sm">
-                    <div>
-                      <p className="text-gray-500">Consultations</p>
-                      <p className="font-medium">{doctor.consultations}</p>
+                    <div className="grid grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <p>Consultations</p>
+                        <p className="font-medium">{doctor.consultations}</p>
+                      </div>
+                      <div>
+                        <p>Avg Response</p>
+                        <p className="font-medium">{doctor.responseTime}m</p>
+                      </div>
                     </div>
-                    <div>
-                      <p className="text-gray-500">Avg Response</p>
-                      <p className="font-medium">{doctor.responseTime}m</p>
-                    </div>
-                  </div>
-                </div>
+                  </ColourCardContent>
+                </ColourCard>
               ))}
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Detailed Stats */}
       <div className="grid grid-cols-1 gap-6">
         <Card>
           <CardHeader>
             <CardTitle className="text-sm">System Performance</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
-              <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                <div>
-                  <p className="font-medium">API Response Time</p>
-                  <p className="text-sm text-gray-500">
-                    Average latency across all endpoints
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="font-medium">45ms</p>
-                  <p className="text-xs text-green-500">-5ms vs last week</p>
-                </div>
-              </div>
-              <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                <div>
-                  <p className="font-medium">Error Rate</p>
-                  <p className="text-sm text-gray-500">
-                    Percentage of failed requests
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="font-medium">0.12%</p>
-                  <p className="text-xs text-green-500">-0.03% vs last week</p>
-                </div>
-              </div>
-              <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                <div>
-                  <p className="font-medium">Database Load</p>
-                  <p className="text-sm text-gray-500">
-                    Average CPU utilization
-                  </p>
-                </div>
-                <div className="text-right">
-                  <p className="font-medium">32%</p>
-                  <p className="text-xs text-gray-500">Within normal range</p>
-                </div>
-              </div>
+            <div className="space-y-4 py-2">
+              <ColourCard variant="gray">
+                <ColourCardContent variant="gray">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium">API Response Time</p>
+                      <p className="text-sm">
+                        Average latency across all endpoints
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-medium">45ms</p>
+                      <p className="text-xs text-green-500">
+                        -5ms vs last week
+                      </p>
+                    </div>
+                  </div>
+                </ColourCardContent>
+              </ColourCard>
+
+              <ColourCard variant="gray">
+                <ColourCardContent variant="gray">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium">Error Rate</p>
+                      <p className="text-sm">Percentage of failed requests</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-medium">0.12%</p>
+                      <p className="text-xs text-red-500">
+                        -0.03% vs last week
+                      </p>
+                    </div>
+                  </div>
+                </ColourCardContent>
+              </ColourCard>
+
+              <ColourCard variant="gray">
+                <ColourCardContent variant="gray">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium">Database Load</p>
+                      <p className="text-sm">Average CPU utilization</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-medium">32%</p>
+                      <p className="text-xs text-blue-500">
+                        Within normal range
+                      </p>
+                    </div>
+                  </div>
+                </ColourCardContent>
+              </ColourCard>
             </div>
           </CardContent>
         </Card>

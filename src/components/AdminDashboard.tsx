@@ -195,7 +195,7 @@ const AdminDashboard = () => {
               </ColourCardHeader>
               <ColourCardContent variant="orange">
                 <div className="text-2xl font-bold">3,521</div>
-                <p className="text-xs text-green-500">+15% from last month</p>
+                <p className="text-xs text-orange-600">+15% from last month</p>
               </ColourCardContent>
             </ColourCard>
 
@@ -208,7 +208,7 @@ const AdminDashboard = () => {
               </ColourCardHeader>
               <ColourCardContent variant="blue">
                 <div className="text-2xl font-bold">42</div>
-                <p className="text-xs text-gray-500">8 currently online</p>
+                <p className="text-xs text-blue-900">8 currently online</p>
               </ColourCardContent>
             </ColourCard>
 
@@ -225,7 +225,7 @@ const AdminDashboard = () => {
               </ColourCardHeader>
               <ColourCardContent variant="green">
                 <div className="text-2xl font-bold">128</div>
-                <p className="text-xs text-gray-500">Avg. response time: 2m</p>
+                <p className="text-xs text-green-800">Avg. response time: 2m</p>
               </ColourCardContent>
             </ColourCard>
 
@@ -239,7 +239,7 @@ const AdminDashboard = () => {
               </ColourCardHeader>
               <ColourCardContent variant="gray">
                 <div className="text-2xl font-bold text-gray-900">₦2.4M</div>
-                <p className="text-xs text-green-500">+22% from last month</p>
+                <p className="text-xs text-gray-900">+22% from last month</p>
               </ColourCardContent>
             </ColourCard>
           </div>
@@ -296,14 +296,14 @@ const AdminDashboard = () => {
               <ColourCardContent variant="purple">
                 <div className="space-y-4">
                   <div className="flex items-center">
-                    <div className="w-2 h-2 bg-red-500 rounded-full mr-2"></div>
+                    <div className="w-2 h-2 bg-gray-800 rounded-full mr-2"></div>
                     <span className="text-sm">Payment failed - User #5678</span>
                     <span className="ml-auto text-xs text-gray-500">
                       5m ago
                     </span>
                   </div>
                   <div className="flex items-center">
-                    <div className="w-2 h-2 bg-yellow-500 rounded-full mr-2"></div>
+                    <div className="w-2 h-2 bg-gray-800 rounded-full mr-2"></div>
                     <span className="text-sm">
                       Account access issue - Dr. James
                     </span>
@@ -323,12 +323,12 @@ const AdminDashboard = () => {
               <ColourCardContent variant="yellow">
                 <div className="space-y-4">
                   <div className="flex items-center">
-                    <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                    <div className="w-2 h-2 bg-gray-800 rounded-full mr-2"></div>
                     <span className="text-sm">API Response Time: 45ms</span>
                     <span className="ml-auto text-xs opacity-70">Normal</span>
                   </div>
                   <div className="flex items-center">
-                    <div className="w-2 h-2 bg-green-500 rounded-full mr-2"></div>
+                    <div className="w-2 h-2 bg-gray-800 rounded-full mr-2"></div>
                     <span className="text-sm">Database Load: 32%</span>
                     <span className="ml-auto text-xs opacity-70">Optimal</span>
                   </div>

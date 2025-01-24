@@ -12,6 +12,7 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { signIn } from "../utils/auth";
 import { ThemeToggle } from "@/components/ui/theme-toggle";
+import { Textarea } from "./ui/textarea";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -81,7 +82,7 @@ const LoginPage = () => {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="pl-10 w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="pl-10 w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-800"
                     placeholder="admin@koyohealth.com"
                   />
                 </div>
@@ -96,7 +97,7 @@ const LoginPage = () => {
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="pl-10 w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
+                    className="pl-10 w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-800"
                     placeholder="••••••••"
                   />
                 </div>

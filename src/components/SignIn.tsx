@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { signIn } from "../utils/auth";
+import { ThemeToggle } from "@/components/ui/theme-toggle";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -45,17 +46,18 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+    <div className="min-h-screen flex items-center justify-center">
       <div className="w-full max-w-md space-y-4 p-6">
         {/* Logo and Title */}
         <div className="text-center space-y-2 mb-8">
           <h1 className="text-3xl font-bold text-orange-600">Koyo Admin</h1>
-          <p className="text-gray-800">Healthcare Management System</p>
+          <p>Healthcare Management System</p>
         </div>
 
         {/* Login Card */}
-        <Card className="bg-orange-100 border-orange-300">
+        <Card>
           <CardHeader>
+            <ThemeToggle className="px-1 py-0 items-center justify-end" />
             <CardTitle>Welcome back</CardTitle>
             <CardDescription>
               Sign in to access your admin dashboard
@@ -72,11 +74,9 @@ const LoginPage = () => {
 
               {/* Email Input */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">
-                  Email Address
-                </label>
+                <label className="text-sm font-medium">Email Address</label>
                 <div className="relative">
-                  <Mail className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+                  <Mail className="absolute left-3 top-2.5 h-5 w-5" />
                   <input
                     type="email"
                     value={email}
@@ -89,11 +89,9 @@ const LoginPage = () => {
 
               {/* Password Input */}
               <div className="space-y-2">
-                <label className="text-sm font-medium text-gray-700">
-                  Password
-                </label>
+                <label className="text-sm font-medium">Password</label>
                 <div className="relative">
-                  <Lock className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+                  <Lock className="absolute left-3 top-2.5 h-5 w-5" />
                   <input
                     type="password"
                     value={password}

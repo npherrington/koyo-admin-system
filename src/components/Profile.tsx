@@ -17,7 +17,7 @@ function Compliance() {
     signOut();
   };
   return (
-    <div className="min-h-screen flex items-center justify-center bg-white">
+    <div className="min-h-screen flex items-center justify-center">
       <div className="w-full max-w-md ">
         <div className="absolute top-0 left-2">
           <Sidebar activeSection="Profile" />
@@ -25,9 +25,9 @@ function Compliance() {
         {/* Logo and Title */}
         <div className="text-center space-y-2 mb-8">
           <h1 className="text-3xl font-bold text-orange-600">Koyo Admin</h1>
-          <p className="text-gray-800">Healthcare Management System</p>
+          <p>Healthcare Management System</p>
         </div>
-        <Card className="bg-orange-100 border-orange-300">
+        <Card>
           <CardHeader className="flex justify-between items-center w-full">
             {/* <CardTitle className="text-xl font-semibold">Profile </CardTitle> */}
             <Avatar className="w-36 h-36">

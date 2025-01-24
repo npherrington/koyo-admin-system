@@ -24,6 +24,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import Sidebar from "./ui/side-bar";
+import { cn } from "@/lib/utils";
+import { useTheme } from "@/contexts/ThemeContext";
 
 interface Message {
   role: string;
@@ -32,6 +34,7 @@ interface Message {
 }
 
 const AiWorkflows = () => {
+  const { isDarkMode } = useTheme();
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputMessage, setInputMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -144,41 +147,75 @@ const AiWorkflows = () => {
     </div>
   );
 
-  const MessageBubble = ({ message }: { message: Message }) => (
-    <div
-      className={`flex gap-3 mb-4 ${
-        message.role === "user" ? "justify-end" : "justify-start"
-      }`}
-    >
+  const MessageBubble = ({ message }: { message: Message }) => {
+    const { isDarkMode } = useTheme();
+    return (
       <div
-        className={`flex gap-3 max-w-[80%] ${
-          message.role === "user" ? "flex-row-reverse" : "flex-row"
-        }`}
+        className={cn(
+          "flex gap-3 mb-4",
+          message.role === "user" ? "justify-end" : "justify-start"
+        )}
       >
         <div
-          className={`w-8 h-8 rounded-full flex items-center justify-center ${
-            message.role === "user" ? "bg-orange-100" : "bg-blue-100"
-          }`}
-        >
-          {message.role === "user" ? (
-            <User className="w-4 h-4 text-orange-600" />
-          ) : (
-            <Bot className="w-4 h-4 text-blue-600" />
+          className={cn(
+            "flex gap-3 max-w-[80%]",
+            message.role === "user" ? "flex-row-reverse" : "flex-row"
           )}
-        </div>
-        <div
-          className={`rounded-lg p-3 ${
-            message.role === "user"
-              ? "bg-orange-100 text-black"
-              : "bg-gray-100 text-black"
-          }`}
         >
-          <p className="text-sm">{message.content}</p>
-          <p className="text-xs text-gray-500 mt-1">{message.timestamp}</p>
+          <div
+            className={cn(
+              "w-8 h-8 rounded-full flex items-center justify-center",
+              message.role === "user"
+                ? isDarkMode
+                  ? "bg-orange-500/80 text-white"
+                  : "bg-orange-100"
+                : isDarkMode
+                ? "bg-blue-900"
+                : "bg-blue-50 border border-blue-100"
+            )}
+          >
+            {message.role === "user" ? (
+              <User
+                className={cn(
+                  "w-4 h-4",
+                  isDarkMode ? "text-orange-400" : "text-orange-600"
+                )}
+              />
+            ) : (
+              <Bot
+                className={cn(
+                  "w-4 h-4",
+                  isDarkMode ? "text-slate-300" : "text-blue-600"
+                )}
+              />
+            )}
+          </div>
+          <div
+            className={cn(
+              "rounded-lg p-3",
+              message.role === "user"
+                ? isDarkMode
+                  ? "bg-orange-500/80 text-white"
+                  : "bg-orange-400"
+                : isDarkMode
+                ? "bg-blue-900 border border-blue-800 text-white"
+                : "bg-blue-50 border border-blue-100"
+            )}
+          >
+            <p className="text-sm">{message.content}</p>
+            <p
+              className={cn(
+                "text-xs mt-1",
+                isDarkMode ? "text-white" : "text-gray-600"
+              )}
+            >
+              {message.timestamp}
+            </p>
+          </div>
         </div>
       </div>
-    </div>
-  );
+    );
+  };
 
   return (
     <div className="p-6 max-w-6xl mx-auto">

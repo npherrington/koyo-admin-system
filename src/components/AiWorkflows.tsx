@@ -129,9 +129,9 @@ const AiWorkflows = () => {
   }) => (
     <div className="flex flex-col gap-2">
       <div className="flex items-center gap-2">
-        <Icon className="w-4 h-4 text-gray-500" />
-        <Label className="text-sm text-gray-600">{label}</Label>
-        <span className="ml-auto text-sm text-gray-600">{value}</span>
+        <Icon className="w-4 h-4" />
+        <Label className="text-sm ">{label}</Label>
+        <span className="ml-auto text-sm">{value}</span>
       </div>
       <Slider
         value={[value]}
@@ -181,17 +181,21 @@ const AiWorkflows = () => {
   );
 
   return (
-    <div className="flex h-screen bg-white">
+    <div className="p-6 max-w-6xl mx-auto">
       <Sidebar activeSection="AI Workflows" />
-      <Card className="w-full max-w-4xl mx-auto my-6 bg-white">
-        <CardHeader className="border-b bg-slate-50">
+      <div className="flex items-center justify-between mb-6">
+        <div>
+          <h1 className="text-2xl font-bold">AI Workflows</h1>
+        </div>
+      </div>
+      <Card className="w-full max-w-6xl mx-auto">
+        <CardHeader className="border-b">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-xl font-bold text-orange-600">
-              <h1 className="text-xl">AI Workflows</h1>
-              <p className="text-xs text-gray-400">Test our KOYO agents</p>
+            <CardTitle className="text-xl font-bold ">
+              <h1 className="text-xl text-orange-600">Test our KOYO agents</h1>
             </CardTitle>
             <div className="flex items-center gap-2">
-              <Wand2 className="w-4 h-4 text-gray-500" />
+              <Wand2 className="w-4 h-4" />
               <Select value={selectedModel} onValueChange={handleModelChange}>
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Select Model" />
@@ -201,9 +205,6 @@ const AiWorkflows = () => {
                     <SelectItem key={model.id} value={model.id}>
                       <div className="flex flex-col">
                         <span>{model.name}</span>
-                        {/* <span className="text-xs scale-75 text-gray-500">
-                          {model.description}
-                        </span> */}
                       </div>
                     </SelectItem>
                   ))}
@@ -231,7 +232,7 @@ const AiWorkflows = () => {
               <div ref={messagesEndRef} />
             </ScrollArea>
 
-            <div className="border-t p-4 bg-slate-50">
+            <div className="border-t p-4">
               <div className="flex gap-2">
                 <Textarea
                   value={inputMessage}
@@ -250,7 +251,7 @@ const AiWorkflows = () => {
                 </Button>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 mt-4 p-4 border rounded-lg bg-gray-50">
+              <div className="grid grid-cols-2 gap-4 mt-4 p-4 border rounded-lg">
                 <ModelParameter
                   icon={Thermometer}
                   label="Temperature"
@@ -289,7 +290,7 @@ const AiWorkflows = () => {
                 />
               </div>
 
-              <p className="text-xs text-gray-500 mt-2">
+              <p className="text-xs mt-2">
                 Press Enter to send, Shift + Enter for new line
               </p>
             </div>

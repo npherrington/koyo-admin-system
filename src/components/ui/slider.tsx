@@ -21,7 +21,7 @@ const Slider = React.forwardRef<
       <SliderPrimitive.Track
         className={cn(
           "relative h-2 w-full grow overflow-hidden rounded-full",
-          isDarkMode ? "bg-slate-700" : "bg-slate-200"
+          isDarkMode ? "bg-slate-800" : "bg-slate-200"
         )}
       >
         <SliderPrimitive.Range
@@ -35,7 +35,7 @@ const Slider = React.forwardRef<
         className={cn(
           "block h-5 w-5 rounded-full border-2 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50",
           isDarkMode
-            ? "border-orange-500 bg-slate-800 hover:bg-slate-700"
+            ? "border-orange-500 bg-slate-800 hover:bg-slate-600"
             : "border-orange-600 bg-white hover:bg-slate-50"
         )}
       />

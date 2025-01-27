@@ -37,7 +37,9 @@ interface Message {
   content: string;
   timestamp: string;
   empathyScore: "unacceptable" | "acceptable" | "good" | null;
+  empathyNumericScore: number | null;
   qstarScore: "unacceptable" | "acceptable" | "good" | null;
+  qstarNumericScore: number | null;
   messageAlerted: boolean;
 }
 
@@ -72,7 +74,9 @@ const ReviewConsultation = () => {
         "Hi Dr. Lee, I’ve been dealing with ongoing skin irritation on my arms and face for a few weeks now. It’s getting uncomfortable, and I was hoping you could help me with this.",
       timestamp: "2024-01-18T09:00:00Z",
       empathyScore: null,
+      empathyNumericScore: null,
       qstarScore: null,
+      qstarNumericScore: null,
       messageAlerted: false,
     },
     {
@@ -82,7 +86,9 @@ const ReviewConsultation = () => {
         "Hello Michael, I’m sorry to hear about your irritation. Let’s take a closer look at the affected areas and discuss your skincare routine. It may be linked to something you're using or a condition we need to treat.",
       timestamp: "2024-01-18T09:05:00Z",
       empathyScore: null,
+      empathyNumericScore: null,
       qstarScore: null,
+      qstarNumericScore: null,
       messageAlerted: false,
     },
     {
@@ -92,7 +98,9 @@ const ReviewConsultation = () => {
         "I’ve been using the same skincare routine for a while now, but I’m not sure if it’s causing the irritation. I’ll show you my products when I come in.",
       timestamp: "2024-01-18T09:10:00Z",
       empathyScore: null,
+      empathyNumericScore: null,
       qstarScore: null,
+      qstarNumericScore: null,
       messageAlerted: false,
     },
     {
@@ -102,7 +110,9 @@ const ReviewConsultation = () => {
         "Great, we’ll review your products during the consultation. Based on the irritation's appearance, I think a new topical treatment will help. I’ll prescribe something specific to your condition.",
       timestamp: "2024-01-18T09:15:00Z",
       empathyScore: null,
+      empathyNumericScore: null,
       qstarScore: null,
+      qstarNumericScore: null,
       messageAlerted: false,
     },
     {
@@ -112,7 +122,9 @@ const ReviewConsultation = () => {
         "I’ve tried a few different treatments before, but they didn’t work. I’m hopeful that this one will make a difference. I just wish I had more details about the options.",
       timestamp: "2024-01-18T09:20:00Z",
       empathyScore: null,
+      empathyNumericScore: null,
       qstarScore: null,
+      qstarNumericScore: null,
       messageAlerted: false,
     },
     {
@@ -122,7 +134,9 @@ const ReviewConsultation = () => {
         "I understand your concerns. I’ll explain the treatment in more detail, including how it works and what to expect. It’s important to follow a proper routine to ensure the best results.",
       timestamp: "2024-01-18T09:25:00Z",
       empathyScore: null,
+      empathyNumericScore: null,
       qstarScore: null,
+      qstarNumericScore: null,
       messageAlerted: false,
     },
     {
@@ -132,7 +146,9 @@ const ReviewConsultation = () => {
         "Thanks, Dr. Lee. I’ll make sure to follow your advice closely and keep you updated on how it’s going. Can you recommend any specific products to complement the treatment?",
       timestamp: "2024-01-18T09:30:00Z",
       empathyScore: null,
+      empathyNumericScore: null,
       qstarScore: null,
+      qstarNumericScore: null,
       messageAlerted: false,
     },
     {
@@ -142,7 +158,9 @@ const ReviewConsultation = () => {
         "Yes, I’d recommend a gentle cleanser that doesn’t irritate your skin, followed by a non-comedogenic moisturizer. I can suggest a few brands when you come in. I’ll also provide you with a written plan.",
       timestamp: "2024-01-18T09:35:00Z",
       empathyScore: null,
+      empathyNumericScore: null,
       qstarScore: null,
+      qstarNumericScore: null,
       messageAlerted: false,
     },
     {
@@ -152,7 +170,9 @@ const ReviewConsultation = () => {
         "That sounds good. I’ve been using a harsh exfoliator lately, and I think that might be contributing to the irritation. I’ll stop using it for now and try the products you suggest.",
       timestamp: "2024-01-18T09:40:00Z",
       empathyScore: null,
+      empathyNumericScore: null,
       qstarScore: null,
+      qstarNumericScore: null,
       messageAlerted: false,
     },
     {
@@ -162,7 +182,9 @@ const ReviewConsultation = () => {
         "I’m glad to hear that. Exfoliating too much can damage the skin barrier, which may worsen the irritation. I’ll also advise you to avoid direct sun exposure during this treatment, as it could make the irritation worse.",
       timestamp: "2024-01-18T09:45:00Z",
       empathyScore: null,
+      empathyNumericScore: null,
       qstarScore: null,
+      qstarNumericScore: null,
       messageAlerted: false,
     },
     {
@@ -172,7 +194,9 @@ const ReviewConsultation = () => {
         "I’ll make sure to wear sunscreen and avoid sun exposure. I have a question, though—what if the irritation comes back after I start the treatment? Should I contact you right away?",
       timestamp: "2024-01-18T09:50:00Z",
       empathyScore: null,
+      empathyNumericScore: null,
       qstarScore: null,
+      qstarNumericScore: null,
       messageAlerted: false,
     },
     {
@@ -182,7 +206,9 @@ const ReviewConsultation = () => {
         "Yes, please reach out if you notice any worsening symptoms. We can adjust the treatment if necessary. It’s also important to monitor how your skin reacts during the first week, as it may take some time to see full results.",
       timestamp: "2024-01-18T09:55:00Z",
       empathyScore: null,
+      empathyNumericScore: null,
       qstarScore: null,
+      qstarNumericScore: null,
       messageAlerted: false,
     },
     {
@@ -192,7 +218,9 @@ const ReviewConsultation = () => {
         "Got it. I’ll be sure to keep track of any changes and let you know if anything seems off. Thanks again for your help today!",
       timestamp: "2024-01-18T10:00:00Z",
       empathyScore: null,
+      empathyNumericScore: null,
       qstarScore: null,
+      qstarNumericScore: null,
       messageAlerted: false,
     },
     {
@@ -202,7 +230,9 @@ const ReviewConsultation = () => {
         "You’re very welcome, Michael. I’m confident that this treatment will help, but don’t hesitate to reach out if you need anything. I’ll be here to assist you. Take care and I’ll see you at your follow-up appointment.",
       timestamp: "2024-01-18T10:05:00Z",
       empathyScore: null,
+      empathyNumericScore: null,
       qstarScore: null,
+      qstarNumericScore: null,
       messageAlerted: false,
     },
     {
@@ -212,7 +242,9 @@ const ReviewConsultation = () => {
         "I’m looking forward to seeing the results! I’ll check back with you soon. Thanks again, Dr. Lee!",
       timestamp: "2024-01-18T10:10:00Z",
       empathyScore: null,
+      empathyNumericScore: null,
       qstarScore: null,
+      qstarNumericScore: null,
       messageAlerted: false,
     },
     {
@@ -222,7 +254,9 @@ const ReviewConsultation = () => {
         "Take care, Michael! Wishing you all the best with your treatment. I’ll see you soon for the follow-up.",
       timestamp: "2024-01-18T10:15:00Z",
       empathyScore: null,
+      empathyNumericScore: null,
       qstarScore: null,
+      qstarNumericScore: null,
       messageAlerted: false,
     },
   ]);
@@ -231,13 +265,21 @@ const ReviewConsultation = () => {
     messageId: number,
     qstarScore: "unacceptable" | "acceptable" | "good"
   ) => {
+    const numericScore =
+      qstarScore === "unacceptable" ? 1 : qstarScore === "acceptable" ? 2 : 3;
+
     setMessages(
       messages.map((message) =>
-        message.id === messageId ? { ...message, qstarScore } : message
+        message.id === messageId
+          ? {
+              ...message,
+              qstarScore,
+              qstarNumericScore: numericScore,
+            }
+          : message
       )
     );
   };
-
   interface CircleRatingProps {
     messageId: number;
     currentRating: "unacceptable" | "acceptable" | "good" | null;
@@ -298,9 +340,22 @@ const ReviewConsultation = () => {
     messageId: number,
     empathyScore: "unacceptable" | "acceptable" | "good"
   ) => {
+    const numericScore =
+      empathyScore === "unacceptable"
+        ? 1
+        : empathyScore === "acceptable"
+        ? 2
+        : 3;
+
     setMessages(
       messages.map((message) =>
-        message.id === messageId ? { ...message, empathyScore } : message
+        message.id === messageId
+          ? {
+              ...message,
+              empathyScore,
+              empathyNumericScore: numericScore,
+            }
+          : message
       )
     );
   };
@@ -390,8 +445,33 @@ const ReviewConsultation = () => {
       .map((m) => m.qstarScore)
       .filter(Boolean) as ("unacceptable" | "acceptable" | "good")[];
 
+    const empathyNumericScores = doctorMessages
+      .map((m) => m.empathyNumericScore)
+      .filter(Boolean) as number[];
+
+    const qstarNumericScores = doctorMessages
+      .map((m) => m.qstarNumericScore)
+      .filter(Boolean) as number[];
+
     const totalEmpathyRatings = empathyRatings.length;
     const totalQstarRatings = qstarRatings.length;
+
+    // Calculate numeric averages
+    const averageEmpathyNumeric =
+      empathyNumericScores.length > 0
+        ? (
+            empathyNumericScores.reduce((a, b) => a + b, 0) /
+            empathyNumericScores.length
+          ).toFixed(2)
+        : "0";
+
+    const averageQstarNumeric =
+      qstarNumericScores.length > 0
+        ? (
+            qstarNumericScores.reduce((a, b) => a + b, 0) /
+            qstarNumericScores.length
+          ).toFixed(2)
+        : "0";
 
     const empathyCounts = {
       unacceptable: empathyRatings.filter((r) => r === "unacceptable").length,
@@ -455,6 +535,8 @@ const ReviewConsultation = () => {
       qstarPercentages,
       totalEmpathyRated: totalEmpathyRatings,
       totalQstarRated: totalQstarRatings,
+      averageEmpathyNumeric,
+      averageQstarNumeric,
     };
   }, [messages]);
 
@@ -722,6 +804,9 @@ const ReviewConsultation = () => {
                     <span className="text-lg font-semibold">
                       {calculateAverages.averageEmpathy}
                     </span>
+                    <span className="ml-1 font-bold">
+                      ({calculateAverages.averageEmpathyNumeric})
+                    </span>
                   </div>
                   <div className="text-sm">
                     <p>
@@ -751,6 +836,9 @@ const ReviewConsultation = () => {
                       <span className="text-lg font-semibold">
                         {calculateAverages.averageQstar}
                       </span>
+                      <span className="ml-1 font-bold">
+                        ({calculateAverages.averageQstarNumeric})
+                      </span>
                     </div>
                   </div>
                   <div className="text-sm">
@@ -773,7 +861,7 @@ const ReviewConsultation = () => {
                 </div>
                 {getMessagesWithUnacceptableRatings.length > 0 && (
                   <div className="space-y-4 mb-6">
-                    <p className="text-sm flex items-center text-red-600 font-medium">
+                    <p className="text-m flex items-center text-red-600 font-medium">
                       <AlertTriangle className="w-4 h-4 mr-2" />
                       Messages with Unacceptable Ratings (
                       {getMessagesWithUnacceptableRatings.length})

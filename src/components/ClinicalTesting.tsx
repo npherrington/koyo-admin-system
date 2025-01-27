@@ -16,133 +16,116 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  ColourCard,
-  ColourCardHeader,
-  ColourCardTitle,
-  ColourCardContent,
-} from "@/components/ui/colour-card";
 import { useNavigate } from "react-router-dom";
 import Sidebar from "./ui/side-bar";
 import { useTheme } from "@/contexts/ThemeContext";
 import { SearchInput } from "@/components/ui/search-input";
-import ConsultationItem from "@/components/ui/ConsultationItem";
+import ConsultationSearch from "@/api/ConsultationSearch";
 
 interface Consultation {
   id: string;
-  patientName: string;
-  doctorName: string;
-  date: string;
-  duration: string;
-  status: string;
-  type: string;
-  patientRating: number;
-  empathyScore: number | null;
-  qstarScore: number | null;
-  summary: string;
-  assignedDoctor: string | null;
+  patientId: string;
+  conclusion: null | boolean;
+  overallScore: null | number;
+  comment: null | string;
+  createdAt: string;
+  endedAt: string;
+  deletedAt: null | string;
 }
 
 const ClinicalTesting = () => {
-  const { isDarkMode, toggleTheme } = useTheme();
-  const navigate = useNavigate();
+  const { isDarkMode } = useTheme();
   const [selectedTab, setSelectedTab] = useState("awaiting-review");
   const [consultations, setConsultations] = useState<Consultation[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5;
 
-  useEffect(() => {
-    const storedConsultations = localStorage.getItem("mockConsultations");
+  // useEffect(() => {
+  //   const storedConsultations = localStorage.getItem("mockConsultations");
 
-    if (storedConsultations) {
-      // If data exists in localStorage, use it
-      setConsultations(JSON.parse(storedConsultations));
-    } else {
-      // If no data in localStorage, fetch from JSON file
-      fetch("../public/mockConsultations.json")
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Network response was not ok");
-          }
-          return response.json();
-        })
-        .then((data: Consultation[]) => {
-          // Initialize assigned property and store in localStorage
-          const consultationsWithAssigned = data.map((consultation) => ({
-            ...consultation,
-            assigned: false,
-          }));
-          localStorage.setItem(
-            "mockConsultations",
-            JSON.stringify(consultationsWithAssigned)
-          );
-          setConsultations(consultationsWithAssigned);
-        })
-        .catch((error) => {
-          console.error("Error loading the JSON file:", error);
-        });
-    }
-  }, []);
+  //   if (storedConsultations) {
+  //     // If data exists in localStorage, use it
+  //     setConsultations(JSON.parse(storedConsultations));
+  //   } else {
+  //     // If no data in localStorage, fetch from JSON file
+  //     fetch("../public/mockConsultations.json")
+  //       .then((response) => {
+  //         if (!response.ok) {
+  //           throw new Error("Network response was not ok");
+  //         }
+  //         return response.json();
+  //       })
+  //       .then((data: Consultation[]) => {
+  //         // Initialize assigned property and store in localStorage
+  //         const consultationsWithAssigned = data.map((consultation) => ({
+  //           ...consultation,
+  //           assigned: false,
+  //         }));
+  //         localStorage.setItem(
+  //           "mockConsultations",
+  //           JSON.stringify(consultationsWithAssigned)
+  //         );
+  //         setConsultations(consultationsWithAssigned);
+  //       })
+  //       .catch((error) => {
+  //         console.error("Error loading the JSON file:", error);
+  //       });
+  //   }
+  // }, []);
 
   // Toggle assigned status
-  const toggleAssigned = (id: string, event: React.MouseEvent) => {
-    event.stopPropagation(); // Prevent consultation click handler from firing
-    setConsultations((prevConsultations) =>
-      prevConsultations.map((consultation) =>
-        consultation.id === id
-          ? { ...consultation, status: "assigned" }
-          : consultation
-      )
-    );
-  };
+  // const toggleAssigned = (id: string, event: React.MouseEvent) => {
+  //   event.stopPropagation(); // Prevent consultation click handler from firing
+  //   setConsultations((prevConsultations) =>
+  //     prevConsultations.map((consultation) =>
+  //       consultation.id === id
+  //         ? { ...consultation, status: "assigned" }
+  //         : consultation
+  //     )
+  //   );
+  // };
 
-  // Filter consultations based on selected tab
-  const filteredConsultations = consultations.filter((consultation) => {
-    if (selectedTab === "awaiting-review") {
-      return (
-        consultation.status === "awaiting review" &&
-        !consultation.assignedDoctor
-      );
-    } else if (selectedTab === "reviewed") {
-      return consultation.status === "reviewed" && !consultation.assignedDoctor;
-    } else if (selectedTab === "assigned") {
-      return consultation.status === "assigned";
-    }
-    return true;
-  });
+  // // Filter consultations based on selected tab
+  // const filteredConsultations = consultations.filter((consultation) => {
+  //   if (selectedTab === "awaiting-review") {
+  //     return (
+  //       consultation.status === "awaiting review" &&
+  //       !consultation.assignedDoctor
+  //     );
+  //   } else if (selectedTab === "reviewed") {
+  //     return consultation.status === "reviewed" && !consultation.assignedDoctor;
+  //   } else if (selectedTab === "assigned") {
+  //     return consultation.status === "assigned";
+  //   }
+  //   return true;
+  // });
 
-  // Calculate pagination
-  const startIndex = (currentPage - 1) * itemsPerPage;
-  const endIndex = startIndex + itemsPerPage;
-  const currentConsultations = filteredConsultations.slice(
-    startIndex,
-    endIndex
-  );
-  const totalPages = Math.ceil(filteredConsultations.length / itemsPerPage);
+  // // Calculate pagination
+  // const startIndex = (currentPage - 1) * itemsPerPage;
+  // const endIndex = startIndex + itemsPerPage;
+  // const currentConsultations = filteredConsultations.slice(
+  //   startIndex,
+  //   endIndex
+  // );
+  // const totalPages = Math.ceil(filteredConsultations.length / itemsPerPage);
 
-  const nextPage = () => {
-    if (currentPage < totalPages) {
-      setCurrentPage(currentPage + 1);
-    }
-  };
+  // const nextPage = () => {
+  //   if (currentPage < totalPages) {
+  //     setCurrentPage(currentPage + 1);
+  //   }
+  // };
 
-  const prevPage = () => {
-    if (currentPage > 1) {
-      setCurrentPage(currentPage - 1);
-    }
-  };
+  // const prevPage = () => {
+  //   if (currentPage > 1) {
+  //     setCurrentPage(currentPage - 1);
+  //   }
+  // };
 
-  // Reset to first page when changing tabs
-  const handleTabChange = (value: string) => {
-    setSelectedTab(value);
-    setCurrentPage(1);
-  };
+  // // Reset to first page when changing tabs
+  // const handleTabChange = (value: string) => {
+  //   setSelectedTab(value);
+  //   setCurrentPage(1);
+  // };
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
@@ -176,7 +159,7 @@ const ClinicalTesting = () => {
                   }}
                 />
               </div>
-              <div className="flex items-center justify-between">
+              {/* <div className="flex items-center justify-between">
                 <Tabs value={selectedTab} className="w-full">
                   <TabsList>
                     <TabsTrigger
@@ -199,15 +182,17 @@ const ClinicalTesting = () => {
                     </TabsTrigger>
                   </TabsList>
                 </Tabs>
-              </div>
+              </div> */}
             </div>
             <button className="flex items-center px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700">
               <Download className="w-4 h-4 mr-2" />
               Export Report
             </button>
           </div>
-
           <div className="divide-y">
+            <ConsultationSearch />
+          </div>
+          {/* <div className="divide-y">
             <div className="divide-y">
               {currentConsultations.map((consultation) => (
                 <ConsultationItem
@@ -218,11 +203,12 @@ const ClinicalTesting = () => {
                 />
               ))}
             </div>
-          </div>
+          </div> */}
         </CardContent>
         <CardFooter className="p-0 w-full">
           <div className="w-full px-6 py-4 flex items-center justify-between border-t">
-            <div className="text-sm">
+            <h1>FOOTER</h1>
+            {/* <div className="text-sm">
               Showing {startIndex + 1}-
               {Math.min(endIndex, filteredConsultations.length)} of{" "}
               {filteredConsultations.length} results
@@ -245,7 +231,7 @@ const ClinicalTesting = () => {
               >
                 Next
               </button>
-            </div>
+            </div> */}
           </div>
         </CardFooter>
       </Card>

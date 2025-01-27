@@ -32,6 +32,7 @@ import { useNavigate } from "react-router-dom";
 import Sidebar from "./ui/side-bar";
 import { useTheme } from "@/contexts/ThemeContext";
 import { SearchInput } from "@/components/ui/search-input";
+import ConsultationItem from "@/components/ui/ConsultationItem";
 
 interface Consultation {
   id: string;
@@ -45,7 +46,7 @@ interface Consultation {
   empathyScore: number | null;
   qstarScore: number | null;
   summary: string;
-  assigned?: boolean;
+  assignedDoctor: string | null;
 }
 
 const ClinicalTesting = () => {
@@ -95,7 +96,7 @@ const ClinicalTesting = () => {
     setConsultations((prevConsultations) =>
       prevConsultations.map((consultation) =>
         consultation.id === id
-          ? { ...consultation, assigned: !consultation.assigned }
+          ? { ...consultation, status: "assigned" }
           : consultation
       )
     );
@@ -105,12 +106,13 @@ const ClinicalTesting = () => {
   const filteredConsultations = consultations.filter((consultation) => {
     if (selectedTab === "awaiting-review") {
       return (
-        consultation.status === "awaiting review" && !consultation.assigned
+        consultation.status === "awaiting review" &&
+        !consultation.assignedDoctor
       );
     } else if (selectedTab === "reviewed") {
-      return consultation.status === "reviewed" && !consultation.assigned;
+      return consultation.status === "reviewed" && !consultation.assignedDoctor;
     } else if (selectedTab === "assigned") {
-      return consultation.assigned;
+      return consultation.status === "assigned";
     }
     return true;
   });
@@ -140,21 +142,6 @@ const ClinicalTesting = () => {
   const handleTabChange = (value: string) => {
     setSelectedTab(value);
     setCurrentPage(1);
-  };
-
-  const handleConsultationClick = () => {
-    console.log("Consultation clicked");
-    navigate("../ReviewConsultation");
-  };
-
-  const getStatusBadge = (status: string) => {
-    const styles: Record<string, string> = {
-      "awaiting review": "bg-yellow-100 text-yellow-800",
-      reviewed: "bg-green-100 text-green-800",
-      "in-progress": "bg-blue-100 text-blue-800",
-      cancelled: "bg-red-100 text-red-800",
-    };
-    return styles[status.toLowerCase()] || "bg-gray-100 text-gray-800";
   };
 
   return (
@@ -199,16 +186,16 @@ const ClinicalTesting = () => {
                       Awaiting Review
                     </TabsTrigger>
                     <TabsTrigger
-                      value="reviewed"
-                      onClick={() => handleTabChange("reviewed")}
-                    >
-                      Reviewed
-                    </TabsTrigger>
-                    <TabsTrigger
                       value="assigned"
                       onClick={() => handleTabChange("assigned")}
                     >
                       Assigned
+                    </TabsTrigger>
+                    <TabsTrigger
+                      value="reviewed"
+                      onClick={() => handleTabChange("reviewed")}
+                    >
+                      Reviewed
                     </TabsTrigger>
                   </TabsList>
                 </Tabs>
@@ -221,71 +208,16 @@ const ClinicalTesting = () => {
           </div>
 
           <div className="divide-y">
-            {currentConsultations.map((consultation) => (
-              <div
-                key={consultation.id}
-                className={`p-4 cursor-pointer ${
-                  isDarkMode
-                    ? "hover:bg-orange-500/80 hover:text-white"
-                    : "hover:bg-orange-500/50"
-                }`}
-                onClick={handleConsultationClick}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <button
-                      onClick={(e) => toggleAssigned(consultation.id, e)}
-                      className="hover:bg-gray-100 p-1 rounded"
-                    >
-                      {consultation.assigned ? (
-                        <CheckSquare className="w-5 h-5 text-blue-500" />
-                      ) : (
-                        <Square className="w-5 h-5 text-gray-400" />
-                      )}
-                    </button>
-                    <div>
-                      <div className="flex items-center">
-                        <h3 className="font-medium">
-                          {consultation.patientName}
-                        </h3>
-                        <span
-                          className={`ml-2 px-2 py-0.5 rounded-full text-xs ${getStatusBadge(
-                            consultation.status
-                          )}`}
-                        >
-                          {consultation.status}
-                        </span>
-                      </div>
-                      <p className="text-sm">
-                        {consultation.type} • {consultation.date}
-                      </p>
-                      <p className="text-sm">{consultation.doctorName}</p>
-                      <p className="text-sm">
-                        <i>{consultation.summary}</i>
-                      </p>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-6">
-                    <div className="flex items-center">
-                      <Star className="w-4 h-4 text-yellow-500 mr-1" />
-                      <span className="text-sm">
-                        {consultation.patientRating}
-                      </span>
-                    </div>
-                    <div className="flex items-center">
-                      <Heart className="w-4 h-4 text-yellow-500 mr-1" />
-                      <span className="text-sm">
-                        {consultation.empathyScore}
-                      </span>
-                    </div>
-                    <div className="flex items-center">
-                      <CheckCircle className="w-4 h-4 text-yellow-500 mr-1" />
-                      <span className="text-sm">{consultation.qstarScore}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
+            <div className="divide-y">
+              {currentConsultations.map((consultation) => (
+                <ConsultationItem
+                  key={consultation.id}
+                  consultation={consultation}
+                  onAssignmentToggle={toggleAssigned}
+                  isDarkMode={isDarkMode}
+                />
+              ))}
+            </div>
           </div>
         </CardContent>
         <CardFooter className="p-0 w-full">

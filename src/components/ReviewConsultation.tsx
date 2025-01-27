@@ -16,6 +16,7 @@ import {
   Hourglass,
   Gauge,
   Bot,
+  Speech,
 } from "lucide-react";
 import {
   Card,
@@ -35,8 +36,8 @@ interface Message {
   sender: string;
   content: string;
   timestamp: string;
-  empathyScore: number | null;
-  qstarScore: number | null;
+  empathyScore: "unacceptable" | "acceptable" | "good" | null;
+  qstarScore: "unacceptable" | "acceptable" | "good" | null;
   messageAlerted: boolean;
 }
 
@@ -44,13 +45,8 @@ const ReviewConsultation = () => {
   const { isDarkMode } = useTheme();
   const navigate = useNavigate();
   const [showOverlay, setShowOverlay] = useState(false);
-  const [reviewerNotes, setReviewerNotes] = useState("");
-  const [alertedMessages, setAlertedMessages] = useState(new Set());
-  const hasAlerts = alertedMessages.size > 0;
-  const [alertNotes, setAlertNotes] = useState(new Map());
-  const [optimizedMessages, setOptimizedMessages] = useState(new Set());
-  const hasOptimizations = optimizedMessages.size > 0;
-  const [optimizationNotes, setOptimizationNotes] = useState(new Map());
+  const [unacceptableNotes, setUnacceptableNotes] = useState(new Map());
+
   const consultationSummary = {
     id: "C-1236",
     patientName: "Michael Davis",
@@ -231,13 +227,10 @@ const ReviewConsultation = () => {
     },
   ]);
 
-  interface AlertTriggerProps {
-    messageId: number;
-    isAlerted: boolean;
-    onToggle: (messageId: number) => void;
-  }
-
-  const handleRatingQualityScore = (messageId: number, qstarScore: number) => {
+  const handleRatingQualityScore = (
+    messageId: number,
+    qstarScore: "unacceptable" | "acceptable" | "good"
+  ) => {
     setMessages(
       messages.map((message) =>
         message.id === messageId ? { ...message, qstarScore } : message
@@ -245,9 +238,65 @@ const ReviewConsultation = () => {
     );
   };
 
+  interface CircleRatingProps {
+    messageId: number;
+    currentRating: "unacceptable" | "acceptable" | "good" | null;
+  }
+
+  const CircleRating = ({ messageId, currentRating }: CircleRatingProps) => {
+    const { isDarkMode } = useTheme();
+    const ratings = [
+      { value: "unacceptable", label: "Unacceptable", color: "red" },
+      { value: "acceptable", label: "Acceptable", color: "yellow" },
+      { value: "good", label: "Good", color: "green" },
+    ] as const;
+
+    return (
+      <div className="flex items-center space-x-2 mb-1">
+        {ratings.map((rating) => (
+          <button
+            key={rating.value}
+            onClick={() => handleRatingQualityScore(messageId, rating.value)}
+            className={cn(
+              "flex items-center px-3 py-1 rounded-full text-sm font-medium transition-colors",
+              currentRating === rating.value
+                ? [
+                    rating.value === "unacceptable" &&
+                      "bg-red-100 text-red-700 border-red-300",
+                    rating.value === "acceptable" &&
+                      "bg-yellow-100 text-yellow-700 border-yellow-300",
+                    rating.value === "good" &&
+                      "bg-green-100 text-green-700 border-green-300",
+                  ]
+                : isDarkMode
+                ? "bg-blue-500 text-white hover:bg-blue-600"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            )}
+          >
+            <Speech
+              className={cn(
+                "w-4 h-4 mr-1",
+                currentRating === rating.value
+                  ? [
+                      rating.value === "unacceptable" && "text-red-500",
+                      rating.value === "acceptable" && "text-yellow-500",
+                      rating.value === "good" && "text-green-500",
+                    ]
+                  : isDarkMode
+                  ? "text-white"
+                  : "text-gray-400"
+              )}
+            />
+            {rating.label}
+          </button>
+        ))}
+      </div>
+    );
+  };
+
   const handleRatingEmpathyScore = (
     messageId: number,
-    empathyScore: number
+    empathyScore: "unacceptable" | "acceptable" | "good"
   ) => {
     setMessages(
       messages.map((message) =>
@@ -256,193 +305,59 @@ const ReviewConsultation = () => {
     );
   };
 
-  interface CircleRatingProps {
-    messageId: number;
-    currentRating: number | null;
-  }
-
   interface HeartRatingProps {
     messageId: number;
-    currentRating: number | null;
+    currentRating: "unacceptable" | "acceptable" | "good" | null;
   }
 
-  interface OptimizeTriggerProps {
-    messageId: number;
-    isOptimized: boolean;
-    onToggle: (messageId: number) => void;
-  }
-
-  const CircleRating = ({ messageId, currentRating }: CircleRatingProps) => {
-    const [hover, setHover] = useState(0);
-
-    return (
-      <div className="flex items-center space-x-1 mb-1">
-        {[1, 2, 3, 4, 5].map((check) => (
-          <button
-            key={check}
-            onClick={() => handleRatingQualityScore(messageId, check)}
-            onMouseEnter={() => setHover(check)}
-            onMouseLeave={() => setHover(0)}
-            className="focus:outline-none"
-          >
-            <CircleCheck
-              className={`w-5 h-5 ${
-                check <= (hover || currentRating || 0)
-                  ? "fill-green-400 text-black-400"
-                  : "text-gray-300"
-              }`}
-            />
-          </button>
-        ))}
-      </div>
-    );
-  };
   const HeartRating = ({ messageId, currentRating }: HeartRatingProps) => {
-    const [hover, setHover] = useState(0);
+    const { isDarkMode } = useTheme();
+    const ratings = [
+      { value: "unacceptable", label: "Unacceptable", color: "red" },
+      { value: "acceptable", label: "Acceptable", color: "yellow" },
+      { value: "good", label: "Good", color: "green" },
+    ] as const;
 
     return (
-      <div className="flex items-center space-x-1 mb-1">
-        {[1, 2, 3, 4, 5].map((heart) => (
+      <div className="flex items-center space-x-2 mb-1">
+        {ratings.map((rating) => (
           <button
-            key={heart}
-            onClick={() => handleRatingEmpathyScore(messageId, heart)}
-            onMouseEnter={() => setHover(heart)}
-            onMouseLeave={() => setHover(0)}
-            className="focus:outline-none"
+            key={rating.value}
+            onClick={() => handleRatingEmpathyScore(messageId, rating.value)}
+            className={cn(
+              "flex items-center px-3 py-1 rounded-full text-sm font-medium transition-colors",
+              currentRating === rating.value
+                ? [
+                    rating.value === "unacceptable" &&
+                      "bg-red-100 text-red-700 border-red-300",
+                    rating.value === "acceptable" &&
+                      "bg-yellow-100 text-yellow-700 border-yellow-300",
+                    rating.value === "good" &&
+                      "bg-green-100 text-green-700 border-green-300",
+                  ]
+                : isDarkMode
+                ? "bg-blue-500 text-white hover:bg-blue-600"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            )}
           >
             <Heart
-              className={`w-5 h-5 ${
-                heart <= (hover || currentRating || 0)
-                  ? "fill-red-400 text-white-400"
-                  : "text-gray-300"
-              }`}
+              className={cn(
+                "w-4 h-4 mr-1",
+                currentRating === rating.value
+                  ? [
+                      rating.value === "unacceptable" && "text-red-500",
+                      rating.value === "acceptable" && "text-yellow-500",
+                      rating.value === "good" && "text-green-500",
+                    ]
+                  : isDarkMode
+                  ? "text-white"
+                  : "text-gray-400"
+              )}
             />
+            {rating.label}
           </button>
         ))}
       </div>
-    );
-  };
-
-  const AlertTrigger: React.FC<AlertTriggerProps> = ({
-    messageId,
-    isAlerted,
-    onToggle,
-  }) => (
-    <button
-      onClick={() => onToggle(messageId)}
-      className="focus:outline-none hover:bg-gray-100 p-1 rounded"
-    >
-      <AlertTriangle
-        className={`w-6 h-6 ${
-          isAlerted ? "fill-red-400 text-black-400" : "text-gray-400"
-        }`}
-      />
-    </button>
-  );
-
-  const handleAlertNote = (messageId: number, note: string) => {
-    setAlertNotes((prev) => {
-      const newNotes = new Map(prev);
-      newNotes.set(messageId, note);
-      return newNotes;
-    });
-  };
-
-  const handleToggleAlert = (messageId: number) => {
-    setAlertedMessages((prev) => {
-      const newAlerts = new Set(prev);
-      if (newAlerts.has(messageId)) {
-        newAlerts.delete(messageId);
-        // Remove the note when unflagging
-        setAlertNotes((prevNotes) => {
-          const newNotes = new Map(prevNotes);
-          newNotes.delete(messageId);
-          return newNotes;
-        });
-      } else {
-        newAlerts.add(messageId);
-        // Initialize empty note when flagging
-        setAlertNotes((prevNotes) => {
-          const newNotes = new Map(prevNotes);
-          newNotes.set(messageId, "");
-          return newNotes;
-        });
-      }
-      return newAlerts;
-    });
-  };
-
-  const getAlertedMessages = useMemo(() => {
-    return messages.filter((message) => alertedMessages.has(message.id));
-  }, [messages, alertedMessages]);
-
-  const areAllAlertNotesComplete = useMemo(() => {
-    return Array.from(alertedMessages).every(
-      (messageId) =>
-        alertNotes.has(messageId) && alertNotes.get(messageId).trim().length > 0
-    );
-  }, [alertedMessages, alertNotes]);
-
-  const getOptimizedMessages = useMemo(() => {
-    return messages.filter((message) => optimizedMessages.has(message.id));
-  }, [messages, optimizedMessages]);
-
-  const handleToggleOptimize = (messageId: number) => {
-    setOptimizedMessages((prev) => {
-      const newOptimized = new Set(prev);
-      if (newOptimized.has(messageId)) {
-        newOptimized.delete(messageId);
-        // Remove the note when unflagging
-        setOptimizationNotes((prevNotes) => {
-          const newNotes = new Map(prevNotes);
-          newNotes.delete(messageId);
-          return newNotes;
-        });
-      } else {
-        newOptimized.add(messageId);
-        // Initialize empty note when flagging
-        setOptimizationNotes((prevNotes) => {
-          const newNotes = new Map(prevNotes);
-          newNotes.set(messageId, "");
-          return newNotes;
-        });
-      }
-      return newOptimized;
-    });
-  };
-
-  const handleOptimizationNote = (messageId: number, note: string) => {
-    setOptimizationNotes((prev) => {
-      const newNotes = new Map(prev);
-      newNotes.set(messageId, note);
-      return newNotes;
-    });
-  };
-  const areAllOptimizationNotesComplete = useMemo(() => {
-    return Array.from(optimizedMessages).every(
-      (messageId) =>
-        optimizationNotes.has(messageId) &&
-        optimizationNotes.get(messageId).trim().length > 0
-    );
-  }, [optimizedMessages, optimizationNotes]);
-
-  const OptimizeTrigger = ({
-    messageId,
-    isOptimized,
-    onToggle,
-  }: OptimizeTriggerProps) => {
-    return (
-      <button
-        onClick={() => onToggle(messageId)}
-        className="focus:outline-none hover:bg-gray-100 p-1 rounded"
-      >
-        <Cpu
-          className={cn(
-            "w-6 h-6",
-            isOptimized ? "fill-blue-400 text-black-400" : "text-gray-400"
-          )}
-        />
-      </button>
     );
   };
 
@@ -468,19 +383,78 @@ const ReviewConsultation = () => {
     const doctorMessages = messages.filter(
       (message) => message.sender === "doctor"
     );
-    const empathySum = doctorMessages.reduce(
-      (sum, message) => sum + (message.empathyScore || 0),
-      0
-    );
-    const qstarSum = doctorMessages.reduce(
-      (sum, message) => sum + (message.qstarScore || 0),
-      0
-    );
-    const count = doctorMessages.length;
+    const empathyRatings = doctorMessages
+      .map((m) => m.empathyScore)
+      .filter(Boolean) as ("unacceptable" | "acceptable" | "good")[];
+    const qstarRatings = doctorMessages
+      .map((m) => m.qstarScore)
+      .filter(Boolean) as ("unacceptable" | "acceptable" | "good")[];
+
+    const totalEmpathyRatings = empathyRatings.length;
+    const totalQstarRatings = qstarRatings.length;
+
+    const empathyCounts = {
+      unacceptable: empathyRatings.filter((r) => r === "unacceptable").length,
+      acceptable: empathyRatings.filter((r) => r === "acceptable").length,
+      good: empathyRatings.filter((r) => r === "good").length,
+    };
+
+    const qstarCounts = {
+      unacceptable: qstarRatings.filter((r) => r === "unacceptable").length,
+      acceptable: qstarRatings.filter((r) => r === "acceptable").length,
+      good: qstarRatings.filter((r) => r === "good").length,
+    };
+
+    const empathyPercentages = {
+      unacceptable:
+        totalEmpathyRatings > 0
+          ? ((empathyCounts.unacceptable / totalEmpathyRatings) * 100).toFixed(
+              1
+            )
+          : "0",
+      acceptable:
+        totalEmpathyRatings > 0
+          ? ((empathyCounts.acceptable / totalEmpathyRatings) * 100).toFixed(1)
+          : "0",
+      good:
+        totalEmpathyRatings > 0
+          ? ((empathyCounts.good / totalEmpathyRatings) * 100).toFixed(1)
+          : "0",
+    };
+
+    const qstarPercentages = {
+      unacceptable:
+        totalQstarRatings > 0
+          ? ((qstarCounts.unacceptable / totalQstarRatings) * 100).toFixed(1)
+          : "0",
+      acceptable:
+        totalQstarRatings > 0
+          ? ((qstarCounts.acceptable / totalQstarRatings) * 100).toFixed(1)
+          : "0",
+      good:
+        totalQstarRatings > 0
+          ? ((qstarCounts.good / totalQstarRatings) * 100).toFixed(1)
+          : "0",
+    };
+
+    // Find most common ratings
+    const mostCommonEmpathy = Object.entries(empathyCounts).reduce(
+      (prev, curr) => (prev[1] > curr[1] ? prev : curr)
+    )[0] as "unacceptable" | "acceptable" | "good";
+
+    const mostCommonQstar = Object.entries(qstarCounts).reduce((prev, curr) =>
+      prev[1] > curr[1] ? prev : curr
+    )[0] as "unacceptable" | "acceptable" | "good";
 
     return {
-      averageEmpathy: (empathySum / count).toFixed(1),
-      averageQstar: (qstarSum / count).toFixed(1),
+      averageEmpathy: mostCommonEmpathy,
+      averageQstar: mostCommonQstar,
+      empathyCounts,
+      qstarCounts,
+      empathyPercentages,
+      qstarPercentages,
+      totalEmpathyRated: totalEmpathyRatings,
+      totalQstarRated: totalQstarRatings,
     };
   }, [messages]);
 
@@ -492,6 +466,39 @@ const ReviewConsultation = () => {
       (message) => message.empathyScore !== null && message.qstarScore !== null
     );
   }, [messages]);
+
+  const getMessagesWithUnacceptableRatings = useMemo(() => {
+    return messages.filter(
+      (message) =>
+        message.sender === "doctor" &&
+        (message.empathyScore === "unacceptable" ||
+          message.qstarScore === "unacceptable")
+    );
+  }, [messages]);
+
+  const handleUnacceptableNote = (messageId: number, note: string) => {
+    setUnacceptableNotes((prev) => {
+      const newNotes = new Map(prev);
+      newNotes.set(messageId, note);
+      return newNotes;
+    });
+  };
+
+  const areAllUnacceptableNotesComplete = useMemo(() => {
+    const messagesWithUnacceptable = getMessagesWithUnacceptableRatings;
+    return messagesWithUnacceptable.every(
+      (message) =>
+        unacceptableNotes.has(message.id) &&
+        unacceptableNotes.get(message.id).trim().length > 0
+    );
+  }, [getMessagesWithUnacceptableRatings, unacceptableNotes]);
+
+  const isConfirmDisabled = useMemo(() => {
+    return (
+      getMessagesWithUnacceptableRatings.length > 0 &&
+      !areAllUnacceptableNotesComplete
+    );
+  }, [getMessagesWithUnacceptableRatings, areAllUnacceptableNotesComplete]);
 
   const handleSubmit = () => {
     setShowOverlay(true);
@@ -619,18 +626,6 @@ const ReviewConsultation = () => {
                             currentRating={message.empathyScore}
                           />
                         </div>
-                        <div className="flex gap-1">
-                          <AlertTrigger
-                            messageId={message.id}
-                            isAlerted={alertedMessages.has(message.id)}
-                            onToggle={handleToggleAlert}
-                          />
-                          <OptimizeTrigger
-                            messageId={message.id}
-                            isOptimized={optimizedMessages.has(message.id)}
-                            onToggle={handleToggleOptimize}
-                          />
-                        </div>
                       </div>
                     )}
                     <div className="flex items-start space-x-2">
@@ -708,52 +703,89 @@ const ReviewConsultation = () => {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="space-y-2">
-                  <p className="text-sm">Patient Rating</p>
+                  <p className="ext-xl font-bold">Patient Rating</p>
                   <ConsultationRating
                     rating={consultationSummary.patientRating}
                   />
                 </div>
                 <div className="p-3 rounded-lg">
-                  <p className="text-sm mb-1">Patient Feedback</p>
+                  <p className="text-sm mb-1 font-semibold">Patient Feedback</p>
                   <p className="text-sm">
                     {consultationSummary.patientFeedback}
                   </p>
                 </div>
 
                 <div className="space-y-2">
-                  <p className="text-sm">Average Empathy Score</p>
+                  <p className="text-xl font-bold">Average Empathy Score</p>
                   <div className="flex items-center">
                     <Heart className="w-5 h-5 text-red-400 mr-2" />
                     <span className="text-lg font-semibold">
                       {calculateAverages.averageEmpathy}
                     </span>
                   </div>
-                </div>
+                  <div className="text-sm">
+                    <p>
+                      Good: {calculateAverages.empathyCounts.good} (
+                      {calculateAverages.empathyPercentages.good}%)
+                    </p>
+                    <p>
+                      Acceptable: {calculateAverages.empathyCounts.acceptable} (
+                      {calculateAverages.empathyPercentages.acceptable}%)
+                    </p>
+                    <p>
+                      Unacceptable:{" "}
+                      {calculateAverages.empathyCounts.unacceptable} (
+                      {calculateAverages.empathyPercentages.unacceptable}%)
+                    </p>
+                    <p className="mt-1">
+                      Total Rated: {calculateAverages.totalEmpathyRated}
+                    </p>
+                  </div>
 
-                <div className="space-y-2">
-                  <p className="text-sm">Average QSTAR Score</p>
-                  <div className="flex items-center">
-                    <CircleCheck className="w-5 h-5 text-green-400 mr-2" />
-                    <span className="text-lg font-semibold">
-                      {calculateAverages.averageQstar}
-                    </span>
+                  <div className="space-y-2">
+                    <p className="text-xl font-bold">
+                      Average Communication Score
+                    </p>
+                    <div className="flex items-center">
+                      <Speech className="w-5 h-5 text-green-400 mr-2" />
+                      <span className="text-lg font-semibold">
+                        {calculateAverages.averageQstar}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="text-sm">
+                    <p>
+                      Good: {calculateAverages.qstarCounts.good} (
+                      {calculateAverages.qstarPercentages.good}%)
+                    </p>
+                    <p>
+                      Acceptable: {calculateAverages.qstarCounts.acceptable} (
+                      {calculateAverages.qstarPercentages.acceptable}%)
+                    </p>
+                    <p>
+                      Unacceptable: {calculateAverages.qstarCounts.unacceptable}{" "}
+                      ({calculateAverages.qstarPercentages.unacceptable}%)
+                    </p>
+                    <p className="mt-1">
+                      Total Rated: {calculateAverages.totalQstarRated}
+                    </p>
                   </div>
                 </div>
-                {/* New section for alerted messages */}
-                {hasAlerts && (
-                  <div className="space-y-4">
-                    <p className="text-sm flex items-center">
-                      <AlertTriangle className="w-4 h-4 text-red-400 mr-2" />
-                      Flagged Messages ({getAlertedMessages.length})
+                {getMessagesWithUnacceptableRatings.length > 0 && (
+                  <div className="space-y-4 mb-6">
+                    <p className="text-sm flex items-center text-red-600 font-medium">
+                      <AlertTriangle className="w-4 h-4 mr-2" />
+                      Messages with Unacceptable Ratings (
+                      {getMessagesWithUnacceptableRatings.length})
                     </p>
-                    {getAlertedMessages.map((message) => (
+                    {getMessagesWithUnacceptableRatings.map((message) => (
                       <div
                         key={message.id}
                         className={cn(
                           "p-4 rounded-lg border",
                           isDarkMode
-                            ? "bg-gray-800 border-gray-700"
-                            : "bg-gray-50 border-gray-200"
+                            ? "bg-gray-800 border-red-800"
+                            : "bg-red-50 border-red-200"
                         )}
                       >
                         <div className="mb-2">
@@ -771,82 +803,69 @@ const ReviewConsultation = () => {
                             {message.content}
                           </div>
                           <div className="space-y-2">
-                            <p className="text-sm text-gray-500 flex items-center">
-                              <AlertTriangle className="w-4 h-4 text-red-400 mr-2" />
-                              Alert Notes
-                            </p>
-                            <Textarea
-                              value={alertNotes.get(message.id) || ""}
-                              onChange={(e) =>
-                                handleAlertNote(message.id, e.target.value)
-                              }
-                              placeholder="Please provide details about this alert..."
-                              className={cn(
-                                "w-full h-24",
-                                isDarkMode
-                                  ? "bg-gray-700 border-gray-600"
-                                  : "bg-white border-gray-200"
-                              )}
-                              required
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-                {hasOptimizations && (
-                  <div className="space-y-4">
-                    <p className="text-sm flex items-center">
-                      <Cpu className="w-4 h-4 text-blue-400 mr-2" />
-                      Messages to Optimize ({getOptimizedMessages.length})
-                    </p>
-                    {getOptimizedMessages.map((message) => (
-                      <div
-                        key={message.id}
-                        className={cn(
-                          "p-4 rounded-lg border",
-                          isDarkMode
-                            ? "bg-gray-800 border-gray-700"
-                            : "bg-gray-50 border-gray-200"
-                        )}
-                      >
-                        <div className="mb-2">
-                          <div className="text-xs text-gray-500 mb-1">
-                            {new Date(message.timestamp).toLocaleTimeString()}
-                          </div>
-                          <div
-                            className={cn(
-                              "p-3 rounded-lg mb-3",
-                              isDarkMode
-                                ? "bg-gray-700 text-gray-200"
-                                : "bg-white text-gray-700"
-                            )}
-                          >
-                            {message.content}
-                          </div>
-                          <div className="space-y-2">
-                            <p className="text-sm text-gray-500 flex items-center">
-                              <Cpu className="w-4 h-4 text-blue-400 mr-2" />
-                              Optimization Suggestion
-                            </p>
-                            <Textarea
-                              value={optimizationNotes.get(message.id) || ""}
-                              onChange={(e) =>
-                                handleOptimizationNote(
-                                  message.id,
-                                  e.target.value
-                                )
-                              }
-                              placeholder="Please provide suggestions for optimizing this message..."
-                              className={cn(
-                                "w-full h-24",
-                                isDarkMode
-                                  ? "bg-gray-700 border-gray-600"
-                                  : "bg-white border-gray-200"
-                              )}
-                              required
-                            />
+                            <div className="flex space-x-4">
+                              <div className="flex items-center">
+                                <Heart
+                                  className={cn(
+                                    "w-4 h-4 mr-1",
+                                    message.empathyScore === "unacceptable"
+                                      ? "text-red-500"
+                                      : "text-gray-400"
+                                  )}
+                                />
+                                <span
+                                  className={
+                                    message.empathyScore === "unacceptable"
+                                      ? "text-red-500"
+                                      : ""
+                                  }
+                                >
+                                  Empathy: {message.empathyScore}
+                                </span>
+                              </div>
+                              <div className="flex items-center">
+                                <Speech
+                                  className={cn(
+                                    "w-4 h-4 mr-1",
+                                    message.qstarScore === "unacceptable"
+                                      ? "text-red-500"
+                                      : "text-gray-400"
+                                  )}
+                                />
+                                <span
+                                  className={
+                                    message.qstarScore === "unacceptable"
+                                      ? "text-red-500"
+                                      : ""
+                                  }
+                                >
+                                  Communication: {message.qstarScore}
+                                </span>
+                              </div>
+                            </div>
+                            <div className="space-y-2">
+                              <p className="text-sm flex items-center">
+                                <AlertTriangle className="w-4 h-4 text-red-400 mr-2" />
+                                Reason for Unacceptable Rating
+                              </p>
+                              <Textarea
+                                value={unacceptableNotes.get(message.id) || ""}
+                                onChange={(e) =>
+                                  handleUnacceptableNote(
+                                    message.id,
+                                    e.target.value
+                                  )
+                                }
+                                placeholder="Please explain why this message received an unacceptable rating..."
+                                className={cn(
+                                  "w-full h-24",
+                                  isDarkMode
+                                    ? "bg-gray-700 border-gray-600"
+                                    : "bg-white border-gray-200"
+                                )}
+                                required
+                              />
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -855,16 +874,16 @@ const ReviewConsultation = () => {
                 )}
               </CardContent>
               <CardFooter className="flex justify-end space-x-2">
-                <Button variant="outline" onClick={() => setShowOverlay(false)}>
+                <Button
+                  className="bg-red-700 hover:bg-red-800"
+                  onClick={() => setShowOverlay(false)}
+                >
                   Cancel
                 </Button>
                 <Button
                   onClick={handleConfirmSubmit}
-                  disabled={
-                    (hasAlerts && !areAllAlertNotesComplete) ||
-                    (hasOptimizations && !areAllOptimizationNotesComplete)
-                  }
                   className="bg-blue-600 hover:bg-blue-700"
+                  disabled={isConfirmDisabled}
                 >
                   Confirm
                 </Button>

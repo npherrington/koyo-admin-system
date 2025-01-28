@@ -1,131 +1,29 @@
 import React, { useEffect, useState } from "react";
-import {
-  Search,
-  Filter,
-  Star,
-  Heart,
-  CheckCircle,
-  Square,
-  CheckSquare,
-  Download,
-} from "lucide-react";
+import { Download, CircleCheck } from "lucide-react";
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useNavigate } from "react-router-dom";
 import Sidebar from "./ui/side-bar";
 import { useTheme } from "@/contexts/ThemeContext";
 import { SearchInput } from "@/components/ui/search-input";
-import ConsultationSearch from "@/api/ConsultationSearch";
+import useConsultations from "@/hooks/useConsultations";
+import Pagination from "@/components/ui/pagination";
 
-interface Consultation {
-  id: string;
-  patientId: string;
-  conclusion: null | boolean;
-  overallScore: null | number;
-  comment: null | string;
-  createdAt: string;
-  endedAt: string;
-  deletedAt: null | string;
-}
+const ITEMS_PER_PAGE = 5;
 
 const ClinicalTesting = () => {
   const { isDarkMode } = useTheme();
-  const [selectedTab, setSelectedTab] = useState("awaiting-review");
-  const [consultations, setConsultations] = useState<Consultation[]>([]);
+  const { consultations } = useConsultations();
+
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 5;
 
-  // useEffect(() => {
-  //   const storedConsultations = localStorage.getItem("mockConsultations");
-
-  //   if (storedConsultations) {
-  //     // If data exists in localStorage, use it
-  //     setConsultations(JSON.parse(storedConsultations));
-  //   } else {
-  //     // If no data in localStorage, fetch from JSON file
-  //     fetch("../public/mockConsultations.json")
-  //       .then((response) => {
-  //         if (!response.ok) {
-  //           throw new Error("Network response was not ok");
-  //         }
-  //         return response.json();
-  //       })
-  //       .then((data: Consultation[]) => {
-  //         // Initialize assigned property and store in localStorage
-  //         const consultationsWithAssigned = data.map((consultation) => ({
-  //           ...consultation,
-  //           assigned: false,
-  //         }));
-  //         localStorage.setItem(
-  //           "mockConsultations",
-  //           JSON.stringify(consultationsWithAssigned)
-  //         );
-  //         setConsultations(consultationsWithAssigned);
-  //       })
-  //       .catch((error) => {
-  //         console.error("Error loading the JSON file:", error);
-  //       });
-  //   }
-  // }, []);
-
-  // Toggle assigned status
-  // const toggleAssigned = (id: string, event: React.MouseEvent) => {
-  //   event.stopPropagation(); // Prevent consultation click handler from firing
-  //   setConsultations((prevConsultations) =>
-  //     prevConsultations.map((consultation) =>
-  //       consultation.id === id
-  //         ? { ...consultation, status: "assigned" }
-  //         : consultation
-  //     )
-  //   );
-  // };
-
-  // // Filter consultations based on selected tab
-  // const filteredConsultations = consultations.filter((consultation) => {
-  //   if (selectedTab === "awaiting-review") {
-  //     return (
-  //       consultation.status === "awaiting review" &&
-  //       !consultation.assignedDoctor
-  //     );
-  //   } else if (selectedTab === "reviewed") {
-  //     return consultation.status === "reviewed" && !consultation.assignedDoctor;
-  //   } else if (selectedTab === "assigned") {
-  //     return consultation.status === "assigned";
-  //   }
-  //   return true;
-  // });
-
-  // // Calculate pagination
-  // const startIndex = (currentPage - 1) * itemsPerPage;
-  // const endIndex = startIndex + itemsPerPage;
-  // const currentConsultations = filteredConsultations.slice(
-  //   startIndex,
-  //   endIndex
-  // );
-  // const totalPages = Math.ceil(filteredConsultations.length / itemsPerPage);
-
-  // const nextPage = () => {
-  //   if (currentPage < totalPages) {
-  //     setCurrentPage(currentPage + 1);
-  //   }
-  // };
-
-  // const prevPage = () => {
-  //   if (currentPage > 1) {
-  //     setCurrentPage(currentPage - 1);
-  //   }
-  // };
-
-  // // Reset to first page when changing tabs
-  // const handleTabChange = (value: string) => {
-  //   setSelectedTab(value);
-  //   setCurrentPage(1);
-  // };
+  // Calculate current page's consultations
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const currentConsultations = consultations.slice(startIndex, endIndex);
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
@@ -154,84 +52,69 @@ const ClinicalTesting = () => {
                   iconColor="text-blue-500"
                   hoverRingColor="hover:ring-orange-300"
                   focusRingColor="focus:ring-orange-500"
-                  onChange={(e) => {
-                    /* handle search */
-                  }}
+                  onChange={(e) => {}}
                 />
               </div>
-              {/* <div className="flex items-center justify-between">
-                <Tabs value={selectedTab} className="w-full">
-                  <TabsList>
-                    <TabsTrigger
-                      value="awaiting-review"
-                      onClick={() => handleTabChange("awaiting-review")}
-                    >
-                      Awaiting Review
-                    </TabsTrigger>
-                    <TabsTrigger
-                      value="assigned"
-                      onClick={() => handleTabChange("assigned")}
-                    >
-                      Assigned
-                    </TabsTrigger>
-                    <TabsTrigger
-                      value="reviewed"
-                      onClick={() => handleTabChange("reviewed")}
-                    >
-                      Reviewed
-                    </TabsTrigger>
-                  </TabsList>
-                </Tabs>
-              </div> */}
             </div>
             <button className="flex items-center px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700">
               <Download className="w-4 h-4 mr-2" />
               Export Report
             </button>
           </div>
-          <div className="divide-y">
-            <ConsultationSearch />
+          <div className="divide-y px-3 py-3 space-y-2">
+            {consultations.map((consultation) => (
+              <Card key={consultation.id} className="p-3 hover:bg-orange-500">
+                <div className="flex justify-between items-start px-2 py-2">
+                  <div>
+                    <h3 className="font-medium">
+                      Patient ID: {consultation.patient_id}
+                    </h3>
+                    <p className="text-sm">
+                      Created:{" "}
+                      {new Date(consultation.created_at).toLocaleDateString()}
+                    </p>
+                    <p className="text-sm">
+                      Ended:{" "}
+                      {new Date(consultation.ended_at).toLocaleDateString()}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <span
+                      className={`inline-block px-2 py-0 rounded text-sm ${
+                        consultation.conclusion === null
+                          ? "bg-yellow-100 text-yellow-800"
+                          : consultation.conclusion
+                          ? "bg-green-100 text-green-800"
+                          : "bg-red-100 text-red-800"
+                      }`}
+                    >
+                      {consultation.conclusion === null
+                        ? "Pending"
+                        : consultation.conclusion
+                        ? "Approved"
+                        : "Rejected"}
+                    </span>
+                    <div className="flex items-center">
+                      <CircleCheck className="w-4 h-4 text-green-500 mr-1" />
+                      <span>{"<some_score>"}</span>
+                    </div>
+                    <div className="flex items-center">
+                      <span>{"<some_comment>"}</span>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            ))}
           </div>
-          {/* <div className="divide-y">
-            <div className="divide-y">
-              {currentConsultations.map((consultation) => (
-                <ConsultationItem
-                  key={consultation.id}
-                  consultation={consultation}
-                  onAssignmentToggle={toggleAssigned}
-                  isDarkMode={isDarkMode}
-                />
-              ))}
-            </div>
-          </div> */}
         </CardContent>
         <CardFooter className="p-0 w-full">
           <div className="w-full px-6 py-4 flex items-center justify-between border-t">
-            <h1>FOOTER</h1>
-            {/* <div className="text-sm">
-              Showing {startIndex + 1}-
-              {Math.min(endIndex, filteredConsultations.length)} of{" "}
-              {filteredConsultations.length} results
-            </div>
-            <div className="flex items-center space-x-2">
-              <button
-                className="px-3 py-1 border rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                onClick={prevPage}
-                disabled={currentPage === 1}
-              >
-                Previous
-              </button>
-              <span>
-                Page {currentPage} of {totalPages}
-              </span>
-              <button
-                className="px-3 py-1 border rounded hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-                onClick={nextPage}
-                disabled={currentPage === totalPages}
-              >
-                Next
-              </button>
-            </div> */}
+            <Pagination
+              items={consultations}
+              itemsPerPage={ITEMS_PER_PAGE}
+              currentPage={currentPage}
+              onPageChange={setCurrentPage}
+            />
           </div>
         </CardFooter>
       </Card>

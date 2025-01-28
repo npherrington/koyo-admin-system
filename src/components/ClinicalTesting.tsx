@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Download, CircleCheck } from "lucide-react";
+import { Download, CircleCheck, Loader2 } from "lucide-react";
 import {
   Card,
   CardContent,
@@ -16,7 +16,7 @@ const ITEMS_PER_PAGE = 5;
 
 const ClinicalTesting = () => {
   const { isDarkMode } = useTheme();
-  const { consultations } = useConsultations();
+  const { consultations, isLoading, error } = useConsultations();
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -61,51 +61,71 @@ const ClinicalTesting = () => {
               {"<export report>"}
             </button>
           </div>
-          <div className="divide-y px-3 py-3 space-y-2">
-            {consultations.map((consultation) => (
-              <Card key={consultation.id} className="p-3 hover:bg-orange-500">
-                <div className="flex justify-between items-start px-2 py-2">
-                  <div>
-                    <h3 className="font-medium">
-                      Patient ID: {consultation.patient_id}
-                    </h3>
-                    <p className="text-sm">
-                      Created:{" "}
-                      {new Date(consultation.created_at).toLocaleDateString()}
-                    </p>
-                    <p className="text-sm">
-                      Ended:{" "}
-                      {new Date(consultation.ended_at).toLocaleDateString()}
-                    </p>
-                  </div>
-                  <div className="text-right">
-                    <span
-                      className={`inline-block px-2 py-0 rounded text-sm ${
-                        consultation.conclusion === null
-                          ? "bg-yellow-100 text-yellow-800"
+          {isLoading ? (
+            <div className="flex justify-center items-center py-12">
+              <Loader2 className="w-8 h-8 text-orange-500 animate-spin" />
+            </div>
+          ) : error ? (
+            <div className="text-center py-12">
+              <p className="text-red-500">Error: {error.message}</p>
+              <button
+                onClick={() => window.location.reload()}
+                className="mt-4 px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700"
+              >
+                Retry
+              </button>
+            </div>
+          ) : consultations.length === 0 ? (
+            <div className="text-center py-12 text-gray-500">
+              No consultations found
+            </div>
+          ) : (
+            <div className="divide-y px-3 py-3 space-y-2">
+              {currentConsultations.map((consultation) => (
+                <Card key={consultation.id} className="p-3 hover:bg-orange-500">
+                  <div className="flex justify-between items-start px-2 py-2">
+                    <div>
+                      <h3 className="font-medium">
+                        Patient ID: {consultation.patient_id}
+                      </h3>
+                      <p className="text-sm">
+                        Created:{" "}
+                        {new Date(consultation.created_at).toLocaleDateString()}
+                      </p>
+                      <p className="text-sm">
+                        Ended:{" "}
+                        {new Date(consultation.ended_at).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <span
+                        className={`inline-block px-2 py-0 rounded text-sm ${
+                          consultation.conclusion === null
+                            ? "bg-yellow-100 text-yellow-800"
+                            : consultation.conclusion
+                            ? "bg-green-100 text-green-800"
+                            : "bg-red-100 text-red-800"
+                        }`}
+                      >
+                        {consultation.conclusion === null
+                          ? "<some_conclusion>"
                           : consultation.conclusion
-                          ? "bg-green-100 text-green-800"
-                          : "bg-red-100 text-red-800"
-                      }`}
-                    >
-                      {consultation.conclusion === null
-                        ? "<some_conclusion>"
-                        : consultation.conclusion
-                        ? "Approved"
-                        : "Rejected"}
-                    </span>
-                    <div className="flex items-center">
-                      <CircleCheck className="w-4 h-4 text-green-500 mr-1" />
-                      <span>{"<some_score>"}</span>
-                    </div>
-                    <div className="flex items-center">
-                      <span>{"<some_comment>"}</span>
+                          ? "Approved"
+                          : "Rejected"}
+                      </span>
+                      <div className="flex items-center">
+                        <CircleCheck className="w-4 h-4 text-green-500 mr-1" />
+                        <span>{"<some_score>"}</span>
+                      </div>
+                      <div className="flex items-center">
+                        <span>{"<some_comment>"}</span>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </Card>
-            ))}
-          </div>
+                </Card>
+              ))}
+            </div>
+          )}{" "}
         </CardContent>
         <CardFooter className="p-0 w-full">
           <div className="w-full px-6 py-4 flex items-center justify-between border-t">

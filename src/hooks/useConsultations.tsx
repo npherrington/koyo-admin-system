@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Loader2 } from "lucide-react";
 
 // Types for the API response
 interface Consultation {
@@ -15,6 +16,12 @@ interface Consultation {
 interface SearchResponse {
   consultations: Consultation[];
 }
+
+const LoadingSpinner = () => (
+  <div className="flex justify-center items-center w-full py-8">
+    <Loader2 className="w-8 h-8 text-orange-500 animate-spin" />
+  </div>
+);
 
 const useConsultations = () => {
   const [consultations, setConsultations] = useState<Consultation[]>([]);
@@ -62,6 +69,7 @@ const useConsultations = () => {
     isLoading,
     error,
     refetch: fetchConsultations,
+    LoadingSpinner,
   };
 };
 

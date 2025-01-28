@@ -1,23 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import {
-  Users,
-  Search,
-  Filter,
-  MoreVertical,
-  Download,
-  Plus,
-  MessageSquare,
-  CreditCard,
-  FileText,
-  BarChart2,
-  Headphones,
-  Shield,
-  Settings,
-  Activity,
-  BadgeCheck,
-  Cpu,
-} from "lucide-react";
+import { Search, Filter, MoreVertical, Download, Plus } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -28,57 +11,49 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "./ui/button";
 import Sidebar from "./ui/side-bar";
+import usePatientsSearch from "@/hooks/usePatientsSearch";
+import useAccountSearch from "@/hooks/useAccountSearch";
+
+interface Account {
+  id: string;
+  phone_number: string;
+  access_level: string;
+  name: string;
+  picture: null;
+  date_of_birth: string;
+  sex: string;
+  location: string;
+  language: string;
+  num_children: number;
+  patient_ids: string[];
+  referral_code: string;
+  promo_code: null;
+  credits: number;
+  created_at: string;
+  deleted_at: null;
+  accepted_terms_at: null;
+  accepted_clinical_trial_at: null;
+}
 
 const UserManagement = () => {
-  const [selectedTab, setSelectedTab] = useState("patients");
-  const [selectedUsers, setSelectedUsers] = useState([]);
+  const navigate = useNavigate();
+  const { data, loading, error, setQuery } = useAccountSearch();
+  const [searchTerm, setSearchTerm] = useState("");
 
-  // Mock data
-  const patients = [
-    {
-      id: 1,
-      name: "Sarah Adebayo",
-      email: "sarah.a@email.com",
-      phone: "+234 801 234 5678",
-      status: "active",
-      subscription: "Premium",
-      lastConsultation: "2024-01-04",
-      familyMembers: 3,
-    },
-    {
-      id: 2,
-      name: "John Okafor",
-      email: "john.o@email.com",
-      phone: "+234 802 345 6789",
-      status: "inactive",
-      subscription: "Basic",
-      lastConsultation: "2023-12-28",
-      familyMembers: 1,
-    },
-  ];
+  const handleSearch = (event) => {
+    const value = event.target.value;
+    setSearchTerm(value);
+    if (value) {
+      setQuery({ name: value });
+    } else {
+      setQuery({});
+    }
+  };
 
-  const doctors = [
-    {
-      id: 1,
-      name: "Dr. Oluwaseun Adeyemi",
-      email: "dr.adeyemi@koyo.health",
-      specialty: "General Practice",
-      status: "active",
-      consultations: 128,
-      rating: 4.8,
-      availability: "online",
-    },
-    {
-      id: 2,
-      name: "Dr. Chinua Achebe",
-      email: "dr.achebe@koyo.health",
-      specialty: "Pediatrics",
-      status: "offline",
-      consultations: 256,
-      rating: 4.9,
-      availability: "offline",
-    },
-  ];
+  const handleNavigate = (id: string) => {
+    console.log("ID to pass to:", id);
+    navigate(`./AccountView/${id}`);
+  };
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
@@ -86,10 +61,8 @@ const UserManagement = () => {
       {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">User Management</h1>
-          <p className="text-gray-500">
-            Manage patients and healthcare providers
-          </p>
+          <h1 className="text-2xl font-bold">User Management</h1>
+          <p>Manage patients and healthcare providers</p>
         </div>
         <button className="flex items-center px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700">
           <Plus className="w-4 h-4 mr-2" />
@@ -99,32 +72,17 @@ const UserManagement = () => {
 
       {/* Main Content */}
       <Card>
-        <CardHeader className="border-b bg-slate-50">
+        <CardHeader>
           <div className="flex items-center justify-between">
-            <Tabs defaultValue="patients" className="w-full">
-              <TabsList className="bg-indigo-50 text-black-300">
-                <TabsTrigger
-                  value="patients"
-                  onClick={() => setSelectedTab("patients")}
-                >
-                  Patients
-                </TabsTrigger>
-                <TabsTrigger
-                  value="doctors"
-                  onClick={() => setSelectedTab("doctors")}
-                >
-                  Doctors
-                </TabsTrigger>
-              </TabsList>
-            </Tabs>
+            <h3 className="text-2xl font-bold">Accounts</h3>
           </div>
         </CardHeader>
-        <CardContent className="p-0 bg-slate-50">
+        <CardContent className="p-0">
           {/* Filters and Search */}
           <div className="p-4 border-b flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <div className="relative">
-                <Search className="absolute left-3 top-2.5 h-4 w-4 text-gray-400" />
+                <Search className="absolute left-3 top-2.5 h-4 w-4" />
                 <input
                   type="text"
                   placeholder="Search users..."
@@ -149,144 +107,39 @@ const UserManagement = () => {
             </div>
           </div>
 
-          {/* User Table */}
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Name/Contact
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {selectedTab === "patients" ? "Subscription" : "Specialty"}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    {selectedTab === "patients" ? "Family Members" : "Rating"}
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {selectedTab === "patients"
-                  ? patients.map((patient) => (
-                      <tr key={patient.id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4">
-                          <div className="flex items-center">
-                            <div>
-                              <div className="font-medium text-gray-900">
-                                {patient.name}
-                              </div>
-                              <div className="text-sm text-gray-500">
-                                {patient.email}
-                              </div>
-                              <div className="text-sm text-gray-500">
-                                {patient.phone}
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <span
-                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                              patient.subscription === "Premium"
-                                ? "bg-purple-100 text-purple-800"
-                                : "bg-gray-100 text-gray-800"
-                            }`}
-                          >
-                            {patient.subscription}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4">
-                          <span
-                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                              patient.status === "active"
-                                ? "bg-green-100 text-green-800"
-                                : "bg-red-100 text-red-800"
-                            }`}
-                          >
-                            {patient.status}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-500">
-                          {patient.familyMembers} members
-                        </td>
-                        <td className="px-6 py-4">
-                          <DropdownMenu>
-                            <DropdownMenuTrigger className="p-1 hover:bg-gray-100 rounded">
-                              <MoreVertical className="h-4 w-4" />
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent>
-                              <DropdownMenuItem>View Profile</DropdownMenuItem>
-                              <DropdownMenuItem>Edit Details</DropdownMenuItem>
-                              <DropdownMenuItem className="text-red-600">
-                                Deactivate
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </td>
-                      </tr>
-                    ))
-                  : doctors.map((doctor) => (
-                      <tr key={doctor.id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4">
-                          <div className="flex items-center">
-                            <div>
-                              <div className="font-medium text-gray-900">
-                                {doctor.name}
-                              </div>
-                              <div className="text-sm text-gray-500">
-                                {doctor.email}
-                              </div>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4 text-sm text-gray-500">
-                          {doctor.specialty}
-                        </td>
-                        <td className="px-6 py-4">
-                          <span
-                            className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
-                              doctor.availability === "online"
-                                ? "bg-green-100 text-green-800"
-                                : "bg-gray-100 text-gray-800"
-                            }`}
-                          >
-                            {doctor.availability}
-                          </span>
-                        </td>
-                        <td className="px-6 py-4">
-                          <div className="flex items-center">
-                            <span className="text-yellow-500">★</span>
-                            <span className="ml-1 text-sm text-gray-600">
-                              {doctor.rating}
-                            </span>
-                          </div>
-                        </td>
-                        <td className="px-6 py-4">
-                          <DropdownMenu>
-                            <DropdownMenuTrigger className="p-1 hover:bg-gray-100 rounded">
-                              <MoreVertical className="h-4 w-4" />
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent>
-                              <DropdownMenuItem>View Profile</DropdownMenuItem>
-                              <DropdownMenuItem>View Schedule</DropdownMenuItem>
-                              <DropdownMenuItem>Edit Details</DropdownMenuItem>
-                              <DropdownMenuItem className="text-red-600">
-                                Suspend Access
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </td>
-                      </tr>
-                    ))}
-              </tbody>
-            </table>
-          </div>
+          {loading ? (
+            <div className="flex justify-center items-center h-64">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600" />
+            </div>
+          ) : error ? (
+            <div className="text-center text-red-600 p-4">{error}</div>
+          ) : (
+            <div className="flex flex-col space-y-4 p-4">
+              {data?.map((account: Account) => (
+                <Card
+                  key={account.id}
+                  className="rounded-xl overflow-hidden hover:shadow-lg transition-all duration-200 hover:ring-2 hover:ring-orange-500 cursor-pointer"
+                  onClick={() => handleNavigate(account.id)}
+                >
+                  <CardHeader className="p-4">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <CardTitle className="text-lg font-medium">
+                          {account.name}
+                        </CardTitle>
+                        <p className="text-sm text-gray-500">
+                          ID: {account.id}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          Access Level: {account.access_level}
+                        </p>
+                      </div>
+                    </div>
+                  </CardHeader>
+                </Card>
+              ))}
+            </div>
+          )}
 
           {/* Pagination */}
           <div className="px-6 py-4 flex items-center justify-between border-t">

@@ -26,9 +26,9 @@ const ClinicalTesting = () => {
   const endIndex = startIndex + ITEMS_PER_PAGE;
   const currentConsultations = consultations.slice(startIndex, endIndex);
 
-  const handleSearch = (query: Record<string, any>) => {
-    fetchConsultations(query);
-  };
+  // const handleSearch = (query: Record<string, any>) => {
+  //   fetchConsultations(query);
+  // };
 
   return (
     <div className="p-6 max-w-7xl mx-auto">

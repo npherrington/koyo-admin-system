@@ -5,6 +5,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { Navigate } from "react-router-dom";
 import AdminDashboard from "./components/AdminDashboard"; // Your dashboard component
 import UserManagement from "./components/UserManagement"; // Example component
+import AccountView from "./components/AccountView";
 import Consultations from "./components/Consultations"; // Example component
 import Content from "./components/Content";
 import Settings from "./components/Settings";
@@ -36,6 +37,10 @@ function App() {
             <Route
               path="/UserManagement"
               element={<PrivateRoute element={<UserManagement />} />}
+            />
+            <Route
+              path="/UserManagement/AccountView/:id"
+              element={<AccountView />}
             />
             <Route
               path="/Consultations"

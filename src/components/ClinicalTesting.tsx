@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import Sidebar from "./ui/side-bar";
 import { useTheme } from "@/contexts/ThemeContext";
-import { SearchInput } from "@/components/ui/search-input";
+import { AdvancedSearchButton } from "@/components/ui/advanced-search";
 import useConsultations from "@/hooks/useConsultations";
 import Pagination from "@/components/ui/pagination";
 
@@ -44,15 +44,11 @@ const ClinicalTesting = () => {
           <div className="p-4 border-b flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <div className="relative">
-                <SearchInput
-                  placeholder="<search consultations>"
-                  width="w-full"
-                  iconClassName="text-orange-500"
+                <AdvancedSearchButton
                   containerClassName="max-w-md"
-                  iconColor="text-blue-500"
-                  hoverRingColor="hover:ring-orange-300"
-                  focusRingColor="focus:ring-orange-500"
-                  onChange={(e) => {}}
+                  onSearch={(searchParams) => {
+                    console.log("Search params:", searchParams);
+                  }}
                 />
               </div>
             </div>
@@ -85,6 +81,9 @@ const ClinicalTesting = () => {
                 <Card key={consultation.id} className="p-3 hover:bg-orange-500">
                   <div className="flex justify-between items-start px-2 py-2">
                     <div>
+                      <h3 className="font-medium">
+                        Consultation ID: {consultation.id}
+                      </h3>
                       <h3 className="font-medium">
                         Patient ID: {consultation.patient_id}
                       </h3>

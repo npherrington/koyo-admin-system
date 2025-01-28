@@ -8,7 +8,7 @@ import {
 } from "@/components/ui/card";
 import Sidebar from "./ui/side-bar";
 import { useTheme } from "@/contexts/ThemeContext";
-import { AdvancedSearchButton } from "@/components/ui/advanced-search";
+import { AdvancedSearchButton } from "@/components/ui/advanced-search-results";
 import useConsultations from "@/hooks/useConsultations";
 import Pagination from "@/components/ui/pagination";
 
@@ -16,7 +16,8 @@ const ITEMS_PER_PAGE = 5;
 
 const ClinicalTesting = () => {
   const { isDarkMode } = useTheme();
-  const { consultations, isLoading, error } = useConsultations();
+  const { consultations, isLoading, error, fetchConsultations } =
+    useConsultations();
 
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -24,6 +25,10 @@ const ClinicalTesting = () => {
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
   const currentConsultations = consultations.slice(startIndex, endIndex);
+
+  const handleSearch = (query: Record<string, any>) => {
+    fetchConsultations(query);
+  };
 
   return (
     <div className="p-6 max-w-7xl mx-auto">
@@ -44,12 +49,7 @@ const ClinicalTesting = () => {
           <div className="p-4 border-b flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <div className="relative">
-                <AdvancedSearchButton
-                  containerClassName="max-w-md"
-                  onSearch={(searchParams) => {
-                    console.log("Search params:", searchParams);
-                  }}
-                />
+                <AdvancedSearchButton />
               </div>
             </div>
             <button className="flex items-center px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700">

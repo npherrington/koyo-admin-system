@@ -45,7 +45,7 @@ const ClinicalTesting = () => {
             <div className="flex items-center space-x-4">
               <div className="relative">
                 <SearchInput
-                  placeholder="Search consultations..."
+                  placeholder="<search consultations>"
                   width="w-full"
                   iconClassName="text-orange-500"
                   containerClassName="max-w-md"
@@ -58,7 +58,7 @@ const ClinicalTesting = () => {
             </div>
             <button className="flex items-center px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700">
               <Download className="w-4 h-4 mr-2" />
-              Export Report
+              {"<export report>"}
             </button>
           </div>
           <div className="divide-y px-3 py-3 space-y-2">

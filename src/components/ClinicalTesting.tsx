@@ -89,7 +89,7 @@ const ClinicalTesting = () => {
                       }`}
                     >
                       {consultation.conclusion === null
-                        ? "Pending"
+                        ? "<some_conclusion>"
                         : consultation.conclusion
                         ? "Approved"
                         : "Rejected"}

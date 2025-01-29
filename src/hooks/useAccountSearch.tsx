@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 interface SearchResponse {
   // Add your API response type here
   // This is a placeholder - update according to your API response structure
-  [key: string]: any;
+  data: Account[];
 }
 
 interface Account {

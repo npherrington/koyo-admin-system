@@ -1,7 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Search, Filter, MoreVertical, Download, Plus } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   DropdownMenu,
@@ -11,8 +17,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "./ui/button";
 import Sidebar from "./ui/side-bar";
-import usePatientsSearch from "@/hooks/usePatientsSearch";
 import useAccountSearch from "@/hooks/useAccountSearch";
+import Pagination from "@/components/ui/pagination";
+import { useTheme } from "@/contexts/ThemeContext";
+import { AccountFindByTelephone } from "./ui/account-find-by-telephone.tsx";
 
 interface Account {
   id: string;
@@ -35,19 +43,71 @@ interface Account {
   accepted_clinical_trial_at: null;
 }
 
+const ITEMS_PER_PAGE = 5;
+
+const ACCESS_LEVELS = {
+  PATIENT: "standard",
+  DOCTOR: "doctor",
+  ADMIN: "admin",
+} as const;
+
 const UserManagement = () => {
+  const { isDarkMode } = useTheme();
   const navigate = useNavigate();
   const { data, loading, error, setQuery } = useAccountSearch();
   const [searchTerm, setSearchTerm] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedAccessLevel, setSelectedAccessLevel] = useState<string | null>(
+    null
+  );
+  // Debug logging
+  useEffect(() => {
+    console.log("Raw API Response:", data);
+    console.log("Response type:", typeof data);
+    console.log("Response keys:", data ? Object.keys(data) : "No data");
+  }, [data]);
 
-  const handleSearch = (event) => {
+  // Extract accounts with proper type checking
+  const accounts = React.useMemo(() => {
+    if (!data) return [];
+    if (Array.isArray(data)) return data;
+    if (typeof data === "object" && "data" in data) {
+      return Array.isArray(data.data) ? data.data : [];
+    }
+    return [];
+  }, [data]);
+
+  // Calculate current page's accounts
+  const currentAccounts = React.useMemo(() => {
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    return accounts.slice(startIndex, endIndex);
+  }, [accounts, currentPage]);
+
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setSearchTerm(value);
+    setCurrentPage(1);
+    setSelectedAccessLevel(null); // Reset access level filter when searching
     if (value) {
       setQuery({ name: value });
     } else {
       setQuery({});
     }
+  };
+
+  const handleAccessLevelFilter = (accessLevel: string) => {
+    setSelectedAccessLevel(accessLevel);
+    setCurrentPage(1);
+    setSearchTerm(""); // Reset search term when filtering
+    setQuery({ access_level: accessLevel.toLowerCase() });
+  };
+
+  const clearFilters = () => {
+    setSelectedAccessLevel(null);
+    setSearchTerm("");
+    setCurrentPage(1);
+    setQuery({});
   };
 
   const handleNavigate = (id: string) => {
@@ -82,28 +142,51 @@ const UserManagement = () => {
           <div className="p-4 border-b flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <div className="relative">
-                <Search className="absolute left-3 top-2.5 h-4 w-4" />
-                <input
-                  type="text"
-                  placeholder="Search users..."
-                  className="pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                />
+                <AccountFindByTelephone />
               </div>
               <DropdownMenu>
-                <DropdownMenuTrigger className="flex items-center px-3 py-2 border rounded-lg text-gray-600 hover:bg-gray-100 bg-gray-50">
+                <DropdownMenuTrigger
+                  className={`flex items-center px-3 py-2 rounded-lg hover:bg-orange-600 hover:text-white ${
+                    selectedAccessLevel ? "bg-orange-600 text-white" : ""
+                  }  ${
+                    isDarkMode
+                      ? "border border-slate-400"
+                      : "border border-slate-600"
+                  }`}
+                >
                   <Filter className="w-4 h-4 mr-2" />
-                  Filter
+                  {selectedAccessLevel || "Filter"}
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                  <DropdownMenuItem>Active Users</DropdownMenuItem>
-                  <DropdownMenuItem>Inactive Users</DropdownMenuItem>
-                  <DropdownMenuItem>Premium Subscribers</DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() =>
+                      handleAccessLevelFilter(ACCESS_LEVELS.PATIENT)
+                    }
+                  >
+                    Patients
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() =>
+                      handleAccessLevelFilter(ACCESS_LEVELS.DOCTOR)
+                    }
+                  >
+                    Doctors
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => handleAccessLevelFilter(ACCESS_LEVELS.ADMIN)}
+                  >
+                    Admins
+                  </DropdownMenuItem>
+                  {selectedAccessLevel && (
+                    <DropdownMenuItem
+                      onClick={clearFilters}
+                      className="text-red-600"
+                    >
+                      Clear Filter
+                    </DropdownMenuItem>
+                  )}
                 </DropdownMenuContent>
-              </DropdownMenu>
-              <button className="flex items-center px-3 py-2 border rounded-lg text-orange-600 hover:bg-orange-100 bg-orange-50">
-                <Download className="w-4 h-4 mr-2" />
-                Export
-              </button>
+              </DropdownMenu>{" "}
             </div>
           </div>
 
@@ -115,7 +198,7 @@ const UserManagement = () => {
             <div className="text-center text-red-600 p-4">{error}</div>
           ) : (
             <div className="flex flex-col space-y-4 p-4">
-              {data?.map((account: Account) => (
+              {currentAccounts.map((account: Account) => (
                 <Card
                   key={account.id}
                   className="rounded-xl overflow-hidden hover:shadow-lg transition-all duration-200 hover:ring-2 hover:ring-orange-500 cursor-pointer"
@@ -127,10 +210,8 @@ const UserManagement = () => {
                         <CardTitle className="text-lg font-medium">
                           {account.name}
                         </CardTitle>
-                        <p className="text-sm text-gray-500">
-                          ID: {account.id}
-                        </p>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm opacity-75">ID: {account.id}</p>
+                        <p className="text-sm opacity-75">
                           Access Level: {account.access_level}
                         </p>
                       </div>
@@ -138,33 +219,24 @@ const UserManagement = () => {
                   </CardHeader>
                 </Card>
               ))}
+              {currentAccounts.length === 0 && !loading && (
+                <div className="text-center py-8 text-gray-500">
+                  No accounts found
+                </div>
+              )}
             </div>
           )}
-
-          {/* Pagination */}
-          <div className="px-6 py-4 flex items-center justify-between border-t">
-            <div className="text-sm text-gray-500">
-              Showing 1-10 of 100 results
-            </div>
-            <div className="flex items-center space-x-2">
-              <button className="px-3 py-1 border rounded hover:bg-gray-50">
-                Previous
-              </button>
-              <button className="px-3 py-1 border rounded bg-orange-50 text-orange-600">
-                1
-              </button>
-              <button className="px-3 py-1 border rounded hover:bg-gray-50">
-                2
-              </button>
-              <button className="px-3 py-1 border rounded hover:bg-gray-50">
-                3
-              </button>
-              <button className="px-3 py-1 border rounded hover:bg-gray-50">
-                Next
-              </button>
-            </div>
-          </div>
         </CardContent>
+        <CardFooter className="p-0 w-full">
+          <div className="w-full px-6 py-4 flex items-center justify-between border-t">
+            <Pagination
+              items={accounts}
+              itemsPerPage={ITEMS_PER_PAGE}
+              currentPage={currentPage}
+              onPageChange={setCurrentPage}
+            />
+          </div>
+        </CardFooter>
       </Card>
     </div>
   );

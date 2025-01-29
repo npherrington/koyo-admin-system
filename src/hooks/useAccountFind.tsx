@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 interface SearchResponse {
-  [key: string]: any;
+  data: Account;
 }
 
 interface Account {

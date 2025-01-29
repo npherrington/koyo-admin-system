@@ -21,6 +21,7 @@ import useAccountSearch from "@/hooks/useAccountSearch";
 import Pagination from "@/components/ui/pagination";
 import { useTheme } from "@/contexts/ThemeContext";
 import { AccountFindByTelephone } from "./ui/account-find-by-telephone.tsx";
+import NewUserForm from "@/components/AddNewUserForm";
 
 interface Account {
   id: string;
@@ -60,6 +61,7 @@ const UserManagement = () => {
   const [selectedAccessLevel, setSelectedAccessLevel] = useState<string | null>(
     null
   );
+  const [showNewUserForm, setShowNewUserForm] = useState(false);
   // Debug logging
   useEffect(() => {
     console.log("Raw API Response:", data);
@@ -124,10 +126,6 @@ const UserManagement = () => {
           <h1 className="text-2xl font-bold">User Management</h1>
           <p>Manage patients and healthcare providers</p>
         </div>
-        <button className="flex items-center px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700">
-          <Plus className="w-4 h-4 mr-2" />
-          Add New User
-        </button>
       </div>
 
       {/* Main Content */}
@@ -187,6 +185,21 @@ const UserManagement = () => {
                   )}
                 </DropdownMenuContent>
               </DropdownMenu>{" "}
+              <button
+                className="flex items-center px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700"
+                onClick={() => setShowNewUserForm(true)}
+              >
+                <Plus className="w-4 h-4 mr-2" />
+                Add New User
+              </button>
+              {/* Render the form conditionally */}
+              {showNewUserForm && (
+                <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+                  <div className="bg-background w-full max-w-2xl rounded-lg">
+                    <NewUserForm onClose={() => setShowNewUserForm(false)} />
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 

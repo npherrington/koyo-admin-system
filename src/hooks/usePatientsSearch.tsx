@@ -69,7 +69,7 @@ const usePatientsSearch = () => {
 
     try {
       const response = await fetch(
-        "https://yxoq0fmgsj.execute-api.eu-west-2.amazonaws.com/api/patients/search",
+        "https://y6oi7rwyh5.execute-api.eu-west-2.amazonaws.com/api/patients/search",
         {
           method: "POST",
           headers: {

@@ -64,7 +64,7 @@ const useConsultations = () => {
       console.log("Query received by hook:", query);
       try {
         const response = await fetch(
-          "https://yxoq0fmgsj.execute-api.eu-west-2.amazonaws.com/api/consultations/search",
+          "https://y6oi7rwyh5.execute-api.eu-west-2.amazonaws.com/api/consultations/search",
           {
             method: "POST",
             headers: {

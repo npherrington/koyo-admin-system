@@ -1,4 +1,10 @@
-import React, { useState, ChangeEvent, FormEvent, useRef } from "react";
+import React, {
+  useState,
+  ChangeEvent,
+  FormEvent,
+  useRef,
+  useEffect,
+} from "react";
 import {
   Card,
   CardContent,
@@ -9,6 +15,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { useTheme } from "@/contexts/ThemeContext";
 import {
   Select,
   SelectContent,
@@ -58,12 +65,14 @@ const COUNTRY_CODES: CountryCode[] = [
 ];
 
 const NewUserForm: React.FC<NewUserFormProps> = ({ onClose }) => {
+  const { isDarkMode } = useTheme();
   const { addNewUser, loading, error } = useAddNewUser();
   const formRef = useRef<HTMLFormElement>(null);
   const [selectedCountry, setSelectedCountry] = useState<CountryCode>(
     COUNTRY_CODES[0]
   );
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [isFormValid, setIsFormValid] = useState(false);
   const [formData, setFormData] = useState<UserFormData>({
     phone_number: "",
     password: "",
@@ -74,6 +83,32 @@ const NewUserForm: React.FC<NewUserFormProps> = ({ onClose }) => {
     num_children: 0,
     date_of_birth: "",
   });
+
+  // Validation function to check if all required fields are filled
+  const validateForm = () => {
+    const isPhoneValid = formData.phone_number.length > 0;
+    const isPasswordValid = formData.password.length >= 6; // Minimum 6 characters for password
+    const isNameValid = formData.name.trim().length > 0;
+    const isLocationValid = formData.location.trim().length > 0;
+    const isLanguageValid = formData.language.trim().length > 0;
+    const isDateValid = formData.date_of_birth.length > 0;
+    const isSexValid = ["male", "female", "other"].includes(formData.sex);
+
+    return (
+      isPhoneValid &&
+      isPasswordValid &&
+      isNameValid &&
+      isLocationValid &&
+      isLanguageValid &&
+      isDateValid &&
+      isSexValid
+    );
+  };
+
+  // Update form validity whenever form data changes
+  useEffect(() => {
+    setIsFormValid(validateForm());
+  }, [formData]);
 
   const formatPhoneNumber = (digits: string, country: CountryCode) => {
     switch (country.code) {
@@ -100,12 +135,10 @@ const NewUserForm: React.FC<NewUserFormProps> = ({ onClose }) => {
 
     let formatted = digits;
     if (selectedCountry.code === "+44") {
-      // UK format: XXXX XXXXXX
       if (digits.length > 4) {
         formatted = `${digits.slice(0, 4)} ${digits.slice(4)}`;
       }
     } else {
-      // Default format: XXX-XXX-XXXX
       if (digits.length > 3) {
         formatted = `${digits.slice(0, 3)}-${digits.slice(3)}`;
       }
@@ -138,7 +171,8 @@ const NewUserForm: React.FC<NewUserFormProps> = ({ onClose }) => {
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("formData:", formData);
+    if (!isFormValid) return;
+
     const response = await addNewUser(formData);
     if (!response.error) {
       onClose();
@@ -161,7 +195,7 @@ const NewUserForm: React.FC<NewUserFormProps> = ({ onClose }) => {
         <form ref={formRef} onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Name</Label>
+              <Label htmlFor="name">Name *</Label>
               <Input
                 id="name"
                 name="name"
@@ -172,10 +206,10 @@ const NewUserForm: React.FC<NewUserFormProps> = ({ onClose }) => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="phone_number">Phone Number</Label>
+              <Label htmlFor="phone_number">Phone Number *</Label>
               <div className="flex gap-2">
                 <DropdownMenu>
-                  <DropdownMenuTrigger className="flex items-center gap-1 px-2 py-2 border rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-orange-500">
+                  <DropdownMenuTrigger className="flex items-center gap-1 px-2 py-2 border rounded-md hover:bg-orange-600 hover:text-white focus:outline-none focus:ring-2 focus:ring-orange-500">
                     <span>{selectedCountry.flag}</span>
                     <span>{selectedCountry.code}</span>
                     <ChevronDown className="h-4 w-4" />
@@ -189,9 +223,7 @@ const NewUserForm: React.FC<NewUserFormProps> = ({ onClose }) => {
                       >
                         <span className="mr-2">{country.flag}</span>
                         <span>{country.country}</span>
-                        <span className="ml-2 text-gray-500">
-                          {country.code}
-                        </span>
+                        <span className="ml-2">{country.code}</span>
                       </DropdownMenuItem>
                     ))}
                   </DropdownMenuContent>
@@ -209,7 +241,7 @@ const NewUserForm: React.FC<NewUserFormProps> = ({ onClose }) => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password">Password *</Label>
               <Input
                 id="password"
                 name="password"
@@ -221,7 +253,7 @@ const NewUserForm: React.FC<NewUserFormProps> = ({ onClose }) => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="date_of_birth">Date of Birth</Label>
+              <Label htmlFor="date_of_birth">Date of Birth *</Label>
               <Input
                 id="date_of_birth"
                 name="date_of_birth"
@@ -233,7 +265,7 @@ const NewUserForm: React.FC<NewUserFormProps> = ({ onClose }) => {
             </div>
 
             <div className="space-y-2">
-              <Label>Sex</Label>
+              <Label>Sex *</Label>
               <Select onValueChange={handleSexChange} value={formData.sex}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select sex" />
@@ -247,7 +279,7 @@ const NewUserForm: React.FC<NewUserFormProps> = ({ onClose }) => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="location">Location</Label>
+              <Label htmlFor="location">Location *</Label>
               <Input
                 id="location"
                 name="location"
@@ -258,7 +290,7 @@ const NewUserForm: React.FC<NewUserFormProps> = ({ onClose }) => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="language">Language</Label>
+              <Label htmlFor="language">Language *</Label>
               <Input
                 id="language"
                 name="language"
@@ -289,13 +321,20 @@ const NewUserForm: React.FC<NewUserFormProps> = ({ onClose }) => {
           )}
         </form>
       </CardContent>
-      <CardFooter className="flex justify-end space-x-4">
-        <Button variant="outline" onClick={onClose}>
+      <CardFooter className="flex justify-end space-x-4 py-2">
+        <Button
+          className={`${
+            isDarkMode
+              ? "border border-slate-400 bg-slate-500 text-black hover:bg-orange-600 hover:text-white"
+              : "border border-slate-600 bg-slate-200 text-black hover:bg-orange-600 hover:text-white"
+          }`}
+          onClick={onClose}
+        >
           Cancel
         </Button>
         <Button
           onClick={handleCreateClick}
-          disabled={loading}
+          disabled={loading || !isFormValid}
           className="bg-orange-600 hover:bg-orange-700 text-white"
         >
           {loading ? "Creating..." : "Create User"}

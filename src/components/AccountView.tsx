@@ -1,15 +1,27 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Edit, UserX } from "lucide-react";
+import { ArrowLeft, Edit, UserX, KeyRound, ChevronDown } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { useTheme } from "@/contexts/ThemeContext";
+import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import useAccountFind from "@/hooks/useAccountFind";
+import useEditAccount from "@/hooks/useEditAccount";
 import EditAccountOverlay from "@/components/EditAccountForm";
 interface Account {
   id: string;
@@ -32,10 +44,78 @@ interface Account {
   accepted_clinical_trial_at: null;
 }
 
+const COUNTRY_CODES = [
+  { country: "United Kingdom", code: "+44", flag: "🇬🇧" },
+  { country: "Nigeria", code: "+234", flag: "🇳🇬" },
+  { country: "Canada", code: "+1", flag: "🇨🇦" },
+  { country: "Mali", code: "+223", flag: "🇲🇱" },
+  { country: "Gambia", code: "+220", flag: "🇬🇲" },
+];
+
 const AccountView = () => {
+  const { isDarkMode } = useTheme();
   const { id } = useParams();
   const navigate = useNavigate();
   const { data, loading, error, setQuery } = useAccountFind();
+  const {
+    editAccount,
+    loading: editLoading,
+    error: editError,
+  } = useEditAccount();
+  const [resetDialogOpen, setResetDialogOpen] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [selectedCountry, setSelectedCountry] = useState(COUNTRY_CODES[1]);
+  const [resetInfo, setResetInfo] = useState<{
+    phone: string;
+    password: string;
+  } | null>(null);
+
+  const formatPhoneNumber = (
+    digits: string,
+    country: (typeof COUNTRY_CODES)[0]
+  ) => {
+    switch (country.code) {
+      case "+44": // UK
+        const areaCode = digits.slice(0, 4);
+        const restOfNumber = digits.slice(4);
+        return `tel:+44-${areaCode}-${restOfNumber}`;
+      case "+234": // Nigeria
+        return `tel:+234-${digits}`;
+      case "+1": // Canada
+        return `tel:+1-${digits}`;
+      case "+223": // Mali
+        return `tel:+223-${digits}`;
+      case "+220": // Gambia
+        return `tel:+220-${digits}`;
+      default:
+        return `tel:${country.code}-${digits}`;
+    }
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    const digits = value.replace(/\D/g, "");
+
+    let formatted = digits;
+    if (selectedCountry.code === "+44") {
+      // UK format: XXXX XXXXXX
+      if (digits.length > 4) {
+        formatted = `${digits.slice(0, 4)} ${digits.slice(4)}`;
+      }
+    } else {
+      // Default format: XXX-XXX-XXXX
+      if (digits.length > 3) {
+        formatted = `${digits.slice(0, 3)}-${digits.slice(3)}`;
+      }
+      if (digits.length > 6) {
+        formatted = `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(
+          6
+        )}`;
+      }
+    }
+
+    setPhoneNumber(formatted);
+  };
 
   //   console.log("DATA:", data);
   useEffect(() => {
@@ -48,6 +128,26 @@ const AccountView = () => {
     navigate(-1);
   };
 
+  const handleAccessChange = async (account_id: string, newAccess: string) => {
+    if (!data) return;
+
+    try {
+      await editAccount({
+        account_id: account_id,
+        changes: {
+          access_level: newAccess,
+        },
+      });
+
+      // Refresh the account data after successful update
+      if (id) {
+        setQuery({ id });
+      }
+    } catch (err) {
+      console.error("Failed to update access level:", err);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -55,6 +155,26 @@ const AccountView = () => {
       </div>
     );
   }
+
+  const generatePassword = () => {
+    return Math.floor(100000 + Math.random() * 900000).toString();
+  };
+
+  const handlePasswordReset = () => {
+    const digits = phoneNumber.replace(/\D/g, "");
+    const formattedPhone = formatPhoneNumber(digits, selectedCountry);
+    const newPassword = generatePassword();
+    setResetInfo({
+      phone: formattedPhone,
+      password: newPassword,
+    });
+  };
+
+  const handleCloseReset = () => {
+    setResetDialogOpen(false);
+    setPhoneNumber("");
+    setResetInfo(null);
+  };
 
   if (error) {
     return (
@@ -101,10 +221,107 @@ const AccountView = () => {
           </div>
         </div>
         <div className="flex space-x-2">
-          {/* <Button variant="secondary">
-            <Edit className="w-4 h-4 mr-2" />
-            Edit Account
-          </Button> */}
+          {/* Password Reset Dialog */}
+          <Dialog open={resetDialogOpen} onOpenChange={setResetDialogOpen}>
+            <DialogTrigger asChild>
+              <Button variant="secondary">
+                <KeyRound className="w-4 h-4 mr-2" />
+                Reset Password
+              </Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Reset Password</DialogTitle>
+              </DialogHeader>
+
+              <div className="space-y-4">
+                {!resetInfo ? (
+                  <>
+                    <div className="space-y-2">
+                      <Label htmlFor="phone">Phone Number</Label>
+                      <div className="flex gap-2">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger
+                            className={cn(
+                              "flex items-center gap-1 px-2 py-2 border rounded-md",
+                              "hover:bg-gray-50",
+                              "focus:outline-none focus:ring-2 focus:ring-orange-500",
+                              isDarkMode
+                                ? "bg-slate-700 border-slate-600 text-white hover:bg-slate-600"
+                                : "bg-white border-gray-300"
+                            )}
+                          >
+                            <span>{selectedCountry.flag}</span>
+                            <span>{selectedCountry.code}</span>
+                            <ChevronDown className="h-4 w-4" />
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent>
+                            {COUNTRY_CODES.map((country) => (
+                              <DropdownMenuItem
+                                key={country.code}
+                                onClick={() => setSelectedCountry(country)}
+                                className="cursor-pointer"
+                              >
+                                <span className="mr-2">{country.flag}</span>
+                                <span>{country.country}</span>
+                                <span className="ml-2 text-gray-500">
+                                  {country.code}
+                                </span>
+                              </DropdownMenuItem>
+                            ))}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                        <Input
+                          id="phone"
+                          type="tel"
+                          placeholder="XXX-XXX-XXXX"
+                          value={phoneNumber}
+                          onChange={handlePhoneChange}
+                          maxLength={12}
+                          className="flex-1"
+                        />
+                      </div>
+                    </div>
+                    <div className="flex justify-end space-x-2">
+                      <Button variant="ghost" onClick={handleCloseReset}>
+                        Cancel
+                      </Button>
+                      <Button
+                        onClick={handlePasswordReset}
+                        disabled={phoneNumber.replace(/\D/g, "").length < 10}
+                      >
+                        {"<Reset Password>"}
+                      </Button>
+                    </div>
+                  </>
+                ) : (
+                  <>
+                    <Card>
+                      <CardContent className="pt-6">
+                        <div className="space-y-2">
+                          <div>
+                            <p className="text-sm text-muted-foreground">
+                              Phone Number
+                            </p>
+                            <p className="font-medium">{resetInfo.phone}</p>
+                          </div>
+                          <div>
+                            <p className="text-sm text-muted-foreground">
+                              New Password
+                            </p>
+                            <p className="font-medium">{resetInfo.password}</p>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                    <div className="flex justify-end">
+                      <Button onClick={handleCloseReset}>Close</Button>
+                    </div>
+                  </>
+                )}
+              </div>
+            </DialogContent>
+          </Dialog>
           <EditAccountOverlay
             account={account}
             onSuccess={() => {
@@ -122,10 +339,30 @@ const AccountView = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem className="text-red-600">
-                Deactivate Account
+              <DropdownMenuItem
+                onClick={() => handleAccessChange(account.id, "patient")}
+                className={
+                  account.access_level === "patient" ? "bg-secondary" : ""
+                }
+              >
+                Set as Patient
               </DropdownMenuItem>
-              <DropdownMenuItem>Change Access Level</DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => handleAccessChange(account.id, "doctor")}
+                className={
+                  account.access_level === "doctor" ? "bg-secondary" : ""
+                }
+              >
+                Set as Doctor
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                onClick={() => handleAccessChange(account.id, "admin")}
+                className={
+                  account.access_level === "admin" ? "bg-secondary" : ""
+                }
+              >
+                Set as Admin
+              </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

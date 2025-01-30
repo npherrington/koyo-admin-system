@@ -62,6 +62,7 @@ const UserManagement = () => {
     null
   );
   const [showNewUserForm, setShowNewUserForm] = useState(false);
+
   // Debug logging
   useEffect(() => {
     console.log("Raw API Response:", data);
@@ -86,17 +87,17 @@ const UserManagement = () => {
     return accounts.slice(startIndex, endIndex);
   }, [accounts, currentPage]);
 
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setSearchTerm(value);
-    setCurrentPage(1);
-    setSelectedAccessLevel(null); // Reset access level filter when searching
-    if (value) {
-      setQuery({ name: value });
-    } else {
-      setQuery({});
-    }
-  };
+  // const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const value = event.target.value;
+  //   setSearchTerm(value);
+  //   setCurrentPage(1);
+  //   setSelectedAccessLevel(null); // Reset access level filter when searching
+  //   if (value) {
+  //     setQuery({ name: value });
+  //   } else {
+  //     setQuery({});
+  //   }
+  // };
 
   const handleAccessLevelFilter = (accessLevel: string) => {
     setSelectedAccessLevel(accessLevel);

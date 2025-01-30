@@ -280,7 +280,7 @@ const AccountView = () => {
                     onClick={handlePasswordReset}
                     disabled={phoneNumber.replace(/\D/g, "").length < 10}
                   >
-                    Reset Password
+                    {"<Reset Password>"}
                   </Button>
                 </div>
 

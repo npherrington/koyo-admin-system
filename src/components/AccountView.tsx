@@ -224,7 +224,7 @@ const AccountView = () => {
           {/* Password Reset Dialog */}
           <Dialog open={resetDialogOpen} onOpenChange={setResetDialogOpen}>
             <DialogTrigger asChild>
-              <Button variant="secondary">
+              <Button variant="default">
                 <KeyRound className="w-4 h-4 mr-2" />
                 Reset Password
               </Button>
@@ -333,7 +333,7 @@ const AccountView = () => {
           />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="destructive">
+              <Button variant="default">
                 <UserX className="w-4 h-4 mr-2" />
                 Manage Access
               </Button>

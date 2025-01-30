@@ -133,7 +133,7 @@ const EditAccountOverlay = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="secondary">
+        <Button variant="default">
           <Edit className="w-4 h-4 mr-2" />
           Edit Account
         </Button>
@@ -235,7 +235,7 @@ const EditAccountOverlay = ({
           <div className="flex justify-end space-x-2">
             <Button
               type="button"
-              variant="outline"
+              variant="ghost"
               onClick={() => setOpen(false)}
             >
               Cancel

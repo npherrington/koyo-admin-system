@@ -23,6 +23,12 @@ import {
 import useAccountFind from "@/hooks/useAccountFind";
 import useEditAccount from "@/hooks/useEditAccount";
 import EditAccountOverlay from "@/components/EditAccountForm";
+import {
+  ColourCard,
+  ColourCardContent,
+  ColourCardHeader,
+  ColourCardTitle,
+} from "./ui/colour-card";
 interface Account {
   id: string;
   phone_number: string;
@@ -64,11 +70,12 @@ const AccountView = () => {
   } = useEditAccount();
   const [resetDialogOpen, setResetDialogOpen] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [selectedCountry, setSelectedCountry] = useState(COUNTRY_CODES[1]);
-  const [resetInfo, setResetInfo] = useState<{
-    phone: string;
-    password: string;
-  } | null>(null);
+  const [selectedCountry, setSelectedCountry] = useState({
+    country: "Nigeria",
+    code: "+234",
+    flag: "🇳🇬",
+  });
+  const [newPassword, setNewPassword] = useState("");
 
   const formatPhoneNumber = (
     digits: string,
@@ -161,19 +168,14 @@ const AccountView = () => {
   };
 
   const handlePasswordReset = () => {
-    const digits = phoneNumber.replace(/\D/g, "");
-    const formattedPhone = formatPhoneNumber(digits, selectedCountry);
-    const newPassword = generatePassword();
-    setResetInfo({
-      phone: formattedPhone,
-      password: newPassword,
-    });
+    const newPass = Math.floor(100000 + Math.random() * 900000).toString();
+    setNewPassword(newPass);
   };
 
-  const handleCloseReset = () => {
+  const handleClose = () => {
     setResetDialogOpen(false);
     setPhoneNumber("");
-    setResetInfo(null);
+    setNewPassword("");
   };
 
   if (error) {
@@ -222,102 +224,74 @@ const AccountView = () => {
         </div>
         <div className="flex space-x-2">
           {/* Password Reset Dialog */}
+          <Button variant="secondary" onClick={() => setResetDialogOpen(true)}>
+            <KeyRound className="w-4 h-4 mr-2" />
+            Reset Password
+          </Button>
           <Dialog open={resetDialogOpen} onOpenChange={setResetDialogOpen}>
-            <DialogTrigger asChild>
-              <Button variant="default">
-                <KeyRound className="w-4 h-4 mr-2" />
-                Reset Password
-              </Button>
-            </DialogTrigger>
             <DialogContent>
               <DialogHeader>
                 <DialogTitle>Reset Password</DialogTitle>
               </DialogHeader>
 
               <div className="space-y-4">
-                {!resetInfo ? (
-                  <>
-                    <div className="space-y-2">
-                      <Label htmlFor="phone">Phone Number</Label>
-                      <div className="flex gap-2">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger
-                            className={cn(
-                              "flex items-center gap-1 px-2 py-2 border rounded-md",
-                              "hover:bg-gray-50",
-                              "focus:outline-none focus:ring-2 focus:ring-orange-500",
-                              isDarkMode
-                                ? "bg-slate-700 border-slate-600 text-white hover:bg-slate-600"
-                                : "bg-white border-gray-300"
-                            )}
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Phone Number</Label>
+                  <div className="flex gap-2">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger className="flex items-center gap-1 px-2 py-2 border rounded-md hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-orange-500">
+                        <span>{selectedCountry.flag}</span>
+                        <span>{selectedCountry.code}</span>
+                        <ChevronDown className="h-4 w-4" />
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent>
+                        {COUNTRY_CODES.map((country) => (
+                          <DropdownMenuItem
+                            key={country.code}
+                            onClick={() => setSelectedCountry(country)}
+                            className="cursor-pointer"
                           >
-                            <span>{selectedCountry.flag}</span>
-                            <span>{selectedCountry.code}</span>
-                            <ChevronDown className="h-4 w-4" />
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent>
-                            {COUNTRY_CODES.map((country) => (
-                              <DropdownMenuItem
-                                key={country.code}
-                                onClick={() => setSelectedCountry(country)}
-                                className="cursor-pointer"
-                              >
-                                <span className="mr-2">{country.flag}</span>
-                                <span>{country.country}</span>
-                                <span className="ml-2 text-gray-500">
-                                  {country.code}
-                                </span>
-                              </DropdownMenuItem>
-                            ))}
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                        <Input
-                          id="phone"
-                          type="tel"
-                          placeholder="XXX-XXX-XXXX"
-                          value={phoneNumber}
-                          onChange={handlePhoneChange}
-                          maxLength={12}
-                          className="flex-1"
-                        />
-                      </div>
-                    </div>
-                    <div className="flex justify-end space-x-2">
-                      <Button variant="ghost" onClick={handleCloseReset}>
-                        Cancel
-                      </Button>
-                      <Button
-                        onClick={handlePasswordReset}
-                        disabled={phoneNumber.replace(/\D/g, "").length < 10}
-                      >
-                        {"<Reset Password>"}
-                      </Button>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <Card>
-                      <CardContent className="pt-6">
-                        <div className="space-y-2">
-                          <div>
-                            <p className="text-sm text-muted-foreground">
-                              Phone Number
-                            </p>
-                            <p className="font-medium">{resetInfo.phone}</p>
-                          </div>
-                          <div>
-                            <p className="text-sm text-muted-foreground">
-                              New Password
-                            </p>
-                            <p className="font-medium">{resetInfo.password}</p>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                    <div className="flex justify-end">
-                      <Button onClick={handleCloseReset}>Close</Button>
-                    </div>
-                  </>
+                            <span className="mr-2">{country.flag}</span>
+                            <span>{country.country}</span>
+                            <span className="ml-2 text-gray-500">
+                              {country.code}
+                            </span>
+                          </DropdownMenuItem>
+                        ))}
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                    <Input
+                      id="phone"
+                      type="tel"
+                      placeholder="XXX-XXX-XXXX"
+                      value={phoneNumber}
+                      onChange={handlePhoneChange}
+                      maxLength={12}
+                      className="flex-1"
+                    />
+                  </div>
+                </div>
+
+                <div className="flex justify-end space-x-2">
+                  <Button variant="ghost" onClick={handleClose}>
+                    Cancel
+                  </Button>
+                  <Button
+                    onClick={handlePasswordReset}
+                    disabled={phoneNumber.replace(/\D/g, "").length < 10}
+                  >
+                    Reset Password
+                  </Button>
+                </div>
+
+                {newPassword && (
+                  <ColourCard variant="purple">
+                    <ColourCardHeader>
+                      <ColourCardTitle className="text-start text-lg">
+                        New password: {newPassword}
+                      </ColourCardTitle>
+                    </ColourCardHeader>
+                  </ColourCard>
                 )}
               </div>
             </DialogContent>

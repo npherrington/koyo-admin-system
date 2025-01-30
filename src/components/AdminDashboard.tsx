@@ -185,15 +185,12 @@ const AdminDashboard = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
             <ColourCard variant="orange">
               <ColourCardHeader className="flex flex-row items-center justify-between pb-2">
-                <ColourCardTitle
-                  variant="orange"
-                  className="text-sm font-medium"
-                >
+                <ColourCardTitle className="text-sm font-medium">
                   Active Patients
                 </ColourCardTitle>
                 <Users className="w-4 h-4 text-gray-500" />
               </ColourCardHeader>
-              <ColourCardContent variant="orange">
+              <ColourCardContent>
                 <div className="text-2xl font-bold">3,521</div>
                 <p className="text-xs text-orange-600">+15% from last month</p>
               </ColourCardContent>
@@ -201,12 +198,12 @@ const AdminDashboard = () => {
 
             <ColourCard variant="blue">
               <ColourCardHeader className="flex flex-row items-center justify-between pb-2">
-                <ColourCardTitle variant="blue" className="text-sm font-medium">
+                <ColourCardTitle className="text-sm font-medium">
                   Active Doctors
                 </ColourCardTitle>
                 <Users className="w-4 h-4 text-gray-500" />
               </ColourCardHeader>
-              <ColourCardContent variant="blue">
+              <ColourCardContent>
                 <div className="text-2xl font-bold">42</div>
                 <p className="text-xs text-blue-900">8 currently online</p>
               </ColourCardContent>
@@ -215,15 +212,12 @@ const AdminDashboard = () => {
             {/* Today's Consultations Card */}
             <ColourCard variant="green">
               <ColourCardHeader className="flex flex-row items-center justify-between pb-2">
-                <ColourCardTitle
-                  variant="green"
-                  className="text-sm font-medium"
-                >
+                <ColourCardTitle className="text-sm font-medium">
                   Today's Consultations
                 </ColourCardTitle>
                 <MessageSquare className="w-4 h-4 text-gray-500" />
               </ColourCardHeader>
-              <ColourCardContent variant="green">
+              <ColourCardContent>
                 <div className="text-2xl font-bold">128</div>
                 <p className="text-xs text-green-800">Avg. response time: 2m</p>
               </ColourCardContent>
@@ -232,12 +226,12 @@ const AdminDashboard = () => {
             {/* Revenue Card */}
             <ColourCard variant="gray">
               <ColourCardHeader className="flex flex-row items-center justify-between pb-2">
-                <ColourCardTitle variant="gray" className="text-sm font-medium">
+                <ColourCardTitle className="text-sm font-medium">
                   Revenue (MTD)
                 </ColourCardTitle>
                 <CreditCard className="w-4 h-4 text-gray-500" />
               </ColourCardHeader>
-              <ColourCardContent variant="gray">
+              <ColourCardContent>
                 <div className="text-2xl font-bold text-gray-900">₦2.4M</div>
                 <p className="text-xs text-gray-900">+22% from last month</p>
               </ColourCardContent>
@@ -246,11 +240,9 @@ const AdminDashboard = () => {
 
           <ColourCard variant="gray" className="mb-6">
             <ColourCardHeader>
-              <ColourCardTitle variant="gray">
-                Active Consultations
-              </ColourCardTitle>
+              <ColourCardTitle>Active Consultations</ColourCardTitle>
             </ColourCardHeader>
-            <ColourCardContent variant="gray">
+            <ColourCardContent>
               <div className="space-y-4">
                 <ColourCard variant="orange">
                   <div className="flex items-center p-3">
@@ -289,11 +281,9 @@ const AdminDashboard = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <ColourCard variant="purple" className="mb-6">
               <ColourCardHeader>
-                <ColourCardTitle variant="purple">
-                  Support Tickets
-                </ColourCardTitle>
+                <ColourCardTitle>Support Tickets</ColourCardTitle>
               </ColourCardHeader>
-              <ColourCardContent variant="purple">
+              <ColourCardContent>
                 <div className="space-y-4">
                   <div className="flex items-center">
                     <div className="w-2 h-2 bg-gray-800 rounded-full mr-2"></div>
@@ -316,11 +306,9 @@ const AdminDashboard = () => {
             </ColourCard>
             <ColourCard variant="yellow" className="mb-6">
               <ColourCardHeader>
-                <ColourCardTitle variant="yellow">
-                  System Health
-                </ColourCardTitle>
+                <ColourCardTitle>System Health</ColourCardTitle>
               </ColourCardHeader>
-              <ColourCardContent variant="yellow">
+              <ColourCardContent>
                 <div className="space-y-4">
                   <div className="flex items-center">
                     <div className="w-2 h-2 bg-gray-800 rounded-full mr-2"></div>

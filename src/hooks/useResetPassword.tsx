@@ -24,8 +24,6 @@ export const useResetPassword = () => {
       setIsLoading(true);
       setError(null);
 
-      console.log("phoneNumber:", phoneNumber);
-      console.log("password:", password);
       const formattedPhoneNumber = phoneNumber.startsWith("tel:")
         ? phoneNumber
         : `tel:${phoneNumber}`;

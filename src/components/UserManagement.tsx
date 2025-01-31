@@ -87,18 +87,6 @@ const UserManagement = () => {
     return accounts.slice(startIndex, endIndex);
   }, [accounts, currentPage]);
 
-  // const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const value = event.target.value;
-  //   setSearchTerm(value);
-  //   setCurrentPage(1);
-  //   setSelectedAccessLevel(null); // Reset access level filter when searching
-  //   if (value) {
-  //     setQuery({ name: value });
-  //   } else {
-  //     setQuery({});
-  //   }
-  // };
-
   const handleAccessLevelFilter = (accessLevel: string) => {
     setSelectedAccessLevel(accessLevel);
     setCurrentPage(1);
@@ -223,10 +211,38 @@ const UserManagement = () => {
                         <CardTitle className="text-lg font-medium">
                           {account.name}
                         </CardTitle>
-                        <p className="text-sm opacity-75">ID: {account.id}</p>
+                        <p className="text-sm opacity-75">
+                          Phone Number: {account.phone_number}
+                        </p>
+                        <p className="text-sm opacity-75">
+                          Location: {account.location}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-sm opacity-75">
+                          Account ID: {account.id}
+                        </p>
                         <p className="text-sm opacity-75">
                           Access Level: {account.access_level}
                         </p>
+                        <p className="text-sm opacity-75">
+                          Created At:{" "}
+                          {new Intl.DateTimeFormat("en-GB", {
+                            dateStyle: "medium",
+                            timeStyle: "short",
+                          }).format(new Date(account.created_at))}
+                        </p>
+                        {/* <p className="text-sm opacity-75">
+                          Patient ID
+                          {account.patient_ids.length > 1 ? "(s)" : ""}:
+                        </p>
+                        <div className="ml-2">
+                          {account.patient_ids.map((id: string) => (
+                            <p key={id} className="text-sm opacity-75">
+                              {id}
+                            </p>
+                          ))}
+                        </div> */}
                       </div>
                     </div>
                   </CardHeader>

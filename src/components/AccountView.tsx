@@ -22,6 +22,7 @@ import {
 } from "@/components/ui/dialog";
 import useAccountFind from "@/hooks/useAccountFind";
 import useEditAccount from "@/hooks/useEditAccount";
+import { useResetPassword } from "@/hooks/useResetPassword";
 import EditAccountOverlay from "@/components/EditAccountForm";
 import {
   ColourCard,
@@ -76,6 +77,7 @@ const AccountView = () => {
     flag: "🇳🇬",
   });
   const [newPassword, setNewPassword] = useState("");
+  const { resetPassword, isLoading, isSuccess } = useResetPassword();
 
   const formatPhoneNumber = (
     digits: string,
@@ -167,9 +169,29 @@ const AccountView = () => {
     return Math.floor(100000 + Math.random() * 900000).toString();
   };
 
-  const handlePasswordReset = () => {
-    const newPass = Math.floor(100000 + Math.random() * 900000).toString();
+  const handlePasswordReset = async () => {
+    if (!phoneNumber) return;
+
+    // Generate new password
+    const newPass = generatePassword();
     setNewPassword(newPass);
+
+    // Format the phone number according to the selected country code
+    const formattedNumber = formatPhoneNumber(
+      phoneNumber.replace(/\D/g, ""),
+      selectedCountry
+    );
+
+    try {
+      await resetPassword(formattedNumber, newPass);
+
+      if (isSuccess) {
+        // You might want to show a success message or handle the success case
+        // The password will be shown in the purple card as it already does
+      }
+    } catch (err) {
+      console.error("Failed to reset password:", err);
+    }
   };
 
   const handleClose = () => {
@@ -278,13 +300,26 @@ const AccountView = () => {
                   </Button>
                   <Button
                     onClick={handlePasswordReset}
-                    disabled={phoneNumber.replace(/\D/g, "").length < 10}
+                    disabled={
+                      phoneNumber.replace(/\D/g, "").length < 10 || isLoading
+                    }
                   >
-                    {"<Reset Password>"}
+                    {isLoading ? (
+                      <div className="flex items-center gap-2">
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
+                        Resetting...
+                      </div>
+                    ) : (
+                      "Reset Password"
+                    )}
                   </Button>
                 </div>
 
-                {newPassword && (
+                {error && (
+                  <div className="text-red-500 text-sm mt-2">{error}</div>
+                )}
+
+                {newPassword && isSuccess && (
                   <ColourCard variant="purple">
                     <ColourCardHeader>
                       <ColourCardTitle className="text-start text-lg">
@@ -309,7 +344,7 @@ const AccountView = () => {
             <DropdownMenuTrigger asChild>
               <Button variant="default">
                 <UserX className="w-4 h-4 mr-2" />
-                Manage Access
+                {"<Manage Access>"}
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>

@@ -42,7 +42,7 @@ const useEditAccount = () => {
     console.log("payload:", payload);
     try {
       const response = await fetch(
-        "https://y6oi7rwyh5.execute-api.eu-west-2.amazonaws.com/api/accounts/update",
+        "https://l0wrj6xw5i.execute-api.eu-west-2.amazonaws.com/api/accounts/update",
         {
           method: "PATCH",
           headers: {

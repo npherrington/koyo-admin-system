@@ -32,7 +32,7 @@ const CardHeader = React.forwardRef<
     <div
       ref={ref}
       className={cn(
-        "flex flex-col space-y-1.5 p-6",
+        "flex flex-col space-y-1.5 p-6 border-b",
         isDarkMode
           ? "bg-slate-800 border-slate-700 text-white"
           : "bg-slate-50 border-slate-200 text-slate-950",
@@ -91,7 +91,7 @@ const CardContent = React.forwardRef<
     <div
       ref={ref}
       className={cn(
-        "p-6 pt-0",
+        "p-6 pt-0 border-b",
         isDarkMode ? "bg-slate-700 text-blue-300/80" : "text-slate-950",
         className
       )}

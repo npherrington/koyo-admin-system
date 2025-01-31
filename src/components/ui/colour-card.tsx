@@ -2,8 +2,33 @@ import * as React from "react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { cn } from "@/lib/utils";
 
+type Variant =
+  | "blue"
+  | "green"
+  | "red"
+  | "yellow"
+  | "purple"
+  | "orange"
+  | "gray";
+
+interface ColourCardContextValue {
+  variant: Variant;
+}
+
+const ColourCardContext = React.createContext<
+  ColourCardContextValue | undefined
+>(undefined);
+
+function useColourCard() {
+  const context = React.useContext(ColourCardContext);
+  if (!context) {
+    throw new Error("Colour Card components must be used within a ColourCard");
+  }
+  return context;
+}
+
 interface ColourCardProps extends React.HTMLAttributes<HTMLDivElement> {
-  variant?: "blue" | "green" | "red" | "yellow" | "purple" | "orange" | "gray";
+  variant?: Variant;
   children: React.ReactNode;
 }
 
@@ -25,9 +50,9 @@ const variantStyles = {
   green: {
     light: {
       card: "bg-green-100 border-green-200",
-      title: "text-green-900",
+      title: "text-green-800",
       description: "text-green-600",
-      content: "text-green-800",
+      content: "text-green-600",
     },
     dark: {
       card: "bg-green-600/70 border-green-200",
@@ -72,8 +97,8 @@ const variantStyles = {
       content: "text-purple-800",
     },
     dark: {
-      card: "bg-purple-200/80 border-purple-100",
-      title: "text-gray-600",
+      card: "bg-purple-500/80 border-purple-100",
+      title: "text-purple-100",
       description: "text-purple-300",
       content: "text-gray-600",
     },
@@ -112,15 +137,18 @@ const ColourCard = React.forwardRef<HTMLDivElement, ColourCardProps>(
   ({ className, variant = "blue", children, ...props }, ref) => {
     const { isDarkMode } = useTheme();
     const styles = variantStyles[variant][isDarkMode ? "dark" : "light"];
+    const value = React.useMemo(() => ({ variant }), [variant]);
 
     return (
-      <div
-        ref={ref}
-        className={cn("rounded-lg border shadow-sm", styles.card, className)}
-        {...props}
-      >
-        {children}
-      </div>
+      <ColourCardContext.Provider value={value}>
+        <div
+          ref={ref}
+          className={cn("rounded-lg border shadow-sm", styles.card, className)}
+          {...props}
+        >
+          {children}
+        </div>
+      </ColourCardContext.Provider>
     );
   }
 );
@@ -128,24 +156,27 @@ ColourCard.displayName = "ColourCard";
 
 const ColourCardHeader = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & {
-    variant?: ColourCardProps["variant"];
-  }
->(({ className, ...props }, ref) => (
-  <div
-    ref={ref}
-    className={cn("flex flex-col space-y-1.5 p-6", className)}
-    {...props}
-  />
-));
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => {
+  const { variant } = useColourCard();
+  const { isDarkMode } = useTheme();
+  const styles = variantStyles[variant][isDarkMode ? "dark" : "light"];
+
+  return (
+    <div
+      ref={ref}
+      className={cn("flex flex-col space-y-1.5 p-6", styles.content, className)}
+      {...props}
+    />
+  );
+});
 ColourCardHeader.displayName = "ColourCardHeader";
 
 const ColourCardTitle = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & {
-    variant?: ColourCardProps["variant"];
-  }
->(({ className, variant = "blue", ...props }, ref) => {
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => {
+  const { variant } = useColourCard();
   const { isDarkMode } = useTheme();
   const styles = variantStyles[variant][isDarkMode ? "dark" : "light"];
 
@@ -165,10 +196,9 @@ ColourCardTitle.displayName = "ColourCardTitle";
 
 const ColourCardDescription = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & {
-    variant?: ColourCardProps["variant"];
-  }
->(({ className, variant = "blue", ...props }, ref) => {
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => {
+  const { variant } = useColourCard();
   const { isDarkMode } = useTheme();
   const styles = variantStyles[variant][isDarkMode ? "dark" : "light"];
 
@@ -184,10 +214,9 @@ ColourCardDescription.displayName = "ColourCardDescription";
 
 const ColourCardContent = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & {
-    variant?: ColourCardProps["variant"];
-  }
->(({ className, variant = "blue", ...props }, ref) => {
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => {
+  const { variant } = useColourCard();
   const { isDarkMode } = useTheme();
   const styles = variantStyles[variant][isDarkMode ? "dark" : "light"];
 
@@ -203,10 +232,9 @@ ColourCardContent.displayName = "ColourCardContent";
 
 const ColourCardFooter = React.forwardRef<
   HTMLDivElement,
-  React.HTMLAttributes<HTMLDivElement> & {
-    variant?: ColourCardProps["variant"];
-  }
->(({ className, variant = "blue", ...props }, ref) => {
+  React.HTMLAttributes<HTMLDivElement>
+>(({ className, ...props }, ref) => {
+  const { variant } = useColourCard();
   const { isDarkMode } = useTheme();
   const styles = variantStyles[variant][isDarkMode ? "dark" : "light"];
 

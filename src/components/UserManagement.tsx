@@ -232,17 +232,6 @@ const UserManagement = () => {
                             timeStyle: "short",
                           }).format(new Date(account.created_at))}
                         </p>
-                        {/* <p className="text-sm opacity-75">
-                          Patient ID
-                          {account.patient_ids.length > 1 ? "(s)" : ""}:
-                        </p>
-                        <div className="ml-2">
-                          {account.patient_ids.map((id: string) => (
-                            <p key={id} className="text-sm opacity-75">
-                              {id}
-                            </p>
-                          ))}
-                        </div> */}
                       </div>
                     </div>
                   </CardHeader>

@@ -9,7 +9,7 @@ interface ApiErrorResponse {
 }
 
 const API_URL =
-  "https://l0wrj6xw5i.execute-api.eu-west-2.amazonaws.com/api/accounts/set_password";
+  "https://j6424zsdt9.execute-api.eu-west-2.amazonaws.com/api/accounts/set_password";
 
 export const useResetPassword = () => {
   const [isLoading, setIsLoading] = useState(false);
